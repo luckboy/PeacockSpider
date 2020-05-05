@@ -109,6 +109,17 @@ namespace peacockspider
     Move(Piece piece, Square from, Square to, PromotionPiece promotion_piece) :
       _M_piece(static_cast<std::int8_t>(piece)), _M_from(from), _M_to(to), _M_promotion_piece(static_cast<std::int8_t>(promotion_piece)) {}
 
+    bool operator==(const Move &move) const
+    {
+      return _M_piece == move._M_piece &&
+        _M_from == move._M_from &&
+        _M_to == move._M_to &&
+        _M_promotion_piece == move._M_promotion_piece;
+    }
+
+    bool operator!=(const Move &move) const
+    { return !(*this == move); }
+
     const Piece piece() const
     { return static_cast<Piece>(_M_piece); }
 
@@ -126,6 +137,11 @@ namespace peacockspider
   {
     Move move;
     int score;
+    
+    MovePair() {}
+
+    MovePair(Move move, int score) :
+      move(move), score(score) {}
   };
 
   class MovePairList
@@ -166,7 +182,19 @@ namespace peacockspider
     int _M_fullmove_number;
   public:
     Board();
+    
+    bool operator==(const Board &board) const
+    {
+      return equal_without_hmvc_and_fmvn(board) &&
+        _M_halfmove_clock == board._M_halfmove_clock &&
+        _M_fullmove_number == board._M_fullmove_number;
+    }
 
+    bool operator!=(const Board &board) const
+    { return !(*this == board); }
+
+    bool equal_without_hmvc_and_fmvn(const Board &board) const;
+    
     Bitboard color_bitboard(Side side) const
     { return _M_color_bitboards[side_to_index(side)]; }
     

@@ -47,6 +47,24 @@ namespace peacockspider
     _M_fullmove_number = 1;
   }
   
+  bool Board::equal_without_hmvc_and_fmvn(const Board &board) const
+  {
+    return _M_color_bitboards[side_to_index(Side::WHITE)] == board._M_color_bitboards[side_to_index(Side::WHITE)] &&
+      _M_color_bitboards[side_to_index(Side::BLACK)] == board._M_color_bitboards[side_to_index(Side::BLACK)] &&
+      _M_piece_bitboards[piece_to_index(Piece::PAWN)] == board._M_piece_bitboards[piece_to_index(Piece::PAWN)] &&
+      _M_piece_bitboards[piece_to_index(Piece::KNIGHT)] == board._M_piece_bitboards[piece_to_index(Piece::KNIGHT)] &&
+      _M_piece_bitboards[piece_to_index(Piece::BISHOP)] == board._M_piece_bitboards[piece_to_index(Piece::BISHOP)] &&
+      _M_piece_bitboards[piece_to_index(Piece::ROOK)] == board._M_piece_bitboards[piece_to_index(Piece::ROOK)] &&
+      _M_piece_bitboards[piece_to_index(Piece::QUEEN)] == board._M_piece_bitboards[piece_to_index(Piece::QUEEN)] &&
+      _M_piece_bitboards[piece_to_index(Piece::KING)] == board._M_piece_bitboards[piece_to_index(Piece::KING)] &&
+      _M_king_squares[side_to_index(Side::WHITE)] == board._M_king_squares[side_to_index(Side::WHITE)] &&
+      _M_king_squares[side_to_index(Side::BLACK)] == board._M_king_squares[side_to_index(Side::BLACK)] &&
+      _M_side == board._M_side &&
+      _M_castlings[side_to_index(Side::WHITE)] == board._M_castlings[side_to_index(Side::WHITE)] &&
+      _M_castlings[side_to_index(Side::BLACK)] == board._M_castlings[side_to_index(Side::BLACK)] &&
+      _M_en_passant_column == board._M_en_passant_column;
+  }
+
   bool Board::has_attack(Side side, Square squ) const
   {
     // Not implemented.
