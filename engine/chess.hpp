@@ -169,7 +169,7 @@ namespace peacockspider
     int _M_halfmove_clock;
     int _M_fullmove_number;
   public:
-    Board() {}
+    Board();
 
     Bitboard color_bitboard(Side side) const
     { return _M_color_bitboards[side_to_index(side)]; }

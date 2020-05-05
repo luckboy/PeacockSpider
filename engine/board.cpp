@@ -21,6 +21,32 @@ using namespace std;
 
 namespace peacockspider
 {
+  Board::Board()
+  {
+    _M_color_bitboards[side_to_index(Side::WHITE)] = static_cast<Bitboard>(0xffff) << 0;
+    _M_color_bitboards[side_to_index(Side::BLACK)] = static_cast<Bitboard>(0xffff) << (64 - 16);
+    _M_piece_bitboards[piece_to_index(Piece::PAWN)] = static_cast<Bitboard>(0xff00) << 0;
+    _M_piece_bitboards[piece_to_index(Piece::PAWN)] |= static_cast<Bitboard>(0x00ff) << (64 - 16);
+    _M_piece_bitboards[piece_to_index(Piece::KNIGHT)] = static_cast<Bitboard>(0x0024) << 0;
+    _M_piece_bitboards[piece_to_index(Piece::KNIGHT)] |= static_cast<Bitboard>(0x2400) << (64 - 16);
+    _M_piece_bitboards[piece_to_index(Piece::BISHOP)] = static_cast<Bitboard>(0x0042) << 0;
+    _M_piece_bitboards[piece_to_index(Piece::BISHOP)] |= static_cast<Bitboard>(0x4200) << (64 - 16);
+    _M_piece_bitboards[piece_to_index(Piece::ROOK)] = static_cast<Bitboard>(0x0018) << 0;
+    _M_piece_bitboards[piece_to_index(Piece::ROOK)] |= static_cast<Bitboard>(0x1800) << (64 - 16);
+    _M_piece_bitboards[piece_to_index(Piece::QUEEN)] = static_cast<Bitboard>(0x0080) << 0;
+    _M_piece_bitboards[piece_to_index(Piece::QUEEN)] |= static_cast<Bitboard>(0x8000) << (64 - 16);
+    _M_piece_bitboards[piece_to_index(Piece::KING)] = static_cast<Bitboard>(0x0001) << 0;
+    _M_piece_bitboards[piece_to_index(Piece::KING)] |= static_cast<Bitboard>(0x0100) << (64 - 16);
+    _M_king_squares[side_to_index(Side::WHITE)] = 004;
+    _M_king_squares[side_to_index(Side::BLACK)] = 074;
+    _M_side = Side::WHITE;
+    _M_castlings[side_to_index(Side::WHITE)] = SideCastlings::SHORT | SideCastlings::LONG;
+    _M_castlings[side_to_index(Side::BLACK)] = SideCastlings::SHORT | SideCastlings::LONG;
+    _M_en_passant_column = -1;
+    _M_halfmove_clock = 0;
+    _M_fullmove_number = 1;
+  }
+  
   bool Board::has_attack(Side side, Square squ) const
   {
     // Not implemented.
