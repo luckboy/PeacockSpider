@@ -19,16 +19,12 @@
 #define _CHESS_HPP
 
 #include <cstddef>
-#include <cstdint>
 #include <utility>
+#include "consts.hpp"
+#include "types.hpp"
 
 namespace peacockspider
 {
-  typedef std::uint64_t Bitboard;
-  typedef int Square;
-  typedef int Column;
-  typedef int Row;
-
   enum class Side
   {
     WHITE = 0,
