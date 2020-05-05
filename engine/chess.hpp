@@ -174,7 +174,7 @@ namespace peacockspider
     Bitboard color_bitboard(Side side) const
     { return _M_color_bitboards[side_to_index(side)]; }
     
-    void set_bitboard(Side side, Bitboard bbd)
+    void set_color_bitboard(Side side, Bitboard bbd)
     { _M_color_bitboards[side_to_index(side)] = bbd; }
 
     Bitboard piece_bitboard(Piece piece) const
