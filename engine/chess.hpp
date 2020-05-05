@@ -20,6 +20,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <utility>
 
 namespace peacockspider
 {
@@ -172,27 +173,135 @@ namespace peacockspider
 
     Bitboard color_bitboard(Side side) const
     { return _M_color_bitboards[side_to_index(side)]; }
+    
+    void set_bitboard(Side side, Bitboard bbd)
+    { _M_color_bitboards[side_to_index(side)] = bbd; }
 
     Bitboard piece_bitboard(Piece piece) const
-    { return _M_color_bitboards[piece_to_index(piece)]; }
+    { return _M_piece_bitboards[piece_to_index(piece)]; }
+
+    void set_piece_bitboard(Piece piece, Bitboard bbd)
+    { _M_piece_bitboards[piece_to_index(piece)] = bbd; }
 
     Square king_square(Side side) const
     { return _M_king_squares[side_to_index(side)]; }
+    
+    void set_king_square(Side side, Square squ)
+    { _M_king_squares[side_to_index(side)] = squ; }
 
     Side side() const
     { return _M_side; }
     
+    void set_side(Side side)
+    { _M_side = side; }
+
     SideCastlings side_castlings(Side side) const
     { return _M_castlings[side_to_index(side)]; }
+
+    void set_side_castling(Side side, SideCastlings side_castlings)
+    { _M_castlings[side_to_index(side)] = side_castlings; }
     
     Column en_passant_column() const
     { return _M_en_passant_column; }
     
+    void set_en_passant_column(Column col)
+    { _M_en_passant_column = col; }
+
     int halfmove_clock() const
     { return _M_halfmove_clock; }
 
+    void set_halfmove_clock(int halfmove_clock)
+    { _M_halfmove_clock = halfmove_clock; }
+
     int fullmove_number() const
     { return _M_fullmove_number; }
+
+    void set_fullmove_number(int fullmove_number)
+    { _M_fullmove_number = fullmove_number; }
+
+    bool has_color(Side side, Square squ) const
+    { return (_M_color_bitboards[side_to_index(side)] & (static_cast<Bitboard>(1) << squ)) != 0; }
+
+    Color color(Square squ) const
+    {
+      if((_M_color_bitboards[side_to_index(Side::WHITE)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return Color::WHITE;
+      else if((_M_color_bitboards[side_to_index(Side::BLACK)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return Color::BLACK;
+      else
+        return Color::EMPTY;
+    }
+
+    void set_color(Square squ, Color color)
+    {
+      switch(color) {
+        case Color::WHITE:
+          _M_color_bitboards[side_to_index(Side::WHITE)] |= static_cast<Bitboard>(1) << squ;
+          _M_color_bitboards[side_to_index(Side::BLACK)] &= ~(static_cast<Bitboard>(1) << squ);
+          break;
+        case Color::BLACK:
+          _M_color_bitboards[side_to_index(Side::WHITE)] &= ~(static_cast<Bitboard>(1) << squ);
+          _M_color_bitboards[side_to_index(Side::BLACK)] |= static_cast<Bitboard>(1) << squ;
+          break;
+        case Color::EMPTY:
+          _M_color_bitboards[side_to_index(Side::WHITE)] &= ~(static_cast<Bitboard>(1) << squ);
+          _M_color_bitboards[side_to_index(Side::BLACK)] &= ~(static_cast<Bitboard>(1) << squ);
+          break;
+      }
+    }
+
+    bool has_piece(Piece piece, Square squ) const
+    { return (_M_piece_bitboards[piece_to_index(piece)] & (static_cast<Bitboard>(1) << squ)) != 0; }
+    
+    std::pair<Piece, bool> piece_pair(Square squ) const
+    {
+      if((_M_piece_bitboards[piece_to_index(Piece::PAWN)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return std::make_pair(Piece::PAWN, true);
+      else if((_M_piece_bitboards[piece_to_index(Piece::KNIGHT)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return std::make_pair(Piece::KNIGHT, true);
+      else if((_M_piece_bitboards[piece_to_index(Piece::BISHOP)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return std::make_pair(Piece::BISHOP, true);
+      else if((_M_piece_bitboards[piece_to_index(Piece::ROOK)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return std::make_pair(Piece::ROOK, true);
+      else if((_M_piece_bitboards[piece_to_index(Piece::QUEEN)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return std::make_pair(Piece::QUEEN, true);
+      else if((_M_piece_bitboards[piece_to_index(Piece::KING)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return std::make_pair(Piece::KING, true);
+      else
+        return std::make_pair(Piece::PAWN, false);
+    }
+
+    void set_piece_pair(Square squ, std::pair<Piece, bool> piece_pair)
+    {
+      _M_piece_bitboards[piece_to_index(Piece::PAWN)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::KNIGHT)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::BISHOP)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::ROOK)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::QUEEN)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::KING)] &= ~(static_cast<Bitboard>(1) << squ);
+      if(piece_pair.second) _M_piece_bitboards[piece_to_index(piece_pair.first)] |= static_cast<Bitboard>(1) << squ;
+    }
+    
+    void set_piece(Square squ, Piece piece)
+    {
+      _M_piece_bitboards[piece_to_index(Piece::PAWN)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::KNIGHT)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::BISHOP)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::ROOK)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::QUEEN)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::KING)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(piece)] |= static_cast<Bitboard>(1) << squ;
+    }
+
+    void unset_piece(Square squ)
+    {
+      _M_piece_bitboards[piece_to_index(Piece::PAWN)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::KNIGHT)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::BISHOP)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::ROOK)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::QUEEN)] &= ~(static_cast<Bitboard>(1) << squ);
+      _M_piece_bitboards[piece_to_index(Piece::KING)] &= ~(static_cast<Bitboard>(1) << squ);
+    }
 
     bool has_attack(Side side, Square squ) const;
     
