@@ -47,7 +47,7 @@ namespace peacockspider
     _M_fullmove_number = 1;
   }
   
-  bool Board::equal_without_hmvc_and_fmvn(const Board &board) const
+  bool Board::equal_for_repetitions(const Board &board) const
   {
     return _M_color_bitboards[side_to_index(Side::WHITE)] == board._M_color_bitboards[side_to_index(Side::WHITE)] &&
       _M_color_bitboards[side_to_index(Side::BLACK)] == board._M_color_bitboards[side_to_index(Side::BLACK)] &&

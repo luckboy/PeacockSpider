@@ -185,7 +185,7 @@ namespace peacockspider
     
     bool operator==(const Board &board) const
     {
-      return equal_without_hmvc_and_fmvn(board) &&
+      return equal_for_repetitions(board) &&
         _M_halfmove_clock == board._M_halfmove_clock &&
         _M_fullmove_number == board._M_fullmove_number;
     }
@@ -193,7 +193,7 @@ namespace peacockspider
     bool operator!=(const Board &board) const
     { return !(*this == board); }
 
-    bool equal_without_hmvc_and_fmvn(const Board &board) const;
+    bool equal_for_repetitions(const Board &board) const;
     
     Bitboard color_bitboard(Side side) const
     { return _M_color_bitboards[side_to_index(side)]; }
