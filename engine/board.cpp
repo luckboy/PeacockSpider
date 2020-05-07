@@ -288,7 +288,7 @@ namespace peacockspider
   bool Board::make_move(Move move, Board &board) const
   {
     Square short_castling_to = (_M_side == Side::WHITE ? G1 : G8);
-    Square long_castling_to = (_M_side == Side::WHITE ? G1 : G8);
+    Square long_castling_to = (_M_side == Side::WHITE ? C1 : C8);
     Side opp_side = ~_M_side;
     if(move.piece() == Piece::KING && move.from() == (_M_side == Side::WHITE ? E1 : E8) && move.to() == short_castling_to) {
       if(in_check()) return false;
@@ -321,7 +321,7 @@ namespace peacockspider
     } else if(move.piece() == Piece::KING && move.from() == (_M_side == Side::WHITE ? E1 : E8) && move.to() == long_castling_to) {
       if(in_check()) return false;
       Square rook_from = (_M_side == Side::WHITE ? A1 : A8);
-      Square rook_to = (_M_side == Side::WHITE ? F1 : F8);
+      Square rook_to = (_M_side == Side::WHITE ? D1 : D8);
       if(has_attack(_M_side, rook_to)) return false;
       board._M_color_bitboards[side_to_index(_M_side)] = color_bitboard(_M_side);
       board._M_piece_bitboards[piece_to_index(Piece::PAWN)] = piece_bitboard(Piece::PAWN);
@@ -394,7 +394,7 @@ namespace peacockspider
       Row pawn_to_row2 = (_M_side == Side::WHITE ? 3 : 4);
       if(move.piece() == Piece::PAWN && (move.from() >> 3) == pawn_from_row2 && (move.to() >> 3) == pawn_to_row2) {
         Square cap_squ = move.from() + (_M_side == Side::WHITE ? -8 : 8);
-        if((color_bitboard(opp_side) & piece_bitboard(Piece::PAWN) & tab_pawn_capture_bitboards[side_to_index(_M_side)][cap_squ]) == 0)
+        if((color_bitboard(opp_side) & piece_bitboard(Piece::PAWN) & tab_pawn_capture_bitboards[side_to_index(_M_side)][cap_squ]) != 0)
           board._M_en_passant_column = move.from() & 7;
         else
           board._M_en_passant_column = -1;
