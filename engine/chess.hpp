@@ -140,6 +140,9 @@ namespace peacockspider
     
     MovePair() {}
 
+    explicit MovePair(Move move) :
+      move(move) {}
+
     MovePair(Move move, int score) :
       move(move), score(score) {}
   };
@@ -245,6 +248,9 @@ namespace peacockspider
 
     bool has_color(Side side, Square squ) const
     { return (_M_color_bitboards[side_to_index(side)] & (static_cast<Bitboard>(1) << squ)) != 0; }
+    
+    bool has_empty(Square squ) const
+    { return ((_M_color_bitboards[side_to_index(Side::WHITE)] | _M_color_bitboards[side_to_index(Side::BLACK)]) & (static_cast<Bitboard>(1) << squ)) == 0; }
 
     Color color(Square squ) const
     {
@@ -276,6 +282,9 @@ namespace peacockspider
 
     bool has_piece(Piece piece, Square squ) const
     { return (_M_piece_bitboards[piece_to_index(piece)] & (static_cast<Bitboard>(1) << squ)) != 0; }
+    
+    bool has_piece(Piece piece1, Piece piece2, Square squ) const
+    { return ((_M_piece_bitboards[piece_to_index(piece1)] | _M_piece_bitboards[piece_to_index(piece2)]) & (static_cast<Bitboard>(1) << squ)) != 0; }
     
     std::pair<Piece, bool> piece_pair(Square squ) const
     {
@@ -344,6 +353,12 @@ namespace peacockspider
       _M_piece_bitboards[piece_to_index(Piece::QUEEN)] &= ~(static_cast<Bitboard>(1) << squ);
       _M_piece_bitboards[piece_to_index(Piece::KING)] &= ~(static_cast<Bitboard>(1) << squ);
     }
+
+    bool has_color_piece(Side side, Piece piece, Square squ) const
+    { return (_M_color_bitboards[side_to_index(side)] & _M_piece_bitboards[piece_to_index(piece)] & (static_cast<Bitboard>(1) << squ)) != 0; }
+
+    bool has_color_piece(Side side, Piece piece1, Piece piece2, Square squ) const
+    { return (_M_color_bitboards[side_to_index(side)] & (_M_piece_bitboards[piece_to_index(piece1)] | _M_piece_bitboards[piece_to_index(piece2)]) & (static_cast<Bitboard>(1) << squ)) != 0; }
 
     bool has_attack(Side side, Square squ) const;
     
