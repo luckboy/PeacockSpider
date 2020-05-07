@@ -305,7 +305,25 @@ namespace peacockspider
       _M_piece_bitboards[piece_to_index(Piece::KING)] &= ~(static_cast<Bitboard>(1) << squ);
       if(piece_pair.second) _M_piece_bitboards[piece_to_index(piece_pair.first)] |= static_cast<Bitboard>(1) << squ;
     }
-    
+
+    Piece piece(Square squ)
+    {
+      if((_M_piece_bitboards[piece_to_index(Piece::PAWN)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return Piece::PAWN;
+      else if((_M_piece_bitboards[piece_to_index(Piece::KNIGHT)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return Piece::KNIGHT;
+      else if((_M_piece_bitboards[piece_to_index(Piece::BISHOP)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return Piece::BISHOP;
+      else if((_M_piece_bitboards[piece_to_index(Piece::ROOK)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return Piece::ROOK;
+      else if((_M_piece_bitboards[piece_to_index(Piece::QUEEN)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return Piece::QUEEN;
+      else if((_M_piece_bitboards[piece_to_index(Piece::KING)] & (static_cast<Bitboard>(1) << squ)) != 0)
+        return Piece::KING;
+      else
+        return Piece::PAWN;
+    }
+
     void set_piece(Square squ, Piece piece)
     {
       _M_piece_bitboards[piece_to_index(Piece::PAWN)] &= ~(static_cast<Bitboard>(1) << squ);
