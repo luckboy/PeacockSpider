@@ -143,13 +143,13 @@ namespace peacockspider
       for(Square from = 0; from < 64; from++) {
         for(int i = 0; i < 2; i++) tab_pawn_squares[side][from][i] = -1;
         int from120 = mailbox64[from];
-        Square to = mailbox[from120 + (side == 0 ? 1 : -1)];
+        Square to = mailbox[from120 + (side == 0 ? 10 : -10)];
         int count = 0;
         if(to != -1) {
           tab_pawn_squares[side][from][count] = to;
           count++;
           if(from / 8 == (side == 0 ? 1 : 6)) {
-            to = mailbox[from120 + (side == 0 ? 2 : -2)];
+            to = mailbox[from120 + (side == 0 ? 20 : -20)];
             if(to != -1) {
               tab_pawn_squares[side][from][count] = to;
               count++;
