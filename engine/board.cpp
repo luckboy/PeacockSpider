@@ -121,7 +121,8 @@ namespace peacockspider
                 move_pairs.add_move_pair(MovePair(Move(Piece::PAWN, from, to, PromotionPiece::KNIGHT)));
               } else
                 move_pairs.add_move_pair(MovePair(Move(Piece::PAWN, from, to, PromotionPiece::NONE)));
-            }            
+            } else
+              break;
           }
         } else if(has_piece(Piece::KNIGHT, from)) {
           int squ_count = tab_knight_square_counts[from];
