@@ -148,7 +148,7 @@ namespace peacockspider
         if(to != -1) {
           tab_pawn_squares[side][from][count] = to;
           count++;
-          if(from / 8 == (side ? 1 : 6)) {
+          if(from / 8 == (side == 0 ? 1 : 6)) {
             to = mailbox[from120 + (side == 0 ? 2 : -2)];
             if(to != -1) {
               tab_pawn_squares[side][from][count] = to;
