@@ -366,9 +366,10 @@ namespace peacockspider
       else
         board._M_piece_bitboards[promotion_piece_to_index(move.promotion_piece())] |= dst_bbd;
       bool is_cap = ((color_bitboard(opp_side) & dst_bbd) != 0);
+      bool is_caped_rook = (is_cap ? ((piece_bitboard(Piece::ROOK) & dst_bbd) != 0) : false);
       Square en_passant_squ = (_M_en_passant_column != -1 ? _M_en_passant_column + (_M_side == Side::WHITE ? 050 : 020) : -1);
       if(move.piece() == Piece::PAWN && move.to() == en_passant_squ) {
-        is_cap |= true;
+        is_cap = true;
         Bitboard cap_bbd = (_M_side == Side::WHITE ? dst_bbd >> 8 : dst_bbd << 8);
         Bitboard cap_mask = ~cap_bbd;
         board._M_color_bitboards[side_to_index(opp_side)] &= cap_mask;
@@ -380,17 +381,23 @@ namespace peacockspider
       switch(move.piece()) {
         case Piece::ROOK:
           if(move.from() == (_M_side == Side::WHITE ? H1 : H8))
-            board._M_castlings[side_to_index(_M_side)] &= ~SideCastlings::SHORT;
+            board._M_castlings[side_to_index(_M_side)] = side_castlings(_M_side) & ~SideCastlings::SHORT;
           else if(move.from() == (_M_side == Side::WHITE ? A1 : A8))
-            board._M_castlings[side_to_index(_M_side)] &= ~SideCastlings::LONG;            
+            board._M_castlings[side_to_index(_M_side)] = side_castlings(_M_side) & ~SideCastlings::LONG;
           break;
         case Piece::KING:
           board._M_castlings[side_to_index(_M_side)] = SideCastlings::NONE;
           break;
         default:
+          board._M_castlings[side_to_index(_M_side)] = side_castlings(_M_side);
           break;
       }
-      board._M_castlings[side_to_index(opp_side)] = side_castlings(opp_side);
+      if(is_caped_rook && move.to() == (_M_side == Side::WHITE ? H8 : H1))
+        board._M_castlings[side_to_index(opp_side)] = side_castlings(opp_side) & ~SideCastlings::SHORT;
+      else if(is_caped_rook && move.to() == (_M_side == Side::WHITE ? A8 : A1))
+        board._M_castlings[side_to_index(opp_side)] = side_castlings(opp_side) & ~SideCastlings::LONG;
+      else
+        board._M_castlings[side_to_index(opp_side)] = side_castlings(opp_side);
       Row pawn_src_row2 = (_M_side == Side::WHITE ? 1 : 6);
       Row pawn_dst_row2 = (_M_side == Side::WHITE ? 3 : 4);
       if(move.piece() == Piece::PAWN && (move.from() >> 3) == pawn_src_row2 && (move.to() >> 3) == pawn_dst_row2) {
