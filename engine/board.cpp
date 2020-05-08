@@ -296,26 +296,27 @@ namespace peacockspider
       Square rook_src = (_M_side == Side::WHITE ? H1 : H8);
       Square rook_dst = (_M_side == Side::WHITE ? F1 : F8);
       if(has_attack(_M_side, rook_dst)) return false;
-      board._M_color_bitboards[side_to_index(_M_side)] = color_bitboard(_M_side);
-      board._M_piece_bitboards[piece_to_index(Piece::PAWN)] = piece_bitboard(Piece::PAWN);
-      board._M_piece_bitboards[piece_to_index(Piece::KNIGHT)] = piece_bitboard(Piece::KNIGHT);
-      board._M_piece_bitboards[piece_to_index(Piece::BISHOP)] = piece_bitboard(Piece::BISHOP);
-      board._M_piece_bitboards[piece_to_index(Piece::ROOK)] = piece_bitboard(Piece::ROOK);
-      board._M_piece_bitboards[piece_to_index(Piece::QUEEN)] = piece_bitboard(Piece::QUEEN);
-      board._M_piece_bitboards[piece_to_index(Piece::KING)] = piece_bitboard(Piece::KING);
-      board._M_piece_bitboards[piece_to_index(Piece::KING)] &= ~(static_cast<Bitboard>(1) << move.from());
-      board._M_color_bitboards[side_to_index(_M_side)] &= ~(static_cast<Bitboard>(1) << move.from());
-      board._M_color_bitboards[side_to_index(_M_side)] |= static_cast<Bitboard>(1) << move.to();
-      board._M_color_bitboards[side_to_index(_M_side)] &= ~(static_cast<Bitboard>(1) << rook_src);
-      board._M_color_bitboards[side_to_index(_M_side)] |= static_cast<Bitboard>(1) << rook_dst;
-      board._M_piece_bitboards[piece_to_index(Piece::KING)] |= static_cast<Bitboard>(1) << move.to();
-      board._M_piece_bitboards[piece_to_index(Piece::ROOK)] &= ~(static_cast<Bitboard>(1) << rook_src);
-      board._M_piece_bitboards[piece_to_index(Piece::ROOK)] |= static_cast<Bitboard>(1) << rook_dst;
-      board._M_king_squares[side_to_index(_M_side)] = move.to();
-      board._M_king_squares[side_to_index(opp_side)] = king_square(opp_side);
+      board.set_color_bitboard(Side::WHITE, color_bitboard(Side::WHITE));
+      board.set_color_bitboard(Side::BLACK, color_bitboard(Side::BLACK));
+      board.set_piece_bitboard(Piece::PAWN, piece_bitboard(Piece::PAWN));
+      board.set_piece_bitboard(Piece::KNIGHT, piece_bitboard(Piece::KNIGHT));
+      board.set_piece_bitboard(Piece::BISHOP, piece_bitboard(Piece::BISHOP));
+      board.set_piece_bitboard(Piece::ROOK, piece_bitboard(Piece::ROOK));
+      board.set_piece_bitboard(Piece::QUEEN, piece_bitboard(Piece::QUEEN));
+      board.set_piece_bitboard(Piece::KING, piece_bitboard(Piece::KING));
+      board.and_color_bitboard(_M_side, ~(static_cast<Bitboard>(1) << move.from()));
+      board.or_color_bitboard(_M_side, static_cast<Bitboard>(1) << move.to());
+      board.and_color_bitboard(_M_side, ~(static_cast<Bitboard>(1) << rook_src));
+      board.or_color_bitboard(_M_side, static_cast<Bitboard>(1) << rook_dst);
+      board.and_piece_bitboard(Piece::KING, ~(static_cast<Bitboard>(1) << move.from()));
+      board.or_piece_bitboard(Piece::KING, static_cast<Bitboard>(1) << move.to());
+      board.and_piece_bitboard(Piece::ROOK, ~(static_cast<Bitboard>(1) << rook_src));
+      board.or_piece_bitboard(Piece::ROOK, static_cast<Bitboard>(1) << rook_dst);
+      board.set_king_square(_M_side, move.to());
+      board.set_king_square(opp_side, king_square(opp_side));
       board._M_side = opp_side;
-      board._M_castlings[side_to_index(_M_side)] = SideCastlings::NONE;
-      board._M_castlings[side_to_index(opp_side)] = side_castlings(opp_side);
+      board.set_side_castlings(_M_side, SideCastlings::NONE);
+      board.set_side_castlings(opp_side, side_castlings(opp_side));
       board._M_en_passant_column = -1;
       board._M_halfmove_clock = board._M_halfmove_clock + 1;
       board._M_fullmove_number = _M_fullmove_number + (_M_side == Side::BLACK ? 1 : 0); 
@@ -324,26 +325,27 @@ namespace peacockspider
       Square rook_src = (_M_side == Side::WHITE ? A1 : A8);
       Square rook_dst = (_M_side == Side::WHITE ? D1 : D8);
       if(has_attack(_M_side, rook_dst)) return false;
-      board._M_color_bitboards[side_to_index(_M_side)] = color_bitboard(_M_side);
-      board._M_piece_bitboards[piece_to_index(Piece::PAWN)] = piece_bitboard(Piece::PAWN);
-      board._M_piece_bitboards[piece_to_index(Piece::KNIGHT)] = piece_bitboard(Piece::KNIGHT);
-      board._M_piece_bitboards[piece_to_index(Piece::BISHOP)] = piece_bitboard(Piece::BISHOP);
-      board._M_piece_bitboards[piece_to_index(Piece::ROOK)] = piece_bitboard(Piece::ROOK);
-      board._M_piece_bitboards[piece_to_index(Piece::QUEEN)] = piece_bitboard(Piece::QUEEN);
-      board._M_piece_bitboards[piece_to_index(Piece::KING)] = piece_bitboard(Piece::KING);
-      board._M_color_bitboards[side_to_index(_M_side)] &= ~(static_cast<Bitboard>(1) << move.from());
-      board._M_color_bitboards[side_to_index(_M_side)] |= static_cast<Bitboard>(1) << move.to();
-      board._M_color_bitboards[side_to_index(_M_side)] &= ~(static_cast<Bitboard>(1) << rook_src);
-      board._M_color_bitboards[side_to_index(_M_side)] |= static_cast<Bitboard>(1) << rook_dst;
-      board._M_piece_bitboards[piece_to_index(Piece::KING)] &= ~(static_cast<Bitboard>(1) << move.from());
-      board._M_piece_bitboards[piece_to_index(Piece::KING)] |= static_cast<Bitboard>(1) << move.to();
-      board._M_piece_bitboards[piece_to_index(Piece::ROOK)] &= ~(static_cast<Bitboard>(1) << rook_src);
-      board._M_piece_bitboards[piece_to_index(Piece::ROOK)] |= static_cast<Bitboard>(1) << rook_dst;
-      board._M_king_squares[side_to_index(_M_side)] = move.to();
-      board._M_king_squares[side_to_index(opp_side)] = king_square(opp_side);
+      board.set_color_bitboard(Side::WHITE, color_bitboard(Side::WHITE));
+      board.set_color_bitboard(Side::BLACK, color_bitboard(Side::BLACK));
+      board.set_piece_bitboard(Piece::PAWN, piece_bitboard(Piece::PAWN));
+      board.set_piece_bitboard(Piece::KNIGHT, piece_bitboard(Piece::KNIGHT));
+      board.set_piece_bitboard(Piece::BISHOP, piece_bitboard(Piece::BISHOP));
+      board.set_piece_bitboard(Piece::ROOK, piece_bitboard(Piece::ROOK));
+      board.set_piece_bitboard(Piece::QUEEN, piece_bitboard(Piece::QUEEN));
+      board.set_piece_bitboard(Piece::KING, piece_bitboard(Piece::KING));
+      board.and_color_bitboard(_M_side, ~(static_cast<Bitboard>(1) << move.from()));
+      board.or_color_bitboard(_M_side, static_cast<Bitboard>(1) << move.to());
+      board.and_color_bitboard(_M_side, ~(static_cast<Bitboard>(1) << rook_src));
+      board.or_color_bitboard(_M_side, static_cast<Bitboard>(1) << rook_dst);
+      board.and_piece_bitboard(Piece::KING, ~(static_cast<Bitboard>(1) << move.from()));
+      board.or_piece_bitboard(Piece::KING, static_cast<Bitboard>(1) << move.to());
+      board.and_piece_bitboard(Piece::ROOK, ~(static_cast<Bitboard>(1) << rook_src));
+      board.or_piece_bitboard(Piece::ROOK, static_cast<Bitboard>(1) << rook_dst);
+      board.set_king_square(_M_side, move.to());
+      board.set_king_square(opp_side, king_square(opp_side));
       board._M_side = opp_side;
-      board._M_castlings[side_to_index(_M_side)] = SideCastlings::NONE;
-      board._M_castlings[side_to_index(opp_side)] = side_castlings(opp_side);
+      board.set_side_castlings(_M_side, SideCastlings::NONE);
+      board.set_side_castlings(opp_side, side_castlings(opp_side));
       board._M_en_passant_column = -1;
       board._M_halfmove_clock = board._M_halfmove_clock + 1;
       board._M_fullmove_number = _M_fullmove_number + (_M_side == Side::BLACK ? 1 : 0); 
@@ -351,53 +353,53 @@ namespace peacockspider
       Bitboard src_mask = ~(static_cast<Bitboard>(1) << move.from());
       Bitboard dst_mask = ~(static_cast<Bitboard>(1) << move.to());
       Bitboard dst_bbd = static_cast<Bitboard>(1) << move.to();
-      board._M_color_bitboards[side_to_index(_M_side)] = color_bitboard(_M_side) | dst_bbd;
-      board._M_color_bitboards[side_to_index(opp_side)] = color_bitboard(opp_side) & dst_mask;
-      board._M_piece_bitboards[piece_to_index(Piece::PAWN)] = piece_bitboard(Piece::PAWN) & dst_mask;
-      board._M_piece_bitboards[piece_to_index(Piece::KNIGHT)] = piece_bitboard(Piece::KNIGHT) & dst_mask;
-      board._M_piece_bitboards[piece_to_index(Piece::BISHOP)] = piece_bitboard(Piece::BISHOP) & dst_mask;
-      board._M_piece_bitboards[piece_to_index(Piece::ROOK)] = piece_bitboard(Piece::ROOK) & dst_mask;
-      board._M_piece_bitboards[piece_to_index(Piece::QUEEN)] = piece_bitboard(Piece::QUEEN) & dst_mask;
-      board._M_piece_bitboards[piece_to_index(Piece::KING)] = piece_bitboard(Piece::KING) & dst_mask;
-      board._M_color_bitboards[side_to_index(_M_side)] &= src_mask;
-      board._M_piece_bitboards[piece_to_index(move.piece())] &= src_mask;
+      board.set_color_bitboard(_M_side, color_bitboard(_M_side) | dst_bbd);
+      board.set_color_bitboard(opp_side, color_bitboard(opp_side) & dst_mask);
+      board.set_piece_bitboard(Piece::PAWN, piece_bitboard(Piece::PAWN) & dst_mask);
+      board.set_piece_bitboard(Piece::KNIGHT, piece_bitboard(Piece::KNIGHT) & dst_mask);
+      board.set_piece_bitboard(Piece::BISHOP, piece_bitboard(Piece::BISHOP) & dst_mask);
+      board.set_piece_bitboard(Piece::ROOK, piece_bitboard(Piece::ROOK) & dst_mask);
+      board.set_piece_bitboard(Piece::QUEEN, piece_bitboard(Piece::QUEEN) & dst_mask);
+      board.set_piece_bitboard(Piece::KING, piece_bitboard(Piece::KING) & dst_mask);
+      board.and_color_bitboard(_M_side, src_mask);
+      board.and_piece_bitboard(move.piece(), src_mask);
       if(move.promotion_piece() == PromotionPiece::NONE)
-        board._M_piece_bitboards[piece_to_index(move.piece())] |= dst_bbd;
+        board.or_piece_bitboard(move.piece(), dst_bbd);
       else
-        board._M_piece_bitboards[promotion_piece_to_index(move.promotion_piece())] |= dst_bbd;
+        board.or_piece_bitboard(move.promotion_piece(), dst_bbd);
       bool is_cap = ((color_bitboard(opp_side) & dst_bbd) != 0);
-      bool is_caped_rook = (is_cap ? ((piece_bitboard(Piece::ROOK) & dst_bbd) != 0) : false);
+      bool is_cap_rook = (is_cap ? ((piece_bitboard(Piece::ROOK) & dst_bbd) != 0) : false);
       Square en_passant_squ = (_M_en_passant_column != -1 ? _M_en_passant_column + (_M_side == Side::WHITE ? 050 : 020) : -1);
       if(move.piece() == Piece::PAWN && move.to() == en_passant_squ) {
         is_cap = true;
         Bitboard cap_bbd = (_M_side == Side::WHITE ? dst_bbd >> 8 : dst_bbd << 8);
         Bitboard cap_mask = ~cap_bbd;
-        board._M_color_bitboards[side_to_index(opp_side)] &= cap_mask;
-        board._M_piece_bitboards[piece_to_index(Piece::PAWN)] &= cap_mask;
+        board.and_color_bitboard(opp_side, cap_mask);
+        board.and_piece_bitboard(Piece::PAWN, cap_mask);
       }
-      board._M_king_squares[side_to_index(_M_side)] = (move.piece() == Piece::KING ? move.to() : king_square(_M_side));
-      board._M_king_squares[side_to_index(opp_side)] = king_square(opp_side);
+      board.set_king_square(_M_side, move.piece() == Piece::KING ? move.to() : king_square(_M_side));
+      board.set_king_square(opp_side, king_square(opp_side));
       board._M_side = opp_side;
       switch(move.piece()) {
         case Piece::ROOK:
           if(move.from() == (_M_side == Side::WHITE ? H1 : H8))
-            board._M_castlings[side_to_index(_M_side)] = side_castlings(_M_side) & ~SideCastlings::SHORT;
+            board.set_side_castlings(_M_side, side_castlings(_M_side) & ~SideCastlings::SHORT);
           else if(move.from() == (_M_side == Side::WHITE ? A1 : A8))
-            board._M_castlings[side_to_index(_M_side)] = side_castlings(_M_side) & ~SideCastlings::LONG;
+            board.set_side_castlings(_M_side, side_castlings(_M_side) & ~SideCastlings::LONG);
           break;
         case Piece::KING:
-          board._M_castlings[side_to_index(_M_side)] = SideCastlings::NONE;
+          board.set_side_castlings(_M_side, SideCastlings::NONE);
           break;
         default:
-          board._M_castlings[side_to_index(_M_side)] = side_castlings(_M_side);
+          board.set_side_castlings(_M_side, side_castlings(_M_side));
           break;
       }
-      if(is_caped_rook && move.to() == (_M_side == Side::WHITE ? H8 : H1))
-        board._M_castlings[side_to_index(opp_side)] = side_castlings(opp_side) & ~SideCastlings::SHORT;
-      else if(is_caped_rook && move.to() == (_M_side == Side::WHITE ? A8 : A1))
-        board._M_castlings[side_to_index(opp_side)] = side_castlings(opp_side) & ~SideCastlings::LONG;
+      if(is_cap_rook && move.to() == (_M_side == Side::WHITE ? H8 : H1))
+        board.set_side_castlings(opp_side, side_castlings(opp_side) & ~SideCastlings::SHORT);
+      else if(is_cap_rook && move.to() == (_M_side == Side::WHITE ? A8 : A1))
+        board.set_side_castlings(opp_side, side_castlings(opp_side) & ~SideCastlings::LONG);
       else
-        board._M_castlings[side_to_index(opp_side)] = side_castlings(opp_side);
+        board.set_side_castlings(opp_side, side_castlings(opp_side));
       Row pawn_src_row2 = (_M_side == Side::WHITE ? 1 : 6);
       Row pawn_dst_row2 = (_M_side == Side::WHITE ? 3 : 4);
       if(move.piece() == Piece::PAWN && (move.from() >> 3) == pawn_src_row2 && (move.to() >> 3) == pawn_dst_row2) {

@@ -203,12 +203,33 @@ namespace peacockspider
     
     void set_color_bitboard(Side side, Bitboard bbd)
     { _M_color_bitboards[side_to_index(side)] = bbd; }
+    
+    void and_color_bitboard(Side side, Bitboard bbd)
+    { _M_color_bitboards[side_to_index(side)] &= bbd; }
+
+    void or_color_bitboard(Side side, Bitboard bbd)
+    { _M_color_bitboards[side_to_index(side)] |= bbd; }
+
+    void xor_color_bitboard(Side side, Bitboard bbd)
+    { _M_color_bitboards[side_to_index(side)] ^= bbd; }
 
     Bitboard piece_bitboard(Piece piece) const
     { return _M_piece_bitboards[piece_to_index(piece)]; }
 
     void set_piece_bitboard(Piece piece, Bitboard bbd)
     { _M_piece_bitboards[piece_to_index(piece)] = bbd; }
+
+    void and_piece_bitboard(Piece piece, Bitboard bbd)
+    { _M_piece_bitboards[piece_to_index(piece)] &= bbd; }
+
+    void or_piece_bitboard(Piece piece, Bitboard bbd)
+    { _M_piece_bitboards[piece_to_index(piece)] |= bbd; }
+
+    void xor_piece_bitboard(Piece piece, Bitboard bbd)
+    { _M_piece_bitboards[piece_to_index(piece)] ^= bbd; }
+
+    void or_piece_bitboard(PromotionPiece promotion_piece, Bitboard bbd)
+    { _M_piece_bitboards[promotion_piece_to_index(promotion_piece)] |= bbd; }
 
     Square king_square(Side side) const
     { return _M_king_squares[side_to_index(side)]; }
