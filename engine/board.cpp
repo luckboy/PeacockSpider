@@ -403,7 +403,7 @@ namespace peacockspider
       Row pawn_src_row2 = (_M_side == Side::WHITE ? 1 : 6);
       Row pawn_dst_row2 = (_M_side == Side::WHITE ? 3 : 4);
       if(move.piece() == Piece::PAWN && (move.from() >> 3) == pawn_src_row2 && (move.to() >> 3) == pawn_dst_row2) {
-        Square cap_squ = move.from() + (_M_side == Side::WHITE ? -8 : 8);
+        Square cap_squ = move.from() + (_M_side == Side::WHITE ? 8 : -8);
         if((color_bitboard(opp_side) & piece_bitboard(Piece::PAWN) & tab_pawn_capture_bitboards[side_to_index(_M_side)][cap_squ]) != 0)
           board._M_en_passant_column = move.from() & 7;
         else
