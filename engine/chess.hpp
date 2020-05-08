@@ -225,7 +225,7 @@ namespace peacockspider
     SideCastlings side_castlings(Side side) const
     { return _M_castlings[side_to_index(side)]; }
 
-    void set_side_castling(Side side, SideCastlings side_castlings)
+    void set_side_castlings(Side side, SideCastlings side_castlings)
     { _M_castlings[side_to_index(side)] = side_castlings; }
     
     Column en_passant_column() const
