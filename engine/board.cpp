@@ -69,8 +69,8 @@ namespace peacockspider
   bool Board::has_attack(Side side, Square squ) const
   {
     Side opp_side = ~side;
-    if((color_bitboard(opp_side) & piece_bitboard(Piece::PAWN) & tab_pawn_capture_bitboards[side_to_index(side)][squ]) != 0 &&
-      (color_bitboard(opp_side) & piece_bitboard(Piece::KNIGHT) & tab_knight_bitboards[squ]) != 0 &&
+    if((color_bitboard(opp_side) & piece_bitboard(Piece::PAWN) & tab_pawn_capture_bitboards[side_to_index(side)][squ]) != 0 ||
+      (color_bitboard(opp_side) & piece_bitboard(Piece::KNIGHT) & tab_knight_bitboards[squ]) != 0 ||
       (color_bitboard(opp_side) & piece_bitboard(Piece::KING) & tab_king_bitboards[squ]) != 0) return true;
     for(int i = 0; i < 4; i++) {
       int count = tab_bishop_square_counts[squ][i];
