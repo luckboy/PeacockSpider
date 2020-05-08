@@ -91,7 +91,7 @@ namespace peacockspider
     return false;
   }
 
-  void Board::generate_pseudo_legal_moves(MovePairList &move_pairs) const
+  void Board::generate_pseudolegal_moves(MovePairList &move_pairs) const
   {
     Bitboard bbd = color_bitboard(_M_side);
     for(Square i = 0; i < 64; i += 4) {
@@ -202,7 +202,7 @@ namespace peacockspider
     }
   }
 
-  void Board::generate_pseudo_legel_good_moves(MovePairList &move_pairs) const
+  void Board::generate_pseudolegel_good_moves(MovePairList &move_pairs) const
   {
     Bitboard bbd = color_bitboard(_M_side);
     for(Square i = 0; i < 64; i += 4) {

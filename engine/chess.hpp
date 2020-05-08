@@ -368,9 +368,9 @@ namespace peacockspider
     bool in_check(Side side) const
     { return has_attack(side, _M_king_squares[side_to_index(side)]); }
 
-    void generate_pseudo_legal_moves(MovePairList &move_pairs) const;
+    void generate_pseudolegal_moves(MovePairList &move_pairs) const;
 
-    void generate_pseudo_legel_good_moves(MovePairList &move_pairs) const;
+    void generate_pseudolegel_good_moves(MovePairList &move_pairs) const;
 
     bool make_move(Move move, Board &board) const;
   };
