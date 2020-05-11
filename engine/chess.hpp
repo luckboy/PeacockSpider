@@ -19,6 +19,7 @@
 #define _CHESS_HPP
 
 #include <cstddef>
+#include <string>
 #include <utility>
 #include "consts.hpp"
 #include "types.hpp"
@@ -395,6 +396,26 @@ namespace peacockspider
 
     bool make_move(Move move, Board &board) const;
   };
+  
+  Square string_to_squere(const std::string &str);
+
+  std::string square_to_string(Square squ);
+
+  Column char_to_column(char c);
+
+  char column_to_char(Column col);
+
+  Row char_to_row(char c);
+
+  char row_to_char(Row row);
+
+  std::pair<Side, bool> char_to_side_pair(char c);
+
+  char side_to_char(Side side);
+
+  std::pair<Piece, bool> char_to_piece_pair(char c);
+
+  char piece_to_char(Piece piece);
 }
 
 #endif
