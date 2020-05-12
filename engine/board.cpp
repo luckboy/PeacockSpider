@@ -15,7 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <cctype>
+#include <sstream>
 #include "chess.hpp"
+#include "exception.hpp"
 #include "tables.hpp"
 
 using namespace std;
@@ -48,6 +51,9 @@ namespace peacockspider
     _M_fullmove_number = 1;
   }
   
+  Board::Board(const std::string &str)
+  { if(!unsafely_set(str)) throw Exception("invalid fen"); }
+
   bool Board::equal_for_repetitions(const Board &board) const
   {
     return _M_color_bitboards[side_to_index(Side::WHITE)] == board._M_color_bitboards[side_to_index(Side::WHITE)] &&
@@ -414,5 +420,230 @@ namespace peacockspider
       board._M_fullmove_number = _M_fullmove_number + (_M_side == Side::BLACK ? 1 : 0);
     }
     return !board.in_check(_M_side);
+  }
+  
+  bool Board::unsafely_set(const string &str)
+  {
+    auto iter = str.begin();
+    // Sets colors and pieces.
+    int white_piece_count = 0;
+    int black_piece_count = 0;
+    set_king_square(Side::WHITE, -1);
+    set_king_square(Side::BLACK, -1);
+    for(Row row = 7; row >= 0; row--) {
+      Column col = 0;
+      while(col < 8) {
+        if(iter == str.end()) return false;
+        if(*iter >= '1' && *iter <= '8') {
+          int count = *iter - '0';
+          if(count > 8 - col) return false;
+          for(int i = 0; i < count; i++) {
+            set_color(col + (row << 3), Color::EMPTY);
+            unset_piece(col + (row << 3));
+            col++;
+          }
+        } else {
+          Color tmp_color = (isupper(*iter) ? Color::WHITE : Color::BLACK);
+          Side tmp_side = (tmp_color == Color::WHITE ? Side::WHITE : Side::BLACK);
+          pair<Piece, bool> tmp_piece_pair = char_to_piece_pair(toupper(*iter));
+          if(!tmp_piece_pair.second) return false;
+          set_color(col + (row << 3), tmp_color);
+          set_piece(col + (row << 3), tmp_piece_pair.first);
+          if(tmp_piece_pair.first == Piece::KING) {
+            if(king_square(tmp_side) == -1)
+              set_king_square(tmp_side, col + (row << 3));
+            else
+              return false;
+          }
+          if(tmp_side == Side::WHITE)
+            white_piece_count++;
+          else
+            black_piece_count++;
+          col++;
+        }
+        iter++;
+      }
+      if(row - 1 >= 0) {
+        if(iter == str.end()) return false;
+        if(*iter != '/') return false;
+        iter++;
+      }
+    }
+    if(king_square(Side::WHITE) == -1) return false;
+    if(king_square(Side::BLACK) == -1) return false;
+    if(white_piece_count > 16) return false;
+    if(black_piece_count > 16) return false;
+    while(iter != str.end() && (*iter == ' ' || *iter == '\t')) iter++;
+    // Sets side.
+    if(iter == str.end()) return false;
+    pair<Side, bool> side_pair = char_to_side_pair(*iter);
+    if(!side_pair.second) return false;
+    set_side(side_pair.first);
+    iter++;
+    while(iter != str.end() && (*iter == ' ' || *iter == '\t')) iter++;
+    // Sets castlings.
+    if(iter == str.end()) return false;
+    set_side_castlings(Side::WHITE, SideCastlings::NONE);
+    set_side_castlings(Side::BLACK, SideCastlings::NONE);
+    if(iter == str.end() || *iter != '-') {
+      while(iter != str.end()) {
+        bool is_castling = true;
+        switch(*iter) {
+          case 'K':
+            set_side_castlings(Side::WHITE, side_castlings(Side::WHITE) | SideCastlings::SHORT);
+            break;
+          case 'Q':
+            set_side_castlings(Side::WHITE, side_castlings(Side::WHITE) | SideCastlings::LONG);
+            break;
+          case 'k':
+            set_side_castlings(Side::BLACK, side_castlings(Side::BLACK) | SideCastlings::SHORT);
+            break;
+          case 'q':
+            set_side_castlings(Side::BLACK, side_castlings(Side::BLACK) | SideCastlings::LONG);
+            break;
+          default:
+            is_castling = false;
+            break;
+        }
+        if(!is_castling) break;
+        iter++;
+      }
+    } else
+      iter++;
+    if((side_castlings(Side::WHITE) & SideCastlings::SHORT) != SideCastlings::NONE) {
+      if(!has_color_piece(Side::WHITE, Piece::KING, E1)) return false;
+      if(!has_color_piece(Side::WHITE, Piece::ROOK, H1)) return false;
+    }
+    if((side_castlings(Side::WHITE) & SideCastlings::LONG) != SideCastlings::NONE) {
+      if(!has_color_piece(Side::WHITE, Piece::KING, E1)) return false;
+      if(!has_color_piece(Side::WHITE, Piece::ROOK, A1)) return false;
+    }
+    if((side_castlings(Side::BLACK) & SideCastlings::SHORT) != SideCastlings::NONE) {
+      if(!has_color_piece(Side::BLACK, Piece::KING, E8)) return false;
+      if(!has_color_piece(Side::BLACK, Piece::ROOK, H8)) return false;
+    }
+    if((side_castlings(Side::BLACK) & SideCastlings::LONG) != SideCastlings::NONE) {
+      if(!has_color_piece(Side::BLACK, Piece::KING, E8)) return false;
+      if(!has_color_piece(Side::BLACK, Piece::ROOK, A8)) return false;
+    }
+    while(iter != str.end() && (*iter == ' ' || *iter == '\t')) iter++;
+    // Sets en passant column.
+    if(iter == str.end()) return false;
+    Square en_passant_squ = -1;
+    if(iter == str.end() || *iter != '-') {
+      if(iter == str.end()) return false;
+      if(iter + 1 == str.end()) return false;
+      string en_passant_squ_str(iter, iter + 2);
+      en_passant_squ = string_to_square(en_passant_squ_str);
+      iter += 2;
+    } else
+      iter++;
+    if(en_passant_squ != -1) {
+      if((en_passant_squ >> 3) != (side() == Side::WHITE ? 5 : 2)) return false;
+      if(color(en_passant_squ) != Color::EMPTY) return false; 
+      Square cap_squ = en_passant_squ + (side() == Side::WHITE ? 8 : -8);
+      if(color(cap_squ) != (side() == Side::WHITE ? Color::BLACK : Color::WHITE) || piece(cap_squ) != Piece::PAWN) return false;
+      if((color_bitboard(side()) & piece_bitboard(Piece::PAWN) & tab_pawn_capture_bitboards[side_to_index(~side())][en_passant_squ]) == 0)
+        en_passant_squ = -1;
+    }
+    set_en_passant_column(en_passant_squ == -1 ? (en_passant_squ & 7) : -1);
+    while(iter != str.end() && (*iter == ' ' || *iter == '\t')) iter++;
+    // Sets halfmove clock.
+    if(iter != str.end()) {
+      auto iter2 = iter;
+      while(iter2 != str.end() && *iter2 != ' ' && *iter2 != '\t') iter2++; 
+      string tmp_str(iter, iter2);
+      istringstream iss(tmp_str);
+      int x;
+      iss >> x;
+      if(iss.fail() || !iss.eof()) return false;
+      set_halfmove_clock(x);
+      iter = iter2;
+    } else
+      return false;
+    while(iter != str.end() && (*iter == ' ' || *iter == '\t')) iter++;
+    // Sets fullmove number.
+    if(iter != str.end()) {
+      auto iter2 = iter;
+      while(iter2 != str.end() && *iter2 != ' ' && *iter2 != '\t') iter2++; 
+      string tmp_str(iter, iter2);
+      istringstream iss(tmp_str);
+      int x;
+      iss >> x;
+      if(iss.fail() || !iss.eof()) return false;
+      set_fullmove_number(x);
+      iter = iter2;
+    } else
+      return false;
+    if(iter != str.end()) return false;
+    return true;
+  }
+
+  bool Board::set(const std::string &str)
+  {
+    Board tmp_board;
+    if(tmp_board.unsafely_set(str)) {
+      *this = tmp_board;
+      return true;
+    } else
+      return false;
+  }
+
+  string Board::to_string() const
+  {
+    string str;
+    // Converts colors and pieces.
+    for(Row row = 7; row >= 0; row++) {
+      Column col = 0;
+      while(col < 8) {
+        if(color(col + (row << 3)) == Color::EMPTY) {
+          int count;
+          for(count = 0; count < 8; count++) {
+            if(col >= 8) break;
+            if(color(col + (row << 3)) == Color::EMPTY) break;
+            col++;
+          }
+          str += ('0' + count);
+        } else {
+          Color tmp_color = color(col + (row << 3));
+          Piece tmp_piece = piece(col + (row << 3));
+          char c = piece_to_char(tmp_piece);
+          str += (tmp_color == Color::WHITE ? toupper(c) : tolower(c));
+          col++;
+        }
+      }
+      if(row -1 >= 0) str += '/';
+    }
+    str += ' ';
+    // Converts side.
+    str += side_to_char(side());
+    str += ' ';
+    // Converts castlings.
+    if(side_castlings(Side::WHITE) != SideCastlings::NONE || side_castlings(Side::WHITE) != SideCastlings::NONE) {
+      if((side_castlings(Side::WHITE) & SideCastlings::SHORT) != SideCastlings::NONE) str += 'K';
+      if((side_castlings(Side::WHITE) & SideCastlings::LONG) != SideCastlings::NONE) str += 'Q';
+      if((side_castlings(Side::BLACK) & SideCastlings::SHORT) != SideCastlings::NONE) str += 'k';
+      if((side_castlings(Side::BLACK) & SideCastlings::LONG) != SideCastlings::NONE) str += 'q';
+    } else
+      str += '-';
+    str += ' ';
+    // Converts en passant column.
+    if(en_passant_column() != -1) {
+      Square en_passant_squ = en_passant_column() + (side() == Side::WHITE ? 050 : 020);
+      str += square_to_string(en_passant_squ);
+    } else
+      str += '-';
+    str += ' ';
+    // Converts halfmove clock.
+    ostringstream oss1;
+    oss1 << halfmove_clock();
+    str += oss1.str();
+    str += ' ';
+    // Converts fullmove number.
+    ostringstream oss2;
+    oss2 << fullmove_number();
+    str += oss2.str();
+    str += ' ';
+    return str;
   }
 }

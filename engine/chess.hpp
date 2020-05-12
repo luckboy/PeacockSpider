@@ -186,6 +186,8 @@ namespace peacockspider
     int _M_fullmove_number;
   public:
     Board();
+
+    explicit Board(const std::string &str);
     
     bool operator==(const Board &board) const
     {
@@ -337,7 +339,7 @@ namespace peacockspider
       if(piece_pair.second) _M_piece_bitboards[piece_to_index(piece_pair.first)] |= static_cast<Bitboard>(1) << squ;
     }
 
-    Piece piece(Square squ)
+    Piece piece(Square squ) const
     {
       if((_M_piece_bitboards[piece_to_index(Piece::PAWN)] & (static_cast<Bitboard>(1) << squ)) != 0)
         return Piece::PAWN;
@@ -395,9 +397,15 @@ namespace peacockspider
     void generate_pseudolegel_good_moves(MovePairList &move_pairs) const;
 
     bool make_move(Move move, Board &board) const;
+  private:
+    bool unsafely_set(const std::string &str);
+  public:
+    bool set(const std::string &str);
+
+    std::string to_string() const;
   };
   
-  Square string_to_squere(const std::string &str);
+  Square string_to_square(const std::string &str);
 
   std::string square_to_string(Square squ);
 

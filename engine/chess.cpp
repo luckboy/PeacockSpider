@@ -21,7 +21,7 @@ using namespace std;
 
 namespace peacockspider
 {
-  Square string_to_squere(const string &str)
+  Square string_to_square(const string &str)
   {
     if(str.length() == 2) {
       Column col = char_to_column(str[0]);
