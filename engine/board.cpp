@@ -475,6 +475,7 @@ namespace peacockspider
     if(king_square(Side::BLACK) == -1) return false;
     if(white_piece_count > 16) return false;
     if(black_piece_count > 16) return false;
+    if(iter == str.end() || (*iter != ' ' && *iter != '\t')) return false; 
     while(iter != str.end() && (*iter == ' ' || *iter == '\t')) iter++;
     // Sets side.
     if(iter == str.end()) return false;
@@ -482,6 +483,7 @@ namespace peacockspider
     if(!side_pair.second) return false;
     set_side(side_pair.first);
     iter++;
+    if(iter == str.end() || (*iter != ' ' && *iter != '\t')) return false; 
     while(iter != str.end() && (*iter == ' ' || *iter == '\t')) iter++;
     // Sets castlings.
     if(iter == str.end()) return false;
@@ -528,6 +530,7 @@ namespace peacockspider
       if(!has_color_piece(Side::BLACK, Piece::KING, E8)) return false;
       if(!has_color_piece(Side::BLACK, Piece::ROOK, A8)) return false;
     }
+    if(iter == str.end() || (*iter != ' ' && *iter != '\t')) return false; 
     while(iter != str.end() && (*iter == ' ' || *iter == '\t')) iter++;
     // Sets en passant column.
     if(iter == str.end()) return false;
@@ -550,6 +553,7 @@ namespace peacockspider
         en_passant_squ = -1;
     }
     set_en_passant_column(en_passant_squ != -1 ? (en_passant_squ & 7) : -1);
+    if(iter == str.end() || (*iter != ' ' && *iter != '\t')) return false; 
     while(iter != str.end() && (*iter == ' ' || *iter == '\t')) iter++;
     // Sets halfmove clock.
     if(iter != str.end()) {
@@ -564,6 +568,7 @@ namespace peacockspider
       iter = iter2;
     } else
       return false;
+    if(iter == str.end() || (*iter != ' ' && *iter != '\t')) return false; 
     while(iter != str.end() && (*iter == ' ' || *iter == '\t')) iter++;
     // Sets fullmove number.
     if(iter != str.end()) {
