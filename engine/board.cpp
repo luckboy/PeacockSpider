@@ -99,6 +99,7 @@ namespace peacockspider
 
   void Board::generate_pseudolegal_moves(MovePairList &move_pairs) const
   {
+    move_pairs.clear();
     Bitboard bbd = color_bitboard(_M_side);
     for(Square i = 0; i < 64; i += 4) {
       int bits = bbd & 0xf;
@@ -210,6 +211,7 @@ namespace peacockspider
 
   void Board::generate_pseudolegel_good_moves(MovePairList &move_pairs) const
   {
+    move_pairs.clear();
     Bitboard bbd = color_bitboard(_M_side);
     for(Square i = 0; i < 64; i += 4) {
       int bits = bbd & 0xf;

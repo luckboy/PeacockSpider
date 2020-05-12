@@ -163,6 +163,12 @@ namespace peacockspider
     
     const MovePair &operator[](std::size_t i) const
     { return _M_move_pairs[i]; }
+    
+    MovePair &operator[](std::size_t i)
+    { return _M_move_pairs[i]; }
+    
+    void clear()
+    { _M_length = 0; }
 
     void add_move_pair(const MovePair &move_pair)
     {
