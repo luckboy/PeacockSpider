@@ -51,7 +51,7 @@ namespace peacockspider
     _M_fullmove_number = 1;
   }
   
-  Board::Board(const std::string &str)
+  Board::Board(const string &str)
   { if(!unsafely_set(str)) throw Exception("invalid fen"); }
 
   bool Board::equal_for_repetitions(const Board &board) const
