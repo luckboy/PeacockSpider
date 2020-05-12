@@ -537,6 +537,7 @@ namespace peacockspider
       if(iter + 1 == str.end()) return false;
       string en_passant_squ_str(iter, iter + 2);
       en_passant_squ = string_to_square(en_passant_squ_str);
+      if(en_passant_squ == -1) return false;
       iter += 2;
     } else
       iter++;
