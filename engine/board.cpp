@@ -603,12 +603,12 @@ namespace peacockspider
             if(color(col + (row << 3)) == Color::EMPTY) break;
             col++;
           }
-          str += ('0' + count);
+          str += static_cast<char>('0' + count);
         } else {
           Color tmp_color = color(col + (row << 3));
           Piece tmp_piece = piece(col + (row << 3));
           char c = piece_to_char(tmp_piece);
-          str += (tmp_color == Color::WHITE ? toupper(c) : tolower(c));
+          str += static_cast<char>(tmp_color == Color::WHITE ? toupper(c) : tolower(c));
           col++;
         }
       }
