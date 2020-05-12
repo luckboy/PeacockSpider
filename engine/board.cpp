@@ -549,7 +549,7 @@ namespace peacockspider
       if((color_bitboard(side()) & piece_bitboard(Piece::PAWN) & tab_pawn_capture_bitboards[side_to_index(~side())][en_passant_squ]) == 0)
         en_passant_squ = -1;
     }
-    set_en_passant_column(en_passant_squ == -1 ? (en_passant_squ & 7) : -1);
+    set_en_passant_column(en_passant_squ != -1 ? (en_passant_squ & 7) : -1);
     while(iter != str.end() && (*iter == ' ' || *iter == '\t')) iter++;
     // Sets halfmove clock.
     if(iter != str.end()) {
