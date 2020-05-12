@@ -416,6 +416,10 @@ namespace peacockspider
   std::pair<Piece, bool> char_to_piece_pair(char c);
 
   char piece_to_char(Piece piece);
+
+  PromotionPiece char_to_promotion_piece(char c);
+
+  char promotion_piece_to_char(PromotionPiece promotion_piece);
 }
 
 #endif

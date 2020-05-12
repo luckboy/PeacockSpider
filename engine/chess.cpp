@@ -122,4 +122,36 @@ namespace peacockspider
         return 'K';
     }
   }
+
+  PromotionPiece char_to_promotion_piece(char c)
+  {
+    switch(c) {
+      case 'N':
+        return PromotionPiece::KNIGHT;
+      case 'B':
+        return PromotionPiece::BISHOP;
+      case 'R':
+        return PromotionPiece::ROOK;
+      case 'Q':
+        return PromotionPiece::QUEEN;
+      default:
+        return PromotionPiece::NONE;
+    }
+  }
+
+  char promotion_piece_to_char(PromotionPiece promotion_piece)
+  {
+    switch(promotion_piece) {
+      case PromotionPiece::NONE:
+        return 0;
+      case PromotionPiece::KNIGHT:
+        return 'N';
+      case PromotionPiece::BISHOP:
+        return 'B';
+      case PromotionPiece::ROOK:
+        return 'R';
+      case PromotionPiece::QUEEN:
+        return 'Q';
+    }
+  }
 }
