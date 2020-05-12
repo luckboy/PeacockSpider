@@ -544,7 +544,7 @@ namespace peacockspider
     if(en_passant_squ != -1) {
       if((en_passant_squ >> 3) != (side() == Side::WHITE ? 5 : 2)) return false;
       if(color(en_passant_squ) != Color::EMPTY) return false; 
-      Square cap_squ = en_passant_squ + (side() == Side::WHITE ? 8 : -8);
+      Square cap_squ = en_passant_squ + (side() == Side::WHITE ? -8 : 8);
       if(color(cap_squ) != (side() == Side::WHITE ? Color::BLACK : Color::WHITE) || piece(cap_squ) != Piece::PAWN) return false;
       if((color_bitboard(side()) & piece_bitboard(Piece::PAWN) & tab_pawn_capture_bitboards[side_to_index(~side())][en_passant_squ]) == 0)
         en_passant_squ = -1;
