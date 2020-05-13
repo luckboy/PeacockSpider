@@ -23,7 +23,7 @@
 
 namespace peacockspider
 {
-  class Exception : std::exception
+  class Exception : public std::exception
   {
     std::string _M_message;
   public:
