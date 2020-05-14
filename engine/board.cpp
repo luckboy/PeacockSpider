@@ -81,16 +81,16 @@ namespace peacockspider
       int count = tab_bishop_square_counts[squ][i];
       for(int j = 0; j < count; j++) {
         int from = tab_bishop_squares[squ][i][j];
-        if(has_color_piece(opp_side, Piece::BISHOP, Piece::QUEEN, squ)) return true;
-        if(has_color(side, from)) break;
+        if(has_color_piece(opp_side, Piece::BISHOP, Piece::QUEEN, from)) return true;
+        if(!has_empty(from)) break;
       }
     }
     for(int i = 0; i < 4; i++) {
       int count = tab_rook_square_counts[squ][i];
       for(int j = 0; j < count; j++) {
         int from = tab_rook_squares[squ][i][j];
-        if(has_color_piece(opp_side, Piece::ROOK, Piece::QUEEN, squ)) return true;
-        if(has_color(side, from)) break;
+        if(has_color_piece(opp_side, Piece::ROOK, Piece::QUEEN, from)) return true;
+        if(!has_empty(from)) break;
       }
     }
     return false;
@@ -106,9 +106,9 @@ namespace peacockspider
       for(int j = 0; j < count; j++) {
         Square from = i + tab_square_offsets[bits][j];
         if(has_piece(Piece::PAWN, from)) {
-          int cap_squ_count = tab_pawn_capture_square_counts[from][side_to_index(_M_side)];
+          int cap_squ_count = tab_pawn_capture_square_counts[side_to_index(_M_side)][from];
           for(int k = 0; k < cap_squ_count; k++) {
-            Square to = tab_pawn_capture_squares[from][side_to_index(_M_side)][k];
+            Square to = tab_pawn_capture_squares[side_to_index(_M_side)][from][k];
             Square en_passant_squ = (_M_en_passant_column != -1 ? _M_en_passant_column + (_M_side == Side::WHITE ? 050 : 020) : -1);
             if(has_color(~_M_side, to) || to == en_passant_squ) {
               if(from >> 3 == (_M_side == Side::WHITE ? 6 : 1)) {
@@ -118,9 +118,9 @@ namespace peacockspider
                 move_pairs.add_move_pair(MovePair(Move(Piece::PAWN, from, to, PromotionPiece::NONE)));
             }
           }
-          int squ_count = tab_pawn_square_counts[from][side_to_index(_M_side)];
+          int squ_count = tab_pawn_square_counts[side_to_index(_M_side)][from];
           for(int k = 0; k < squ_count; k++) {
-            Square to = tab_pawn_squares[from][side_to_index(_M_side)][k];
+            Square to = tab_pawn_squares[side_to_index(_M_side)][from][k];
             if(has_empty(to)) {
               if(from >> 3 == (_M_side == Side::WHITE ? 6 : 1)) {
                 move_pairs.add_move_pair(MovePair(Move(Piece::PAWN, from, to, PromotionPiece::QUEEN)));
@@ -192,7 +192,7 @@ namespace peacockspider
     }
     if((side_castlings(_M_side) & SideCastlings::SHORT) != SideCastlings::NONE) {
       Bitboard castling_mask = static_cast<Bitboard>(0x60) << (_M_side == Side::WHITE ? 0 : 64 - 8);
-      if((color_bitboard(Side::WHITE) | color_bitboard(Side::BLACK)) & castling_mask) {
+      if(((color_bitboard(Side::WHITE) | color_bitboard(Side::BLACK)) & castling_mask) == 0) {
         Square from = (_M_side == Side::WHITE ? E1 : E8);
         Square to = (_M_side == Side::WHITE ? G1 : G8);
         move_pairs.add_move_pair(MovePair(Move(Piece::KING, from, to, PromotionPiece::NONE)));
@@ -200,7 +200,7 @@ namespace peacockspider
     }
     if((side_castlings(_M_side) & SideCastlings::LONG) != SideCastlings::NONE) {
       Bitboard castling_mask = static_cast<Bitboard>(0x0e) << (_M_side == Side::WHITE ? 0 : 64 - 8);
-      if((color_bitboard(Side::WHITE) | color_bitboard(Side::BLACK)) & castling_mask) {
+      if(((color_bitboard(Side::WHITE) | color_bitboard(Side::BLACK)) & castling_mask) == 0) {
         Square from = (_M_side == Side::WHITE ? E1 : E8);
         Square to = (_M_side == Side::WHITE ? C1 : C8);
         move_pairs.add_move_pair(MovePair(Move(Piece::KING, from, to, PromotionPiece::NONE)));
@@ -218,9 +218,9 @@ namespace peacockspider
       for(int j = 0; j < count; j++) {
         Square from = i + tab_square_offsets[bits][j];
         if(has_piece(Piece::PAWN, from)) {
-          int cap_squ_count = tab_pawn_capture_square_counts[from][side_to_index(_M_side)];
+          int cap_squ_count = tab_pawn_capture_square_counts[side_to_index(_M_side)][from];
           for(int k = 0; k < cap_squ_count; k++) {
-            Square to = tab_pawn_capture_squares[from][side_to_index(_M_side)][k];
+            Square to = tab_pawn_capture_squares[side_to_index(_M_side)][from][k];
             Square en_passant_squ = (_M_en_passant_column != -1 ? _M_en_passant_column + (_M_side == Side::WHITE ? 050 : 020) : -1);
             if(has_color(~_M_side, to) || to == en_passant_squ) {
               if(from >> 3 == (_M_side == Side::WHITE ? 6 : 1)) {
@@ -231,7 +231,7 @@ namespace peacockspider
             }
           }
           if(from >> 3 == (_M_side == Side::WHITE ? 6 : 1)) {
-            Square to = tab_pawn_squares[from][side_to_index(_M_side)][0];
+            Square to = tab_pawn_squares[side_to_index(_M_side)][from][0];
             if(has_empty(to)) {
               move_pairs.add_move_pair(MovePair(Move(Piece::PAWN, from, to, PromotionPiece::QUEEN)));
               move_pairs.add_move_pair(MovePair(Move(Piece::PAWN, from, to, PromotionPiece::KNIGHT)));
@@ -600,14 +600,14 @@ namespace peacockspider
   {
     string str;
     // Converts colors and pieces.
-    for(Row row = 7; row >= 0; row++) {
+    for(Row row = 7; row >= 0; row--) {
       Column col = 0;
       while(col < 8) {
         if(color(col + (row << 3)) == Color::EMPTY) {
           int count;
           for(count = 0; count < 8; count++) {
             if(col >= 8) break;
-            if(color(col + (row << 3)) == Color::EMPTY) break;
+            if(color(col + (row << 3)) != Color::EMPTY) break;
             col++;
           }
           str += static_cast<char>('0' + count);
@@ -650,7 +650,6 @@ namespace peacockspider
     ostringstream oss2;
     oss2 << fullmove_number();
     str += oss2.str();
-    str += ' ';
     return str;
   }
 }

@@ -99,26 +99,29 @@ namespace peacockspider
     for(int side = 0; side < 2; side++) {
       for(Square from = 0; from < 64; from++) {
         int from120 = mailbox64[from];
+        tab_pawn_capture_bitboards[side][from] = 0;
         for(int i = 0; i < 2; i++) {
           Square to = mailbox[from120 + tab_pawn_capture_steps120[side][i]];
-          if(to != -1) tab_pawn_capture_bitboards[side][from] = static_cast<Bitboard>(1) << to;
+          if(to != -1) tab_pawn_capture_bitboards[side][from] |= static_cast<Bitboard>(1) << to;
         }
       }
     }
     // Initializes knight bitboards.
     for(Square from = 0; from < 64; from++) {
       int from120 = mailbox64[from];
+      tab_knight_bitboards[from] = 0;
       for(int i = 0; i < 8; i++) {
         Square to = mailbox[from120 + tab_knight_steps120[i]];
-        if(to != -1) tab_knight_bitboards[from] = static_cast<Bitboard>(1) << to;
+        if(to != -1) tab_knight_bitboards[from] |= static_cast<Bitboard>(1) << to;
       }
     }
     // Initializes king bitboards.
     for(Square from = 0; from < 64; from++) {
       int from120 = mailbox64[from];
+      tab_king_bitboards[from] = 0;
       for(int i = 0; i < 8; i++) {
         Square to = mailbox[from120 + tab_king_steps120[i]];
-        if(to != -1) tab_king_bitboards[from] = static_cast<Bitboard>(1) << to;
+        if(to != -1) tab_king_bitboards[from] |= static_cast<Bitboard>(1) << to;
       }
     }
 
@@ -185,6 +188,7 @@ namespace peacockspider
           count++;
         }
       }
+      tab_king_square_counts[from] = count;
     }
     
     // Initializes bishop squares.
