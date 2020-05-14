@@ -626,7 +626,7 @@ namespace peacockspider
     str += side_to_char(side());
     str += ' ';
     // Converts castlings.
-    if(side_castlings(Side::WHITE) != SideCastlings::NONE || side_castlings(Side::WHITE) != SideCastlings::NONE) {
+    if(side_castlings(Side::WHITE) != SideCastlings::NONE || side_castlings(Side::BLACK) != SideCastlings::NONE) {
       if((side_castlings(Side::WHITE) & SideCastlings::SHORT) != SideCastlings::NONE) str += 'K';
       if((side_castlings(Side::WHITE) & SideCastlings::LONG) != SideCastlings::NONE) str += 'Q';
       if((side_castlings(Side::BLACK) & SideCastlings::SHORT) != SideCastlings::NONE) str += 'k';
