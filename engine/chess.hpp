@@ -177,6 +177,8 @@ namespace peacockspider
       _M_length++;
     }
 
+    bool contain_move(Move move) const;
+
     MovePairList to_next_list() const
     { return MovePairList(_M_move_pairs + _M_length, 0); } 
   };

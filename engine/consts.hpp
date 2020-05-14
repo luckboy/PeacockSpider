@@ -18,10 +18,13 @@
 #ifndef _CONSTS_HPP
 #define _CONSTS_HPP
 
+#include <cstddef>
 #include "types.hpp"
 
 namespace peacockspider
 {
+  const std::size_t MAX_MOVE_COUNT = 512;
+  
   const Square A1 = 000;
   const Square B1 = 001;
   const Square C1 = 002;
