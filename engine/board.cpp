@@ -18,7 +18,6 @@
 #include <cctype>
 #include <sstream>
 #include "chess.hpp"
-#include "exception.hpp"
 #include "tables.hpp"
 
 using namespace std;

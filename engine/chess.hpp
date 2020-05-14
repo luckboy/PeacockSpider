@@ -22,6 +22,7 @@
 #include <string>
 #include <utility>
 #include "consts.hpp"
+#include "exception.hpp"
 #include "types.hpp"
 
 namespace peacockspider
