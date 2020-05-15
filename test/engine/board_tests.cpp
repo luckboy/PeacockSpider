@@ -454,6 +454,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, E2, E3, PromotionPiece::NONE)));
       CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, E2, E4, PromotionPiece::NONE)));
       CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C4, C5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, C4, C6, PromotionPiece::NONE)));
     }
 
     void BoardTests::test_board_generate_pseudolegal_moves_method_generates_moves_for_black_side_and_pawns()
@@ -466,6 +467,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, E7, E6, PromotionPiece::NONE)));
       CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, E7, E5, PromotionPiece::NONE)));
       CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, F5, F4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, F5, F3, PromotionPiece::NONE)));
     }
     
     void BoardTests::test_board_generate_pseudolegal_moves_method_does_not_generate_for_white_side_and_pawns_and_barriers()
@@ -476,7 +478,7 @@ namespace peacockspider
       board.generate_pseudolegal_moves(move_pairs);
       CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, C2, C3, PromotionPiece::NONE)));
       CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, C2, C4, PromotionPiece::NONE)));
-      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E2, E4, PromotionPiece::NONE)));      
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E2, E4, PromotionPiece::NONE)));
     }
 
     void BoardTests::test_board_generate_pseudolegal_moves_method_does_not_generate_for_black_side_and_pawns_and_barriers()
@@ -487,7 +489,7 @@ namespace peacockspider
       board.generate_pseudolegal_moves(move_pairs);
       CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, C7, C6, PromotionPiece::NONE)));
       CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, C7, C5, PromotionPiece::NONE)));
-      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E7, E5, PromotionPiece::NONE)));      
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E7, E5, PromotionPiece::NONE)));
     }
 
     void BoardTests::test_board_generate_pseudolegal_moves_method_generates_captures_for_white_side_and_pawns()
@@ -510,6 +512,30 @@ namespace peacockspider
       CPPUNIT_ASSERT(2 <= move_pairs.length());
       CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C5, D4, PromotionPiece::NONE)));
       CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, F7, E6, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_moves_method_does_not_generate_captures_for_white_side_and_pawns()
+    {
+      Board board("4k3/8/8/8/8/3P4/4P3/4K3 w - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_moves(move_pairs);
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E2, D3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E2, F3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, D3, C4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, D3, E4, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_moves_method_does_not_generate_captures_for_black_side_and_pawns()
+    {
+      Board board("4k3/4p3/3p4/8/8/8/8/4K3 b - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_moves(move_pairs);
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, D6, C5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, D6, E5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E7, D6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E7, F6, PromotionPiece::NONE)));
     }
 
     void BoardTests::test_board_generate_pseudolegal_moves_method_generates_captures_for_white_side_and_en_passant()

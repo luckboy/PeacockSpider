@@ -64,6 +64,8 @@ namespace peacockspider
       CPPUNIT_TEST(test_board_generate_pseudolegal_moves_method_does_not_generate_for_black_side_and_pawns_and_barriers);
       CPPUNIT_TEST(test_board_generate_pseudolegal_moves_method_generates_captures_for_white_side_and_pawns);
       CPPUNIT_TEST(test_board_generate_pseudolegal_moves_method_generates_captures_for_black_side_and_pawns);
+      CPPUNIT_TEST(test_board_generate_pseudolegal_moves_method_does_not_generate_captures_for_white_side_and_pawns);
+      CPPUNIT_TEST(test_board_generate_pseudolegal_moves_method_does_not_generate_captures_for_black_side_and_pawns);
       CPPUNIT_TEST(test_board_generate_pseudolegal_moves_method_generates_captures_for_white_side_and_en_passant);
       CPPUNIT_TEST(test_board_generate_pseudolegal_moves_method_generates_captures_for_black_side_and_en_passant);
       CPPUNIT_TEST(test_board_generate_pseudolegal_moves_method_generates_moves_for_white_side_and_promotions);
@@ -115,6 +117,8 @@ namespace peacockspider
       void test_board_generate_pseudolegal_moves_method_does_not_generate_for_black_side_and_pawns_and_barriers();
       void test_board_generate_pseudolegal_moves_method_generates_captures_for_white_side_and_pawns();
       void test_board_generate_pseudolegal_moves_method_generates_captures_for_black_side_and_pawns();
+      void test_board_generate_pseudolegal_moves_method_does_not_generate_captures_for_white_side_and_pawns();
+      void test_board_generate_pseudolegal_moves_method_does_not_generate_captures_for_black_side_and_pawns();
       void test_board_generate_pseudolegal_moves_method_generates_captures_for_white_side_and_en_passant();
       void test_board_generate_pseudolegal_moves_method_generates_captures_for_black_side_and_en_passant();
       void test_board_generate_pseudolegal_moves_method_generates_moves_for_white_side_and_promotions();
