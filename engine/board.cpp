@@ -269,7 +269,7 @@ namespace peacockspider
             }
           }
         } else if(has_piece(Piece::QUEEN, from)) {
-          for(int k = 0; k < 4; k++) {
+          for(int k = 0; k < 8; k++) {
             int squ_count = tab_queen_square_counts[from][k];
             for(int l = 0; l < squ_count; l++) {
               Square to = tab_queen_squares[from][k][l];
