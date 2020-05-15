@@ -409,7 +409,7 @@ namespace peacockspider
       CPPUNIT_ASSERT_EQUAL(false, board.has_attack(Side::WHITE, H4));
     }
 
-    void BoardTests::test_board_has_attack_method_returns_false_for_no_barries()
+    void BoardTests::test_board_has_attack_method_returns_false_for_no_barriers()
     {
       Board board("4k3/8/8/8/8/5N2/8/4K3 w - - 0 1");
       CPPUNIT_ASSERT_EQUAL(false, board.has_attack(Side::WHITE, E1));
@@ -470,7 +470,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, F5, F3, PromotionPiece::NONE)));
     }
     
-    void BoardTests::test_board_generate_pseudolegal_moves_method_does_not_generate_for_white_side_and_pawns_and_barriers()
+    void BoardTests::test_board_generate_pseudolegal_moves_method_does_not_generate_moves_for_white_side_and_pawns_and_barriers()
     {
       Board board("4k3/2p1p3/2N5/4n3/4n3/2B5/2P1P3/4K3 w - - 0 1");
       unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
@@ -481,7 +481,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E2, E4, PromotionPiece::NONE)));
     }
 
-    void BoardTests::test_board_generate_pseudolegal_moves_method_does_not_generate_for_black_side_and_pawns_and_barriers()
+    void BoardTests::test_board_generate_pseudolegal_moves_method_does_not_generate_moves_for_black_side_and_pawns_and_barriers()
     {
       Board board("4k3/2p1p3/2N5/4n3/4n3/2B5/2P1P3/4K3 b - - 0 1");
       unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
@@ -739,6 +739,607 @@ namespace peacockspider
       CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::ROOK, G4, H4, PromotionPiece::NONE)));
       CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::ROOK, G4, G3, PromotionPiece::NONE)));
       CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, G4, G2, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_moves_method_generates_moves_for_white_side_and_queen()
+    {
+      Board board("4k3/8/3n4/8/1b3Q2/8/3P4/4K3 w - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_moves(move_pairs);
+      CPPUNIT_ASSERT(20 <= move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, E5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, D6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F4, C7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, F5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, F6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, F7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, F8, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, G5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, H6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, E4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, D4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, C4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, B4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F4, A4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, G4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, H4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, E3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F4, D2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, F3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, F2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, F1, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, G3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F4, H2, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_moves_method_generates_moves_for_black_side_and_queen()
+    {
+      Board board("4k3/8/2q3p1/8/8/5N2/2N5/4K3 b - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_moves(move_pairs);
+      CPPUNIT_ASSERT(19 <= move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, B7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, A8, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, C7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, C8, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, D7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, B6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, A6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, D6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, E6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, F6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, G6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, B5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, A4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, C5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, C4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, C3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, C2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, C1, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, D5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, E4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, F3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, G2, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_moves_method_generates_moves_for_white_side_and_king()
+    {
+      Board board("4k3/8/8/8/8/8/3P1p2/4K3 w - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_moves(move_pairs);
+      CPPUNIT_ASSERT(4 <= move_pairs.length());
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E1, D2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E1, E2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E1, F2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E1, D1, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E1, F1, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_moves_method_generates_moves_for_black_side_and_king()
+    {
+      Board board("4k3/3P1p2/8/8/8/8/8/4K3 b - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_moves(move_pairs);
+      CPPUNIT_ASSERT(4 <= move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E8, D8, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E8, F8, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E8, D7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E8, E7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E8, F7, PromotionPiece::NONE)));
+    }
+    
+    void BoardTests::test_board_generate_pseudolegal_moves_method_generates_all_castlings_for_white_side()
+    {
+      Board board("4k3/8/8/8/8/8/8/R3K2R w KQ - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_moves(move_pairs);
+      CPPUNIT_ASSERT(2 <= move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E1, G1, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E1, C1, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_moves_method_generates_all_castlings_for_black_side()
+    {
+      Board board("r3k2r/8/8/8/8/8/8/4K3 b kq - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_moves(move_pairs);
+      CPPUNIT_ASSERT(2 <= move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E8, G8, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E8, C8, PromotionPiece::NONE)));
+    }
+    
+    void BoardTests::test_board_generate_pseudolegal_moves_method_does_not_generate_all_castlings_for_white_side()
+    {
+      Board board("4k3/8/8/8/8/8/8/R3K1NR w K - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_moves(move_pairs);
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E1, G1, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E1, C1, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_moves_method_does_not_generate_all_castlings_for_black_side()
+    {
+      Board board("rB1nk2r/8/8/8/8/8/8/4K3 b q - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_moves(move_pairs);
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E8, G8, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E8, C8, PromotionPiece::NONE)));
+    }
+    
+    void BoardTests::test_board_generate_pseudolegal_moves_method_generates_moves_for_white_side_and_pieces()
+    {
+      Board board("rnbqkbnr/ppp2ppp/3p4/4p3/4P3/3P4/PPP2PPP/RNBQKBNR w KQkq - 0 3");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_moves(move_pairs);
+      CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(32), move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, B1, A3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, B1, C3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, B1, D2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, C1, D2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, C1, E3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, C1, F4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, C1, G5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, C1, H6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, D1, D2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, D1, E2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, D1, F3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, D1, G4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, D1, H5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E1, D2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E1, E2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, F1, E2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, G1, F3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, G1, H3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, G1, E2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, A2, A3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, A2, A4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, B2, B3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, B2, B4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C2, C3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C2, C4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, F2, F3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, F2, F4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, G2, G3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, G2, G4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, H2, H3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, H2, H4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, D3, D4, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_moves_method_generates_moves_for_black_side_and_pieces()
+    {
+      Board board("rnbqkbnr/ppp2ppp/3p4/4p3/4P3/2NP4/PPP2PPP/R1BQKBNR b KQkq - 0 3");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_moves(move_pairs);
+      CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(32), move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, D6, D5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, A7, A6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, A7, A5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, B7, B6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, B7, B5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C7, C6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C7, C5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, F7, F6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, F7, F5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, G7, G6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, G7, G5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, H7, H6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, H7, H5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, B8, D7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, B8, A6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, B8, C6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, C8, D7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, C8, E6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, C8, F5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, C8, G4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, C8, H3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, D8, D7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, D8, E7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, D8, F6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, D8, G5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, D8, H4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E8, D7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E8, E7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, F8, E7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, G8, E7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, G8, F6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, G8, H6, PromotionPiece::NONE)));
+    }
+    
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_does_not_generate_moves_for_initial_board()
+    {
+      Board board;
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), move_pairs.length());
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_does_not_generate_moves_for_white_side_and_pawns()
+    {
+      Board board("4k3/4p3/8/6p1/2P5/8/4P3/4K3 w - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E2, E3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E2, E4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, C4, C5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, C4, C6, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_does_not_generate_moves_for_black_side_and_pawns()
+    {
+      Board board("4k3/4p3/8/6p1/2P5/8/4P3/4K3 b - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E7, E6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E7, E5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, G5, G4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, G4, G3, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_white_side_and_pawns()
+    {
+      Board board("4k3/8/8/3p4/2P5/3b1b2/4P3/4K3 w - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(3 <= move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, E2, D3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, E2, F3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C4, D5, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_black_side_and_pawns()
+    {
+      Board board("4k3/4p3/5P2/2p5/1B1N4/8/8/4K3 b - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(3 <= move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C5, B4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C5, D4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, E7, F6, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_does_not_generate_captures_for_white_side_and_pawns()
+    {
+      Board board("4k3/8/8/8/8/3P4/4P3/4K3 w - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E2, D3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E2, F3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, D3, C4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, D3, E4, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_does_not_generate_captures_for_black_side_and_pawns()
+    {
+      Board board("4k3/4p3/3p4/8/8/8/8/4K3 b - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, D6, C5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, D6, E5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E7, D6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::PAWN, E7, F6, PromotionPiece::NONE)));
+    }
+    
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_white_side_and_en_passant()
+    {
+      Board board("4k3/8/8/2PpP3/8/8/8/4K3 w - d6 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(2 <= move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C5, D6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, E5, D6, PromotionPiece::NONE)));
+    }
+    
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_black_side_and_en_passant()
+    {
+      Board board("4k3/8/8/8/4pPp1/8/8/4K3 b - f3 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(2 <= move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, E4, F3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, G4, F3, PromotionPiece::NONE)));
+    }
+    
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_moves_for_white_side_and_promotions()
+    {
+      Board board("2n1k3/1P4P1/8/8/8/8/8/4K3 w - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(6 <= move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, B7, B8, PromotionPiece::QUEEN)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, B7, B8, PromotionPiece::KNIGHT)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, B7, C8, PromotionPiece::QUEEN)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, B7, C8, PromotionPiece::KNIGHT)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, G7, G8, PromotionPiece::QUEEN)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, G7, G8, PromotionPiece::KNIGHT)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_moves_for_black_side_and_promotions()
+    {
+      Board board("4k3/8/8/8/8/8/2p4p/1B2K3 b - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(6 <= move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C2, C1, PromotionPiece::QUEEN)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C2, C1, PromotionPiece::KNIGHT)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C2, B1, PromotionPiece::QUEEN)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, C2, B1, PromotionPiece::KNIGHT)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, H2, H1, PromotionPiece::QUEEN)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, H2, H1, PromotionPiece::KNIGHT)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_white_side_and_knights()
+    {
+      Board board("4k3/4p1p1/8/5N2/1N6/4P3/2b5/4K3 w - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(3 <= move_pairs.length());
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, B4, A6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, B4, C6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, B4, D5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, B4, D3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, B4, A2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, B4, C2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, F5, E7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, F5, G7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, F5, D6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, F5, H6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, F5, D4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, F5, H4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, F5, E3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, F5, G3, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_black_side_and_knights()
+    {
+      Board board("4k3/6n1/1p2P3/5B2/2n5/4P3/3P4/4K3 b - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(4 <= move_pairs.length());
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, C4, B6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, C4, D6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, C4, A5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, C4, E5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, C4, A3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, C4, E3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, C4, B2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, C4, D2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, G7, E6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, G7, F5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KNIGHT, G7, H5, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_white_side_and_bishops()
+    {
+      Board board("4k3/8/3P4/8/3p1B2/8/1B1n3p/4K3 w - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(3 <= move_pairs.length());
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, B2, A3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, B2, C3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, B2, D4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, B2, E5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, B2, A1, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, B2, C1, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, F4, E5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, F4, D6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, F4, G5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, F4, E3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, F4, D2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, F4, C1, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, F4, G3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, F4, H2, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_black_side_and_bishops()
+    {
+      Board board("4k3/P7/6b1/2b5/8/p2PP3/8/4K3 b - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(3 <= move_pairs.length());
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, C5, B6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, C5, A7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, C5, D6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, C5, B4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, C5, A3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, C5, D4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, C5, E3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, C5, F2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, G6, F7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, G6, E8, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, G6, H7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, G6, F5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::BISHOP, G6, D3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, G6, C2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::BISHOP, G6, H5, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_white_side_and_rooks()
+    {
+      Board board("4k3/8/1R2p3/8/8/1P2n1R1/8/4K3 w - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(2 <= move_pairs.length());
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, G3, G4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, G3, F3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::ROOK, G3, E3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, G3, D3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, G3, H3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, G3, G2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, B6, B7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, B6, A6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, B6, C6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::ROOK, B6, E6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, B6, F6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, B6, B5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, B6, B3, PromotionPiece::NONE)));
+    }
+    
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_black_side_and_rooks()
+    {
+      Board board("4k3/8/1p2P1r1/8/1r2P1N1/8/8/4K3 b - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(3 <= move_pairs.length());
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, B4, B5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, B4, B6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, B4, A4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, B4, C4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::ROOK, B4, E4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, B4, F4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, B4, B3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, G6, G7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, G6, F6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::ROOK, G6, E6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, G6, D6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, G6, H6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, G6, G5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::ROOK, G6, G4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::ROOK, G6, G3, PromotionPiece::NONE)));
+    }
+    
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_white_side_and_queen()
+    {
+      Board board("4k3/8/5p2/3P3p/8/2n2Q2/8/4K3 w - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(3 <= move_pairs.length());
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F3, E4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F3, D5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F3, F4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F3, F6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F3, F7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F3, G4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F3, H5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F3, E3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, F3, C3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F3, B3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F3, E2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F3, F2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, F3, G2, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_black_side_and_queen()
+    {
+      Board board("4k3/8/2q3N1/8/P7/2P2p2/8/4K3 b - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(3 <= move_pairs.length());
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, B7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, C7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, D7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, B6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, D6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, G6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, H6, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, B5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, A4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, C5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::QUEEN, C6, C3, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, C2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, D5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::QUEEN, C6, F3, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_white_side_and_king()
+    {
+      Board board("4k3/8/8/8/8/8/3pPp2/4K3 w - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(2 <= move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E1, D2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E1, E2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E1, F2, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E1, D1, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E1, F1, PromotionPiece::NONE)));
+    }
+    
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_black_side_and_king()
+    {
+      Board board("4k3/3PpP2/8/8/8/8/8/4K3 b - - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(2 <= move_pairs.length());
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E8, D8, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E8, F8, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E8, D7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E8, E7, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KING, E8, F7, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_does_not_generate_castlings_for_white_side()
+    {
+      Board board("4k3/8/8/8/8/8/8/R3K2R w KQ - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E1, G1, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E1, C1, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_does_not_generate_castlings_for_black_side()
+    {
+      Board board("r3k2r/8/8/8/8/8/8/4K3 b kq - 0 1");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E8, G8, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(!move_pairs.contain_move(Move(Piece::KING, E8, C8, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_white_side_and_pieces()
+    {
+      Board board("r1bqkbnr/ppp2ppp/2n5/3pp3/3PP3/2N5/PPP2PPP/R1BQKBNR w KQkq - 0 4");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(3), move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, C3, D5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, D4, E5, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, E4, D5, PromotionPiece::NONE)));
+    }
+
+    void BoardTests::test_board_generate_pseudolegal_good_moves_method_generates_captures_for_black_side_and_pieces()
+    {
+      Board board("r1bqkbnr/ppp2ppp/2n5/3pp3/3PP3/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 4");
+      unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
+      MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      board.generate_pseudolegal_good_moves(move_pairs);
+      CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(3), move_pairs.length());
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, D5, E4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, E5, D4, PromotionPiece::NONE)));
+      CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, C6, D4, PromotionPiece::NONE)));
     }
   }
 }
