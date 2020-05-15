@@ -82,6 +82,8 @@ namespace peacockspider
         return 'w';
       case Side::BLACK:
         return 'b';
+      default:
+        return 0;
     }
   }
 
@@ -120,6 +122,8 @@ namespace peacockspider
         return 'Q';
       case Piece::KING:
         return 'K';
+      default:
+        return 0;
     }
   }
 
@@ -152,6 +156,8 @@ namespace peacockspider
         return 'R';
       case PromotionPiece::QUEEN:
         return 'Q';
+      default:
+        return 0;
     }
   }
 }
