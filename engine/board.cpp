@@ -208,7 +208,7 @@ namespace peacockspider
     }
   }
 
-  void Board::generate_pseudolegel_good_moves(MovePairList &move_pairs) const
+  void Board::generate_pseudolegal_good_moves(MovePairList &move_pairs) const
   {
     move_pairs.clear();
     Bitboard bbd = color_bitboard(_M_side);

@@ -403,7 +403,7 @@ namespace peacockspider
 
     void generate_pseudolegal_moves(MovePairList &move_pairs) const;
 
-    void generate_pseudolegel_good_moves(MovePairList &move_pairs) const;
+    void generate_pseudolegal_good_moves(MovePairList &move_pairs) const;
 
     bool make_move(Move move, Board &board) const;
   private:
