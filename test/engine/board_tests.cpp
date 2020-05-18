@@ -1341,5 +1341,293 @@ namespace peacockspider
       CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::PAWN, E5, D4, PromotionPiece::NONE)));
       CPPUNIT_ASSERT(move_pairs.contain_move(Move(Piece::KNIGHT, C6, D4, PromotionPiece::NONE)));
     }
+    
+    void BoardTests::test_board_make_move_method_makes_move_for_piece()
+    {
+      Board board("4k3/8/2b5/8/8/2B3N1/8/4K3 w - - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KNIGHT, G3, F5, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/2b5/5N2/8/2B5/8/4K3 b - - 1 1") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_makes_capture_for_piece()
+    {
+      Board board("4k3/8/2b5/8/8/2N2N2/8/4K3 b - - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::BISHOP, C6, F3, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/8/8/8/2N2b2/8/4K3 w - - 0 2") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_makes_capture_for_king_and_captured_pawn()
+    {
+      Board board("4k3/8/8/8/3P4/8/5p2/4K3 w - - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E1, F2, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/8/8/3P4/8/5K2/8 b - - 0 1") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_makes_capture_for_king_and_captured_knight()
+    {
+      Board board("4k3/5n2/8/8/3P4/8/8/4Kn2 w - - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E1, F1, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/5n2/8/8/3P4/8/8/5K2 b - - 0 1") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_makes_capture_for_king_and_captured_bishop()
+    {
+      Board board("4kB2/8/8/5p2/3n4/4B3/8/4K3 b - - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E8, F8, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("5k2/8/8/5p2/3n4/4B3/8/4K3 w - - 0 2") == board2);
+    }
+    
+    void BoardTests::test_board_make_move_method_makes_capture_for_king_and_captured_rook()
+    {
+      Board board("6Rk/8/8/6n1/8/3R1B2/8/4K3 b - - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, H8, G8, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("6k1/8/8/6n1/8/3R1B2/8/4K3 w - - 0 2") == board2);
+    }
+    
+    void BoardTests::test_board_make_move_method_makes_capture_for_king_and_captured_queen()
+    {
+      Board board("4k3/8/8/5b2/3P4/2N5/5q2/4K3 w - - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E1, F2, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/8/5b2/3P4/2N5/5K2/8 b - - 0 1") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_does_not_make_king_move_for_check()
+    {
+      Board board("4k3/8/8/8/8/6n1/8/4K3 w - - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(false, board.make_move(Move(Piece::KING, E1, E2, PromotionPiece::NONE), board2));
+    }
+
+    void BoardTests::test_board_make_move_method_does_not_make_pawn_move_for_check()
+    {
+      Board board("4k3/8/2p5/8/B7/8/8/4K3 b - - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(false, board.make_move(Move(Piece::PAWN, C6, C5, PromotionPiece::NONE), board2));
+    }
+
+    void BoardTests::test_board_make_move_method_makes_move_for_promotion()
+    {
+      Board board("4k3/6P1/8/8/8/2p5/8/4K3 w - - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::PAWN, G7, G8, PromotionPiece::QUEEN), board2));
+      CPPUNIT_ASSERT(Board("4k1Q1/8/8/8/8/2p5/8/4K3 b - - 0 1") == board2);
+    }
+    
+    void BoardTests::test_board_make_move_method_makes_capture_for_promotion()
+    {
+      Board board("4k3/8/8/8/8/8/2p5/1B2K3 b - - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::PAWN, C2, B1, PromotionPiece::KNIGHT), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/8/8/8/8/8/1n2K3 w - - 0 2") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_makes_capture_for_white_side_and_en_passant()
+    {
+      Board board("rnbqkb1r/pp1p1ppp/5n2/1Pp1p3/4P3/8/P1PP1PPP/RNBQKBNR w KQkq c6 0 4");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::PAWN, B5, C6, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("rnbqkb1r/pp1p1ppp/2P2n2/4p3/4P3/8/P1PP1PPP/RNBQKBNR b KQkq - 0 4") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_makes_capture_for_black_side_and_en_passant()
+    {
+      Board board("rnbqkbnr/ppp1p1pp/8/3p4/3PPp2/2N5/PPPB1PPP/R2QKBNR b KQkq e3 0 4");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::PAWN, F4, E3, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("rnbqkbnr/ppp1p1pp/8/3p4/3P4/2N1p3/PPPB1PPP/R2QKBNR w KQkq - 0 5") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_sets_en_passant_column_for_white_side()
+    {
+      Board board("rnbqkbnr/pp1p1ppp/8/4p3/2p1P3/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 0 4");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::PAWN, B2, B4, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("rnbqkbnr/pp1p1ppp/8/4p3/1Pp1P3/2N2N2/P1PP1PPP/R1BQKB1R b KQkq b3 0 4") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_sets_en_passant_column_for_black_side()
+    {
+      Board board("r1bqkbnr/pppp1ppp/2n5/4p1P1/4P3/8/PPPP1P1P/RNBQKBNR b KQkq - 0 3");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::PAWN, F7, F5, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("r1bqkbnr/pppp2pp/2n5/4ppP1/4P3/8/PPPP1P1P/RNBQKBNR w KQkq f6 0 4") == board2);
+    }
+    
+    void BoardTests::test_board_make_move_method_does_not_set_en_passant_column_for_white_side()
+    {
+      Board board("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::PAWN, D2, D4, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("rnbqkbnr/pppp1ppp/8/4p3/3PP3/8/PPP2PPP/RNBQKBNR b KQkq - 0 2") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_does_not_set_en_passant_column_for_black_side()
+    {
+      Board board("rnbqkbnr/pppp1ppp/8/4p3/3PP3/8/PPP2PPP/RNBQKBNR b KQkq - 0 2");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::PAWN, D7, D5, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("rnbqkbnr/ppp2ppp/8/3pp3/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 3") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_removes_white_short_castling_for_white_side()
+    {
+      Board board("4k3/8/8/8/8/8/8/R3K2R w KQ - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::ROOK, H1, H4, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/8/8/7R/8/8/R3K3 b Q - 1 1") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_removes_black_short_castling_for_black_side()
+    {
+      Board board("r3k2r/8/8/8/8/8/8/4K3 b kq - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::ROOK, H8, H5, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("r3k3/8/8/7r/8/8/8/4K3 w q - 1 2") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_removes_white_long_castling_for_white_side()
+    {
+      Board board("4k3/8/8/8/8/8/8/R3K2R w KQ - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::ROOK, A1, C1, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/8/8/8/8/8/2R1K2R b K - 1 1") == board2);
+    }
+    
+    void BoardTests::test_board_make_move_method_removes_black_long_castling_for_black_side()
+    {
+      Board board("r3k2r/8/8/8/8/8/8/4K3 b kq - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::ROOK, A8, C8, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("2r1k2r/8/8/8/8/8/8/4K3 w k - 1 2") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_removes_all_white_castling_for_white_side()
+    {
+      Board board("4k3/8/8/8/8/8/8/R3K2R w KQ - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E1, E2, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/8/8/8/8/4K3/R6R b - - 1 1") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_removes_all_black_castling_for_black_side()
+    {
+      Board board("r3k2r/8/8/8/8/8/8/4K3 b kq - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E8, E7, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("r6r/4k3/8/8/8/8/8/4K3 w - - 1 2") == board2);
+    }
+    
+    void BoardTests::test_board_make_move_method_removes_black_short_castling_for_white_side()
+    {
+      Board board("r3k2r/8/8/8/3B4/8/8/4K3 w kq - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::BISHOP, D4, H8, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("r3k2B/8/8/8/8/8/8/4K3 b q - 0 1") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_removes_white_short_castling_for_black_side()
+    {
+      Board board("4k3/8/8/3b4/8/8/8/R3K2R b KQ - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::BISHOP, D5, H1, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/8/8/8/8/8/R3K2b w Q - 0 2") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_removes_black_long_castling_for_white_side()
+    {
+      Board board("r3k2r/8/8/8/R7/8/8/4K3 w kq - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::ROOK, A4, A8, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("R3k2r/8/8/8/8/8/8/4K3 b k - 0 1") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_removes_white_long_castling_for_black_side()
+    {
+      Board board("4k3/8/8/r7/8/8/8/R3K2R b KQ - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::ROOK, A5, A1, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/8/8/8/8/8/r3K2R w K - 0 2") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_makes_short_castling_for_white_side()
+    {
+      Board board("4k3/8/8/8/8/8/8/R3K2R w KQ - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E1, G1, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/8/8/8/8/8/R4RK1 b - - 1 1") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_makes_short_castling_for_black_side()
+    {
+      Board board("r3k2r/8/8/8/8/8/8/4K3 b kq - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E8, G8, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("r4rk1/8/8/8/8/8/8/4K3 w - - 1 2") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_makes_long_castling_for_white_side()
+    {
+      Board board("4k3/8/8/8/8/8/8/R3K2R w KQ - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E1, C1, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/8/8/8/8/8/2KR3R b - - 1 1") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_makes_long_castling_for_black_side()
+    {
+      Board board("r3k2r/8/8/8/8/8/8/4K3 b kq - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E8, C8, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("2kr3r/8/8/8/8/8/8/4K3 w - - 1 2") == board2);
+    }
+
+    void BoardTests::test_board_make_move_method_does_not_make_short_castling_for_check_before_castling()
+    {
+      Board board("4k3/8/8/8/8/6b1/8/R3K2R w KQ - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(false, board.make_move(Move(Piece::KING, E1, G1, PromotionPiece::NONE), board2));
+    }
+
+    void BoardTests::test_board_make_move_method_does_not_make_short_castling_for_attack_to_rook_destination_square()
+    {
+      Board board("r3k2r/8/8/8/8/8/8/4KR2 b kq - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(false, board.make_move(Move(Piece::KING, E8, G8, PromotionPiece::NONE), board2));
+    }
+    
+    void BoardTests::test_board_make_move_method_does_not_make_short_castling_for_check_after_castling()
+    {
+      Board board("4k3/8/8/8/8/7n/8/R3K2R w KQ - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(false, board.make_move(Move(Piece::KING, E1, G1, PromotionPiece::NONE), board2));
+    }
+
+    void BoardTests::test_board_make_move_method_does_not_make_long_castling_for_check_before_castling()
+    {
+      Board board("4k3/8/4q3/8/8/8/8/R3K2R w KQ - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(false, board.make_move(Move(Piece::KING, E1, C1, PromotionPiece::NONE), board2));
+    }
+
+    void BoardTests::test_board_make_move_method_does_not_make_long_castling_for_attack_to_rook_destination_square()
+    {
+      Board board("r3k2r/8/1B6/8/8/8/8/4K3 b kq - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(false, board.make_move(Move(Piece::KING, E8, C8, PromotionPiece::NONE), board2));
+    }
+
+    void BoardTests::test_board_make_move_method_does_not_make_long_castling_for_check_after_castling()
+    {
+      Board board("4k3/8/8/8/2r5/8/8/R3K2R w KQ - 0 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(false, board.make_move(Move(Piece::KING, E1, C1, PromotionPiece::NONE), board2));
+    }
   }
 }
