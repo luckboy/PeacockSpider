@@ -393,6 +393,8 @@ namespace peacockspider
             board.set_side_castlings(_M_side, side_castlings(_M_side) & ~SideCastlings::SHORT);
           else if(move.from() == (_M_side == Side::WHITE ? A1 : A8))
             board.set_side_castlings(_M_side, side_castlings(_M_side) & ~SideCastlings::LONG);
+          else
+            board.set_side_castlings(_M_side, side_castlings(_M_side));
           break;
         case Piece::KING:
           board.set_side_castlings(_M_side, SideCastlings::NONE);
