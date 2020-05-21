@@ -81,11 +81,12 @@ namespace peacockspider
       set_to(dst);
       iter += 2;
       // Sets promotion piece.
-      if(iter == str.end()) return false;
       bool must_promotion = false;
-      if(*iter == '=') {
-        must_promotion = true;
-        iter++;
+      if(iter != str.end()) {
+        if(*iter == '=') {
+          must_promotion = true;
+          iter++;
+        }
       }
       if(iter != str.end()) {
         PromotionPiece tmp_promotion_piece = char_to_promotion_piece(*iter);
