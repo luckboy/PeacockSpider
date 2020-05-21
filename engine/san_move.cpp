@@ -117,6 +117,7 @@ namespace peacockspider
     }
     while(iter != str.end()) {
       if(*iter != '!' && *iter != '?') break;
+      iter++;
     }
     if(iter != str.end()) return false;
     return true;
