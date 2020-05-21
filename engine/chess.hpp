@@ -27,6 +27,9 @@
 
 namespace peacockspider
 {
+  class Board;
+  class MovePairList;
+
   enum class Side
   {
     WHITE = 0,
@@ -71,6 +74,16 @@ namespace peacockspider
   inline std::size_t promotion_piece_to_index(PromotionPiece promotion_piece)
   { return static_cast<std::size_t>(promotion_piece); }
 
+  inline bool equal_for_promotion(PromotionPiece promotion_piece1, PromotionPiece promotion_piece2)
+  {
+    if(promotion_piece1 == PromotionPiece::QUEEN)
+      return promotion_piece2 == PromotionPiece::QUEEN ||
+        promotion_piece2 == PromotionPiece::ROOK ||
+        promotion_piece2 == PromotionPiece::BISHOP;
+    else
+      return promotion_piece1 == promotion_piece2;
+  }
+
   enum class SideCastlings
   {
     NONE = 0,
@@ -99,6 +112,161 @@ namespace peacockspider
   inline SideCastlings operator^=(SideCastlings &castlings1, SideCastlings castlings2)
   { castlings1 = castlings1 ^ castlings2; return castlings1; }
 
+  class CANMove
+  {
+    Square _M_from;
+    Square _M_to;
+    PromotionPiece _M_promotion_piece;
+  public:
+    CANMove() {}
+
+    CANMove(Square from, Square to, PromotionPiece promotion_piece) :
+      _M_from(from), _M_to(to), _M_promotion_piece(promotion_piece) {}
+
+    explicit CANMove(const std::string &str);
+      
+    bool operator==(const CANMove &move) const
+    {
+      return _M_from == move._M_from &&
+        _M_to == move._M_to &&
+        _M_promotion_piece == move._M_promotion_piece;
+    }
+
+    bool operator!=(const CANMove &move) const
+    { return !(*this == move); }
+    
+    Square from() const
+    { return _M_from; }
+
+    void set_from(Square from)
+    { _M_from = from; }
+
+    Square to() const
+    { return _M_to; }
+
+    void set_to(Square to)
+    { _M_to = to; }
+
+    PromotionPiece promotion_piece() const
+    { return _M_promotion_piece; }
+    
+    void set_promotion_piece(PromotionPiece promotion_piece)
+    { _M_promotion_piece = promotion_piece; }
+  private:
+    bool unsafely_set(const std::string &str);
+  public:
+    bool set(const std::string &str);
+
+    std::string to_string() const;
+  };
+
+  enum class SANMoveFlags
+  {
+    NONE = 0,
+    CAPTURE = 1,
+    SHORT_CASTLING = 2,
+    LONG_CASTLING = 4,
+    CHECK = 8,
+    CHECKMATE = 16
+  };
+
+  inline SANMoveFlags operator~(SANMoveFlags flags)
+  { return static_cast<SANMoveFlags>(static_cast<int>(flags) ^ 31); }
+
+  inline SANMoveFlags operator&(SANMoveFlags flags1, SANMoveFlags flags2)
+  { return static_cast<SANMoveFlags>(static_cast<int>(flags1) & static_cast<int>(flags2)); }
+
+  inline SANMoveFlags operator&=(SANMoveFlags &flags1, SANMoveFlags flags2)
+  { flags1 = flags1 & flags2; return flags1; }
+
+  inline SANMoveFlags operator|(SANMoveFlags flags1, SANMoveFlags flags2)
+  { return static_cast<SANMoveFlags>(static_cast<int>(flags1) | static_cast<int>(flags2)); }
+
+  inline SANMoveFlags operator|=(SANMoveFlags &flags1, SANMoveFlags flags2)
+  { flags1 = flags1 | flags2; return flags1; }
+  
+  inline SANMoveFlags operator^(SANMoveFlags flags1, SANMoveFlags flags2)
+  { return static_cast<SANMoveFlags>(static_cast<int>(flags1) ^ static_cast<int>(flags2)); }
+
+  inline SANMoveFlags operator^=(SANMoveFlags &flags1, SANMoveFlags flags2)
+  { flags1 = flags1 ^ flags2; return flags1; }
+
+  class SANMove
+  {
+    Piece _M_piece;
+    Column _M_from_column;
+    Row _M_from_row;
+    Square _M_to;
+    PromotionPiece _M_promotion_piece;
+    SANMoveFlags _M_flags;
+  public:
+    SANMove() {}
+    
+    SANMove(Piece piece, Column from_col, Row from_row, Square to, PromotionPiece promotion_piece, SANMoveFlags flags) :
+      _M_piece(piece), _M_from_column(from_col), _M_from_row(from_row), _M_to(to), _M_promotion_piece(promotion_piece), _M_flags(flags) {}
+      
+    SANMove(bool is_short_castling) :
+      _M_piece(Piece::KING), _M_from_column(-1), _M_from_row(-1), _M_to(-1), _M_promotion_piece(PromotionPiece::NONE),
+      _M_flags(is_short_castling ? SANMoveFlags::SHORT_CASTLING : SANMoveFlags::LONG_CASTLING) {}
+
+    explicit SANMove(const std::string &str);
+
+    bool operator==(const SANMove &move) const
+    {
+      return _M_piece == move._M_piece &&
+        _M_from_column == move._M_from_column &&
+        _M_from_row == move._M_from_row &&
+        _M_to == move._M_to &&
+        _M_promotion_piece == move._M_promotion_piece &&
+        _M_flags == move._M_flags;
+    }
+
+    bool operator!=(const SANMove &move) const
+    { return !(*this == move); }
+
+    Piece piece() const
+    { return _M_piece; }
+
+    void set_piece(Piece piece)
+    { _M_piece = piece; }
+
+    Column from_column() const
+    { return _M_from_column; }
+
+    void set_from_column(Column from_col)
+    { _M_from_column = from_col; }
+
+    Row from_row() const
+    { return _M_from_row; }
+
+    void set_from_row(Row from_row)
+    { _M_from_row = from_row; }
+
+    Square to() const
+    { return _M_to; }
+
+    void set_to(Square to)
+    { _M_to = to; }
+
+    PromotionPiece promotion_piece() const
+    { return _M_promotion_piece; }
+
+    void set_promotion_piece(PromotionPiece promotion_piece)
+    { _M_promotion_piece = promotion_piece; }
+
+    SANMoveFlags flags() const
+    { return _M_flags; }
+
+    void set_flags(SANMoveFlags flags)
+    { _M_flags = flags; }
+  private:
+    bool unsafely_set(const std::string &str);
+  public:
+    bool set(const std::string &str);
+
+    std::string to_string() const;
+  };
+  
   class Move
   {
     std::int8_t _M_piece;
@@ -111,6 +279,12 @@ namespace peacockspider
     Move(Piece piece, Square from, Square to, PromotionPiece promotion_piece) :
       _M_piece(static_cast<std::int8_t>(piece)), _M_from(from), _M_to(to), _M_promotion_piece(static_cast<std::int8_t>(promotion_piece)) {}
 
+    Move(const CANMove &move, const Board &board, MovePairList &move_pairs);
+
+    Move(const SANMove &move, const Board &board, MovePairList &move_pairs);
+
+    Move(const std::string &str, const Board &board, MovePairList &move_pairs, bool is_can = true);
+
     bool operator==(const Move &move) const
     {
       return _M_piece == move._M_piece &&
@@ -121,18 +295,72 @@ namespace peacockspider
 
     bool operator!=(const Move &move) const
     { return !(*this == move); }
+    
+    bool equal_for_promotion(const Move &move) const
+    {
+      return _M_piece == move._M_piece &&
+        _M_from == move._M_from &&
+        _M_to == move._M_to &&
+        ::peacockspider::equal_for_promotion(static_cast<PromotionPiece>(_M_promotion_piece), static_cast<PromotionPiece>(move._M_promotion_piece));
+    }
 
     const Piece piece() const
     { return static_cast<Piece>(_M_piece); }
+    
+    void set_piece(Piece piece)
+    { _M_piece = static_cast<std::int8_t>(piece); }
 
     const Square from() const
     { return _M_from; }
     
+    void set_from(Square from)
+    { _M_from = from; }
+    
     const Square to() const
     { return _M_to; }
 
+    void set_to(Square to)
+    { _M_to = to; }
+
     const PromotionPiece promotion_piece() const
     { return static_cast<PromotionPiece>(_M_promotion_piece); }
+
+    void set_promotion_piece(PromotionPiece promotion_piece)
+    { _M_promotion_piece = static_cast<std::int8_t>(promotion_piece); }
+    
+    bool is_capture(const Board &board) const;
+  private:
+    bool is_check(const Board &board) const;
+
+    bool is_checkmate(const Board &board, MovePairList &move_pairs) const;
+  public:
+    bool set_can(const CANMove &move, const Board &board, MovePairList &move_pairs);
+
+    bool set_can(const std::string &str, const Board &board, MovePairList &move_pairs)
+    {
+      CANMove tmp_move;
+      if(!tmp_move.set(str)) return false;
+      return set_can(tmp_move, board, move_pairs);
+    }
+
+    bool set_san(const SANMove &move, const Board &board, MovePairList &move_pairs);
+  
+    bool set_san(const std::string &str, const Board &board, MovePairList &move_pairs)
+    {
+      SANMove tmp_move;
+      if(!tmp_move.set(str)) return false;
+      return set_san(tmp_move, board, move_pairs);
+    }
+
+    CANMove to_can_move() const;
+
+    SANMove to_san_move(const Board &board, MovePairList &move_pairs) const;
+    
+    std::string to_string() const
+    { return to_can_move().to_string(); }
+    
+    std::string to_string(const Board &board, MovePairList &move_pairs) const
+    { return to_san_move(board, move_pairs).to_string(); }
   };
 
   struct MovePair
@@ -406,6 +634,8 @@ namespace peacockspider
     void generate_pseudolegal_good_moves(MovePairList &move_pairs) const;
 
     bool make_move(Move move, Board &board) const;
+
+    bool has_legal_move(Move move) const;
   private:
     bool unsafely_set(const std::string &str);
   public:
@@ -437,6 +667,10 @@ namespace peacockspider
   PromotionPiece char_to_promotion_piece(char c);
 
   char promotion_piece_to_char(PromotionPiece promotion_piece);
+
+  bool is_column_char(char c);
+
+  bool is_row_char(char c);
 }
 
 #endif

@@ -160,4 +160,10 @@ namespace peacockspider
         return 0;
     }
   }
+  
+  bool is_column_char(char c)
+  { return c >= 'a' && c <= 'h'; }
+  
+  bool is_row_char(char c)
+  { return c >= '1' && c <= '8'; }
 }

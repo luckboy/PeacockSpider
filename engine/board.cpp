@@ -425,6 +425,12 @@ namespace peacockspider
     return !board.in_check(_M_side);
   }
   
+  bool Board::has_legal_move(Move move) const
+  {
+    Board tmp_board;
+    return make_move(move, tmp_board);
+  }
+  
   bool Board::unsafely_set(const string &str)
   {
     auto iter = str.begin();
