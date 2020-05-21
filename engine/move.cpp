@@ -92,8 +92,8 @@ namespace peacockspider
       Move tmp_move = move_pairs[i].move;
       if(board.has_legal_move(tmp_move)) {
         if((move.flags() & (SANMoveFlags::SHORT_CASTLING | SANMoveFlags::LONG_CASTLING)) != SANMoveFlags::NONE ?
-          (tmp_move.piece() == Piece::KING && tmp_move.from() == castling_src && move.to() == short_castling_dst && tmp_move.promotion_piece() == PromotionPiece::NONE) ||
-          (tmp_move.piece() == Piece::KING && tmp_move.from() == castling_src && move.to() == long_castling_dst && tmp_move.promotion_piece() == PromotionPiece::NONE) :
+          ((move.flags() & SANMoveFlags::SHORT_CASTLING) != SANMoveFlags::NONE && tmp_move.piece() == Piece::KING && tmp_move.from() == castling_src && tmp_move.to() == short_castling_dst && tmp_move.promotion_piece() == PromotionPiece::NONE) ||
+          ((move.flags() & SANMoveFlags::LONG_CASTLING) != SANMoveFlags::NONE && tmp_move.piece() == Piece::KING && tmp_move.from() == castling_src && tmp_move.to() == long_castling_dst && tmp_move.promotion_piece() == PromotionPiece::NONE) :
           (move.from_column() != -1 ? (tmp_move.from() & 7) == move.from_column() : true) &&
           (move.from_row() != -1 ? (tmp_move.from() >> 3) == move.from_row() : true) &&
           move.to() == tmp_move.to() &&
