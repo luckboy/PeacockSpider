@@ -87,13 +87,16 @@ namespace peacockspider
         must_promotion = true;
         iter++;
       }
-      if(iter == str.end()) return false;
-      PromotionPiece tmp_promotion_piece = char_to_promotion_piece(*iter);
-      if(tmp_promotion_piece == PromotionPiece::NONE) {
-        if(must_promotion) return false;
+      if(iter != str.end()) {
+        PromotionPiece tmp_promotion_piece = char_to_promotion_piece(*iter);
+        if(tmp_promotion_piece == PromotionPiece::NONE) {
+          if(must_promotion) return false;
+        } else {
+          set_promotion_piece(tmp_promotion_piece);
+          iter++;
+        }
       } else {
-        set_promotion_piece(tmp_promotion_piece);
-        iter++;
+        if(must_promotion) return false;
       }
     }
     // Sets flags for check and checkmate.
