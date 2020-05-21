@@ -146,8 +146,8 @@ namespace peacockspider
       else
         move = SANMove(false);
     } else {
-      bool must_src_col = false;
-      bool must_src_row = false;
+      bool must_be_src_col = false;
+      bool must_be_src_row = false;
       bool is_ambiguous = false;
       move.set_flags(SANMoveFlags::NONE);
       for(size_t i = 0; i < move_pairs.length(); i++) {
@@ -157,17 +157,17 @@ namespace peacockspider
             is_found = true;
           } else if(tmp_move.piece() == piece() && tmp_move.to() == to() &&
             ::peacockspider::equal_for_promotion(tmp_move.promotion_piece(), promotion_piece()))  {
-            if((tmp_move.from() & 7) == (from() & 7)) must_src_row = true;
-            if((tmp_move.from() >> 3) == (from() >> 3)) must_src_col = true;
+            if((tmp_move.from() & 7) == (from() & 7)) must_be_src_row = true;
+            if((tmp_move.from() >> 3) == (from() >> 3)) must_be_src_col = true;
             is_ambiguous = true;
           }
         }
       }      
-      if(is_ambiguous && !must_src_col && !must_src_row) must_src_col = true;
-      if(!must_src_col && !must_src_row && piece() == Piece::PAWN && is_capture(board)) must_src_col = true;
+      if(is_ambiguous && !must_be_src_col && !must_be_src_row) must_be_src_col = true;
+      if(!must_be_src_col && !must_be_src_row && piece() == Piece::PAWN && is_capture(board)) must_be_src_col = true;
       move.set_piece(piece());
-      move.set_from_column(must_src_col ? (from() & 7) : -1);
-      move.set_from_row(must_src_row ? (from() >> 3) : -1);
+      move.set_from_column(must_be_src_col ? (from() & 7) : -1);
+      move.set_from_row(must_be_src_row ? (from() >> 3) : -1);
       move.set_to(to());
       move.set_promotion_piece(promotion_piece());
       if(is_capture(board)) move.set_flags(move.flags() | SANMoveFlags::CAPTURE);
