@@ -106,8 +106,7 @@ namespace peacockspider
     }
     if(is_found) {
       if((move.flags() & SANMoveFlags::CAPTURE) != SANMoveFlags::NONE) {
-        Square en_passant_squ = (board.en_passant_column() != -1 ? board.en_passant_column() + (board.side() == Side::WHITE ? 050 : 020) : -1);
-        if(board.color(move.to()) == Color::EMPTY && move.to() != en_passant_squ) return false;
+        if(!found_move.is_capture(board)) return false;
       }
       if((move.flags() & SANMoveFlags::CHECK) != SANMoveFlags::NONE) {
         if(!found_move.is_check(board)) return false;
