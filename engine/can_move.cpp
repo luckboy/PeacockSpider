@@ -72,7 +72,7 @@ namespace peacockspider
     str += square_to_string(from());
     str += square_to_string(to());
     char c = promotion_piece_to_char(promotion_piece());
-    if(c != 0) str += c;
+    if(c != 0) str += static_cast<char>(tolower(c));
     return str;
   }
 }
