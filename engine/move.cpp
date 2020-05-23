@@ -53,17 +53,10 @@ namespace peacockspider
   {
     Board tmp_board;
     board.make_move(*this, tmp_board);
-    if(tmp_board.in_check()) {
-      tmp_board.generate_pseudolegal_moves(move_pairs);
-      for(size_t i = 0; i < move_pairs.length(); i++) {
-        if(tmp_board.has_legal_move(move_pairs[i].move)) return false;
-      }
-      return true;
-    } else
-      return false;
+    return tmp_board.in_checkmate(move_pairs);
   }
- 
- bool Move::set_can(const CANMove &move, const Board &board, MovePairList &move_pairs)
+
+  bool Move::set_can(const CANMove &move, const Board &board, MovePairList &move_pairs)
   {
     board.generate_pseudolegal_moves(move_pairs);
     for(size_t i = 0; i < move_pairs.length(); i++) {

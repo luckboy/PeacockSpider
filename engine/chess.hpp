@@ -329,11 +329,11 @@ namespace peacockspider
     { _M_promotion_piece = static_cast<std::int8_t>(promotion_piece); }
     
     bool is_capture(const Board &board) const;
-  private:
+
     bool is_check(const Board &board) const;
 
     bool is_checkmate(const Board &board, MovePairList &move_pairs) const;
-  public:
+
     bool set_can(const CANMove &move, const Board &board, MovePairList &move_pairs);
 
     bool set_can(const std::string &str, const Board &board, MovePairList &move_pairs)
@@ -628,7 +628,7 @@ namespace peacockspider
 
     bool in_check(Side side) const
     { return has_attack(side, _M_king_squares[side_to_index(side)]); }
-
+    
     void generate_pseudolegal_moves(MovePairList &move_pairs) const;
 
     void generate_pseudolegal_good_moves(MovePairList &move_pairs) const;
@@ -636,6 +636,10 @@ namespace peacockspider
     bool make_move(Move move, Board &board) const;
 
     bool has_legal_move(Move move) const;
+
+    bool in_checkmate(MovePairList &move_pairs) const;
+    
+    bool in_stalemate(MovePairList &move_pairs) const;
   private:
     bool unsafely_set(const std::string &str);
   public:

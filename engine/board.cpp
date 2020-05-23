@@ -431,6 +431,30 @@ namespace peacockspider
     return make_move(move, tmp_board);
   }
   
+  bool Board::in_checkmate(MovePairList &move_pairs) const
+  {
+    if(in_check()) {
+      generate_pseudolegal_moves(move_pairs);
+      for(size_t i = 0; i < move_pairs.length(); i++) {
+        if(has_legal_move(move_pairs[i].move)) return false;
+      }
+      return true;
+    } else
+      return false;
+  }
+
+  bool Board::in_stalemate(MovePairList &move_pairs) const
+  {
+    if(!in_check()) {
+      generate_pseudolegal_moves(move_pairs);
+      for(size_t i = 0; i < move_pairs.length(); i++) {
+        if(has_legal_move(move_pairs[i].move)) return false;
+      }
+      return true;
+    } else
+      return false;
+  }
+  
   bool Board::unsafely_set(const string &str)
   {
     auto iter = str.begin();
