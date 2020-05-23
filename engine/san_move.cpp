@@ -33,7 +33,7 @@ namespace peacockspider
       iter += 3;
     } else if(str.length() >= 5 && string(iter, iter + 5) == "O-O-O") {
       *this = SANMove(false);
-      iter += 3;
+      iter += 5;
     } else {
       // Sets piece.
       if(iter == str.end()) return false;
