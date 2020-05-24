@@ -204,8 +204,8 @@ namespace peacockspider
     
     SANMove(Piece piece, Column from_col, Row from_row, Square to, PromotionPiece promotion_piece, SANMoveFlags flags) :
       _M_piece(piece), _M_from_column(from_col), _M_from_row(from_row), _M_to(to), _M_promotion_piece(promotion_piece), _M_flags(flags) {}
-      
-    SANMove(bool is_short_castling) :
+
+    explicit SANMove(bool is_short_castling) :
       _M_piece(Piece::KING), _M_from_column(-1), _M_from_row(-1), _M_to(-1), _M_promotion_piece(PromotionPiece::NONE),
       _M_flags(is_short_castling ? SANMoveFlags::SHORT_CASTLING : SANMoveFlags::LONG_CASTLING) {}
 
