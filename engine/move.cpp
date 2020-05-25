@@ -66,6 +66,7 @@ namespace peacockspider
           tmp_move.to() == move.to() &&
           ::peacockspider::equal_for_promotion(tmp_move.promotion_piece(), move.promotion_piece())) {
           *this = tmp_move;
+          set_promotion_piece(move.promotion_piece());
           return true;
         }
       }
@@ -87,10 +88,11 @@ namespace peacockspider
         if((move.flags() & (SANMoveFlags::SHORT_CASTLING | SANMoveFlags::LONG_CASTLING)) != SANMoveFlags::NONE ?
           ((move.flags() & SANMoveFlags::SHORT_CASTLING) != SANMoveFlags::NONE && tmp_move.piece() == Piece::KING && tmp_move.from() == castling_src && tmp_move.to() == short_castling_dst && tmp_move.promotion_piece() == PromotionPiece::NONE) ||
           ((move.flags() & SANMoveFlags::LONG_CASTLING) != SANMoveFlags::NONE && tmp_move.piece() == Piece::KING && tmp_move.from() == castling_src && tmp_move.to() == long_castling_dst && tmp_move.promotion_piece() == PromotionPiece::NONE) :
+          tmp_move.piece() == move.piece() &&
           (move.from_column() != -1 ? (tmp_move.from() & 7) == move.from_column() : true) &&
           (move.from_row() != -1 ? (tmp_move.from() >> 3) == move.from_row() : true) &&
-          move.to() == tmp_move.to() &&
-          ::peacockspider::equal_for_promotion(move.promotion_piece(), tmp_move.promotion_piece())) {
+          tmp_move.to() == move.to() &&
+          ::peacockspider::equal_for_promotion(tmp_move.promotion_piece(), move.promotion_piece())) {
           if(is_found) return false;
           found_move = tmp_move;
           is_found = true;
@@ -107,6 +109,7 @@ namespace peacockspider
         if(!found_move.is_checkmate(board, move_pairs)) return false;
       }
       *this = found_move;
+      set_promotion_piece(move.promotion_piece());
       return true;
     } else
       return false;
