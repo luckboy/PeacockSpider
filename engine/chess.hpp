@@ -356,10 +356,10 @@ namespace peacockspider
 
     SANMove to_san_move(const Board &board, MovePairList &move_pairs) const;
     
-    std::string to_string() const
+    std::string to_can_string() const
     { return to_can_move().to_string(); }
     
-    std::string to_string(const Board &board, MovePairList &move_pairs) const
+    std::string to_san_string(const Board &board, MovePairList &move_pairs) const
     { return to_san_move(board, move_pairs).to_string(); }
   };
 
