@@ -336,7 +336,43 @@ namespace peacockspider
       CPPUNIT_ASSERT_EQUAL(true, board.set("r1bqkb1r/ppp2ppp/2n1pn2/3p4/4P3/2NB1N2/PPPP1PPP/R1BQK2R w KQkq - 0 5"));
       CPPUNIT_ASSERT_EQUAL(5, board.fullmove_number());
     }
-    
+
+    void BoardTests::test_board_set_method_complains_on_incorrect_pieces()
+    {
+      Board board;
+      CPPUNIT_ASSERT_EQUAL(false, board.set("rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N5/PPPP1PPP/X1BQKBNR w KQkq - 0 3"));
+    }
+
+    void BoardTests::test_board_set_method_complains_on_incorrect_side()
+    {
+      Board board;
+      CPPUNIT_ASSERT_EQUAL(false, board.set("rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR x KQkq - 0 3"));
+    }
+
+    void BoardTests::test_board_set_method_complains_on_incorrect_castlings()
+    {
+      Board board;
+      CPPUNIT_ASSERT_EQUAL(false, board.set("rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR w XQkq - 0 3"));
+    }
+
+    void BoardTests::test_board_set_method_complains_on_incorrect_en_passant_square()
+    {
+      Board board;
+      CPPUNIT_ASSERT_EQUAL(false, board.set("rnbqkbnr/pp1p1ppp/8/4p3/2pPP3/5N2/PPP1BPPP/RNBQK2R b KQkq x3 0 4"));
+    }
+
+    void BoardTests::test_board_set_method_complains_on_incorrect_halfmove_clock()
+    {
+      Board board;
+      CPPUNIT_ASSERT_EQUAL(false, board.set("rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR w KQkq - 0x 3"));
+    }
+
+    void BoardTests::test_board_set_method_complains_on_incorrect_fullmove_number()
+    {
+      Board board;
+      CPPUNIT_ASSERT_EQUAL(false, board.set("rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR w KQkq - 0 x"));
+    }
+
     void BoardTests::test_board_to_string_method_converts_board_to_string()
     {
       Board board("r1bqkb1r/ppp1pppp/2n2n2/3p4/3P4/5N2/PPPBPPPP/RN1QKB1R w KQkq - 0 4");

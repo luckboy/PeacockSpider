@@ -44,6 +44,12 @@ namespace peacockspider
       CPPUNIT_TEST(test_board_set_method_sets_en_passant_column_for_no_en_passant_square);
       CPPUNIT_TEST(test_board_set_method_sets_halfmove_clock);
       CPPUNIT_TEST(test_board_set_method_sets_fullmove_number);
+      CPPUNIT_TEST(test_board_set_method_complains_on_incorrect_pieces);
+      CPPUNIT_TEST(test_board_set_method_complains_on_incorrect_side);
+      CPPUNIT_TEST(test_board_set_method_complains_on_incorrect_castlings);
+      CPPUNIT_TEST(test_board_set_method_complains_on_incorrect_en_passant_square);
+      CPPUNIT_TEST(test_board_set_method_complains_on_incorrect_halfmove_clock);
+      CPPUNIT_TEST(test_board_set_method_complains_on_incorrect_fullmove_number);
       CPPUNIT_TEST(test_board_to_string_method_converts_board_to_string);
       CPPUNIT_TEST(test_board_to_string_method_converts_board_to_string_for_white_side_and_en_passant);
       CPPUNIT_TEST(test_board_to_string_method_converts_board_to_string_for_black_side_and_en_passant);
@@ -169,6 +175,12 @@ namespace peacockspider
       void test_board_set_method_sets_en_passant_column_for_no_en_passant_square();
       void test_board_set_method_sets_halfmove_clock();
       void test_board_set_method_sets_fullmove_number();
+      void test_board_set_method_complains_on_incorrect_pieces();
+      void test_board_set_method_complains_on_incorrect_side();
+      void test_board_set_method_complains_on_incorrect_castlings();
+      void test_board_set_method_complains_on_incorrect_en_passant_square();
+      void test_board_set_method_complains_on_incorrect_halfmove_clock();
+      void test_board_set_method_complains_on_incorrect_fullmove_number();
       void test_board_to_string_method_converts_board_to_string();
       void test_board_to_string_method_converts_board_to_string_for_white_side_and_en_passant();
       void test_board_to_string_method_converts_board_to_string_for_black_side_and_en_passant();
