@@ -28,12 +28,12 @@ namespace peacockspider
   {
     auto iter = str.begin();
     set_flags(SANMoveFlags::NONE);
-    if(str.length() >= 3 && string(iter, iter + 3) == "O-O") {
-      *this = SANMove(true);
-      iter += 3;
-    } else if(str.length() >= 5 && string(iter, iter + 5) == "O-O-O") {
-      *this = SANMove(false);
+    if(str.length() >= 5 && string(iter, iter + 5) == "O-O-O") {
+      *this = SANMove(false, SANMoveFlags::NONE);
       iter += 5;
+    } else if(str.length() >= 3 && string(iter, iter + 3) == "O-O") {
+      *this = SANMove(true, SANMoveFlags::NONE);
+      iter += 3;
     } else {
       // Sets piece.
       if(iter == str.end()) return false;
@@ -82,6 +82,7 @@ namespace peacockspider
       iter += 2;
       // Sets promotion piece.
       bool must_promotion = false;
+      set_promotion_piece(PromotionPiece::NONE);
       if(iter != str.end()) {
         if(*iter == '=') {
           must_promotion = true;
@@ -104,11 +105,11 @@ namespace peacockspider
     if(iter != str.end()) {
       switch(*iter) {
         case '+':
-          set_flags(SANMoveFlags::CHECK);
+          set_flags(flags() | SANMoveFlags::CHECK);
           iter++;
           break;
         case '#':
-          set_flags(SANMoveFlags::CHECKMATE);
+          set_flags(flags() | SANMoveFlags::CHECKMATE);
           iter++;
           break;
         default:
@@ -153,7 +154,7 @@ namespace peacockspider
     }
     if((flags() & SANMoveFlags::CHECK) != SANMoveFlags::NONE)
       str += '+';
-    else if((flags() & SANMoveFlags::CHECK) != SANMoveFlags::NONE)
+    else if((flags() & SANMoveFlags::CHECKMATE) != SANMoveFlags::NONE)
       str += '#';
     return str;
   }

@@ -134,9 +134,9 @@ namespace peacockspider
         }
       }
       if(to() == short_castling_dst)
-        move = SANMove(true);
+        move = SANMove(true, SANMoveFlags::NONE);
       else
-        move = SANMove(false);
+        move = SANMove(false, SANMoveFlags::NONE);
     } else {
       bool must_be_src_col = false;
       bool must_be_src_row = false;
