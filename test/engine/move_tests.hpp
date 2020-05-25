@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _SAN_MOVE_TESTS_HPP
-#define _SAN_MOVE_TESTS_HPP
+#ifndef _MOVE_TESTS_HPP
+#define _MOVE_TESTS_HPP
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
