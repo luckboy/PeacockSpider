@@ -35,29 +35,33 @@ namespace peacockspider
     _M_stack[0].board.generate_pseudolegal_moves(_M_stack[0].move_pairs);
     _M_move_order.set_move_scores(_M_stack[0].move_pairs, 0, _M_stack[0].board, _M_evaluation_function, nullptr);
     int best_value = MIN_VALUE;
-    for(size_t i = 0; i < _M_stack[0].move_pairs.length(); i++) {
-      _M_stack[0].move_pairs.select_sort_move(i);
-      Move move = _M_stack[0].move_pairs[i].move;
-      if(_M_stack[0].board.make_move(move, _M_stack[1].board)) {
-        int value;
-        if(repetitions(_M_stack[0].board, boards) >= 1)
-          value = 0;
-        else
-          value = -search(-beta, -alpha, depth - 1, 1);
-        if(value > best_value) {
-          _M_stack[0].pv_line.update(move, _M_stack[1].pv_line);
-          best_move = move;
-          best_value = value;
-          if(best_value > alpha) {
-            alpha = value;
-            if(best_value >= beta) {
-              _M_move_order.increase_history_for_cutoff(_M_stack[0].board.side(), move.from(), move.to(), depth);
-              return best_value;
+    try {
+      for(size_t i = 0; i < _M_stack[0].move_pairs.length(); i++) {
+        _M_stack[0].move_pairs.select_sort_move(i);
+        Move move = _M_stack[0].move_pairs[i].move;
+        if(_M_stack[0].board.make_move(move, _M_stack[1].board)) {
+          int value;
+          if(repetitions(_M_stack[0].board, boards) >= 1)
+            value = 0;
+          else
+            value = -search(-beta, -alpha, depth - 1, 1);
+          if(value > best_value) {
+            _M_stack[0].pv_line.update(move, _M_stack[1].pv_line);
+            best_move = move;
+            best_value = value;
+            if(best_value > alpha) {
+              alpha = value;
+              if(best_value >= beta) {
+                _M_move_order.increase_history_for_cutoff(_M_stack[0].board.side(), move.from(), move.to(), depth);
+                return best_value;
+              }
+              _M_move_order.increase_history_for_alpha(_M_stack[0].board.side(), move.from(), move.to(), depth);
             }
-            _M_move_order.increase_history_for_alpha(_M_stack[0].board.side(), move.from(), move.to(), depth);
           }
         }
       }
+    } catch(SearchingStopException &e) {
+      return 0;
     }
     return best_value;
   }
