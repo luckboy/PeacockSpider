@@ -24,7 +24,10 @@
 namespace peacockspider
 {
   const std::size_t MAX_MOVE_COUNT = 512;
-  
+
+  const int MAX_DEPTH = 100;
+  const int MAX_QUIESCENCE_DEPTH = 15;
+
   const Square A1 = 000;
   const Square B1 = 001;
   const Square C1 = 002;

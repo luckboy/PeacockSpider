@@ -15,31 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "chess.hpp"
-
-using namespace std;
+#include "search.hpp"
 
 namespace peacockspider
 {
-  bool MovePairList::contain_move(Move move) const
-  {
-    for(size_t i = 0; i < _M_length; i++) {
-      if(_M_move_pairs[i].move == move) return true;
-    }
-    return false;
-  }
-
-  void MovePairList::select_sort_move(size_t i)
-  {
-    size_t k = i;
-    for(size_t j = i + 1; j < _M_length; i++) {
-      if(_M_move_pairs[j].score > _M_move_pairs[k].score) k = j; 
-    }
-    if(k != i) {
-      MovePair tmp_move_pair = _M_move_pairs[i];
-      _M_move_pairs[i] = _M_move_pairs[k];
-      _M_move_pairs[k] = tmp_move_pair;
-    }
-  }
+  Searcher::~Searcher() {}
 }
-

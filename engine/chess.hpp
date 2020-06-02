@@ -20,6 +20,7 @@
 
 #include <cstddef>
 #include <string>
+#include <vector>
 #include <utility>
 #include "consts.hpp"
 #include "exception.hpp"
@@ -407,6 +408,8 @@ namespace peacockspider
 
     bool contain_move(Move move) const;
 
+    void select_sort_move(std::size_t i);
+
     MovePairList to_next_list() const
     { return MovePairList(_M_move_pairs + _M_length, 0); } 
   };
@@ -675,6 +678,8 @@ namespace peacockspider
   bool is_column_char(char c);
 
   bool is_row_char(char c);
+
+  std::size_t repetitions(const Board &board, const std::vector<Board> &boards);
 }
 
 #endif

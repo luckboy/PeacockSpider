@@ -15,31 +15,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "chess.hpp"
+#include "search.hpp"
 
 using namespace std;
 
 namespace peacockspider
 {
-  bool MovePairList::contain_move(Move move) const
+  PVLine::PVLine(std::size_t max_length) :
+    _M_moves(new Move[max_length]), _M_length(0) {}
+    
+  PVLine &PVLine::operator=(const PVLine &pv_line)
   {
-    for(size_t i = 0; i < _M_length; i++) {
-      if(_M_move_pairs[i].move == move) return true;
+    for(size_t i = 0; i < pv_line._M_length; i++) {
+      _M_moves[i] = pv_line._M_moves[i];
     }
-    return false;
+    _M_length = pv_line._M_length; 
+    return *this;
   }
 
-  void MovePairList::select_sort_move(size_t i)
+  void PVLine::update(Move move, const PVLine &pv_line)
   {
-    size_t k = i;
-    for(size_t j = i + 1; j < _M_length; i++) {
-      if(_M_move_pairs[j].score > _M_move_pairs[k].score) k = j; 
+    _M_moves[0] = move;
+    for(size_t i = 0; pv_line._M_length; i++) {
+      _M_moves[i + 1] = pv_line._M_moves[i];
     }
-    if(k != i) {
-      MovePair tmp_move_pair = _M_move_pairs[i];
-      _M_move_pairs[i] = _M_move_pairs[k];
-      _M_move_pairs[k] = tmp_move_pair;
-    }
+    _M_length = pv_line._M_length + 1;
   }
 }
-
