@@ -40,7 +40,7 @@ namespace peacockspider
       } else if(_M_history[side_to_index(board.side())][move.from()][move.to()] > 0) {
         return MOVE_SCORE_HISTORY + _M_history[side_to_index(board.side())][move.from()][move.to()];
       } else
-        return board.side() == Side::WHITE ? move.from() * 64 + move.to() : (63 - move.from()) * 64 + (63 - move.to());
+        return MOVE_SCORE_NONE + (board.side() == Side::WHITE ? move.from() * 64 + move.to() : (63 - move.from()) * 64 + (63 - move.to()));
     }
   }
 
