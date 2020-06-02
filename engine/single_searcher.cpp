@@ -41,7 +41,7 @@ namespace peacockspider
         Move move = _M_stack[0].move_pairs[i].move;
         if(_M_stack[0].board.make_move(move, _M_stack[1].board)) {
           int value;
-          if(repetitions(_M_stack[0].board, boards) >= 1)
+          if(repetitions(_M_stack[1].board, boards) >= 1)
             value = 0;
           else
             value = -search(-beta, -alpha, depth - 1, 1);
