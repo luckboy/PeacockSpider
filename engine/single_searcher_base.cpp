@@ -97,7 +97,7 @@ namespace peacockspider
         _M_stack[ply].move_pairs = _M_stack[ply - 1].move_pairs.to_next_list();
       _M_stack[ply].board.generate_pseudolegal_good_moves(_M_stack[ply].move_pairs);
       _M_move_order.set_move_scores(_M_stack[ply].move_pairs, ply, _M_stack[ply].board, _M_evaluation_function, nullptr);
-      int best_value = MIN_VALUE;
+      int best_value = eval_value;
       for(size_t i = 0; i < _M_stack[ply].move_pairs.length(); i++) {
         _M_stack[ply].move_pairs.select_sort_move(i);
         Move move = _M_stack[ply].move_pairs[i].move;
