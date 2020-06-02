@@ -22,12 +22,11 @@ using namespace std;
 namespace peacockspider
 {
   SingleSearcher::SingleSearcher(EvaluationFunction *eval_fun, int max_depth, int max_quiescence_depth) :
-    SingleSearcherBase(eval_fun, max_depth, max_quiescence_depth)
-  {}
+    SingleSearcherBase(eval_fun, max_depth, max_quiescence_depth) {}
 
   SingleSearcher::~SingleSearcher() {}
 
-  int SingleSearcher::search_from_root(int alpha, int beta, int depth, Move &best_move, const std::vector<Board> &boards)
+  int SingleSearcher::search_from_root(int alpha, int beta, int depth, Move &best_move, const vector<Board> &boards)
   {
     _M_stack[0].pv_line.clear();
     _M_nodes = 1;

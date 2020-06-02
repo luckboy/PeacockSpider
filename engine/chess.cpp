@@ -167,7 +167,7 @@ namespace peacockspider
   bool is_row_char(char c)
   { return c >= '1' && c <= '8'; }
 
-  std::size_t repetitions(const Board &board, const std::vector<Board> &boards)
+  std::size_t repetitions(const Board &board, const vector<Board> &boards)
   {
     std::size_t count = 0;
     for(std::size_t i = boards.size(); i > 0; i--) {

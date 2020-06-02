@@ -21,7 +21,7 @@ using namespace std;
 
 namespace peacockspider
 {
-  PVLine::PVLine(std::size_t max_length) :
+  PVLine::PVLine(size_t max_length) :
     _M_moves(new Move[max_length]), _M_length(0) {}
     
   PVLine &PVLine::operator=(const PVLine &pv_line)
