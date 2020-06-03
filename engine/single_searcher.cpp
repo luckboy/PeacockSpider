@@ -86,7 +86,13 @@ namespace peacockspider
       check_stop_for_nodes();
       int tt_best_value;
       Move tt_best_move;
-      if(before(alpha, beta, depth, ply, tt_best_value, tt_best_move)) return tt_best_value;
+      if(before(alpha, beta, depth, ply, tt_best_value, tt_best_move)) {
+        if(tt_best_move.to() != -1) {
+          _M_stack[ply + 1].pv_line.clear();
+          _M_stack[ply].pv_line.update(tt_best_move, _M_stack[ply + 1].pv_line);
+        }
+        return tt_best_value;
+      }
       if(ply == 0) {
         _M_stack[ply].move_pairs = MovePairList(_M_move_pairs.get(), 0);
       } else
