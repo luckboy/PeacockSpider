@@ -17,7 +17,12 @@
  */
 #include "search.hpp"
 
+using namespace std;
+
 namespace peacockspider
 {
   Searcher::~Searcher() {}
+  
+  void Searcher::set_time(unsigned ms)
+  { set_stop_time(chrono::high_resolution_clock::now() + chrono::milliseconds(ms)); }
 }

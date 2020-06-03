@@ -28,6 +28,7 @@ namespace peacockspider
     _M_max_quiescence_depth(max_quiescence_depth),
     _M_move_order(max_depth + max_quiescence_depth + 1),
     _M_nodes(0),
+    _M_has_stop_time(false),
     _M_searching_stop_flag(false),
     _M_thinking_stop_flag(false),
     _M_non_stop_flag(false)
@@ -42,9 +43,15 @@ namespace peacockspider
   void SingleSearcherBase::set_board(const Board &board)
   { _M_stack[0].board = board; }
 
-  void SingleSearcherBase::set_time(unsigned ms)
-  { _M_stop_time = chrono::high_resolution_clock::now() + chrono::milliseconds(ms); }
-    
+  void SingleSearcherBase::set_stop_time(const chrono::high_resolution_clock::time_point &time)
+  {
+    _M_stop_time = time;
+    _M_has_stop_time = true;
+  }
+
+  void SingleSearcherBase::unset_stop_time()
+  { _M_has_stop_time = false; }
+
   void SingleSearcherBase::clear()
   {
     _M_move_order.clear();
@@ -74,7 +81,7 @@ namespace peacockspider
   {
     if(!_M_non_stop_flag) {
       auto now = chrono::high_resolution_clock::now();
-      if(now >= _M_stop_time || _M_thinking_stop_flag.load()) throw ThinkingStopException();
+      if((_M_has_stop_time && now >= _M_stop_time) || _M_thinking_stop_flag.load()) throw ThinkingStopException();
     }
     if(_M_searching_stop_flag) throw SearchingStopException();
   }

@@ -105,8 +105,12 @@ namespace peacockspider
     virtual ~Searcher();
 
     virtual void set_board(const Board &board) = 0;
+
+    void set_time(unsigned ms);
     
-    virtual void set_time(unsigned ms) = 0;
+    virtual void set_stop_time(const std::chrono::high_resolution_clock::time_point &time) = 0;
+
+    virtual void unset_stop_time() = 0;
 
     virtual void set_previous_pv_line(const PVLine &pv_line) = 0;
 
@@ -144,6 +148,7 @@ namespace peacockspider
     MoveOrder _M_move_order;
     std::uint64_t _M_nodes;
     std::chrono::high_resolution_clock::time_point _M_stop_time;
+    bool _M_has_stop_time;
     std::atomic<bool> _M_searching_stop_flag;
     std::atomic<bool> _M_thinking_stop_flag;
     bool _M_non_stop_flag;
@@ -154,7 +159,9 @@ namespace peacockspider
 
     virtual void set_board(const Board &board);
     
-    virtual void set_time(unsigned ms);
+    virtual void set_stop_time(const std::chrono::high_resolution_clock::time_point &time);
+
+    virtual void unset_stop_time();
     
     virtual void clear();
 
