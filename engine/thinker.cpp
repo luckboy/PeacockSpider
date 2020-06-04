@@ -83,19 +83,27 @@ namespace peacockspider
   {
     _M_must_continue = false;
     _M_has_pondering = true;
-    if(boards.empty()) return false;
+    if(boards.empty()) {
+      _M_has_pondering = false;
+      return false;
+    }
     Board tmp_board;
     if(_M_has_hint_move) {
-      if(!boards.back().make_move(_M_hint_move, tmp_board)) return false;
-    } else
+      if(!boards.back().make_move(_M_hint_move, tmp_board)) {
+        _M_has_pondering = false;
+        return false;
+      }
+    } else {
+      _M_has_pondering = false;
       return false;
+    }
     MovePairList move_pairs(_M_move_pairs.get(), 0);
     if(tmp_board.in_checkmate(move_pairs) || tmp_board.in_stalemate(move_pairs)) {
       _M_has_best_move = false;
+      _M_has_pondering = false;
       return false;
     }
     if(!think(max_depth, 0, _M_best_move, boards, &tmp_board, fun)) {
-      _M_must_continue = true;
       _M_has_pondering = false;
       return false;
     }
