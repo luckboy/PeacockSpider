@@ -22,6 +22,7 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include "chess.hpp"
 #include "eval.hpp"
@@ -30,6 +31,7 @@ namespace peacockspider
 {
   const int MAX_VALUE = 32767;
   const int MIN_VALUE = -32767;
+  const int VALUE_WINDOW = 100;
   
   const int MOVE_SCORE_PV = 2000000000;
   const int MOVE_SCORE_BEST_MOVE = 1500000000;
@@ -115,8 +117,10 @@ namespace peacockspider
     virtual void set_previous_pv_line(const PVLine &pv_line) = 0;
 
     virtual void clear() = 0;
-    
-    virtual int search_from_root(int alpha, int beta, int depth, Move &best_move, const std::vector<Board> &boards) = 0;
+
+    virtual void clear_for_new_game();
+
+    virtual int search_from_root(int alpha, int beta, int depth, Move &best_move, const std::vector<Board> &boards, const Board *last_board) = 0;
     
     virtual void stop_thinking() = 0;
     
@@ -191,7 +195,7 @@ namespace peacockspider
 
     virtual ~SingleSearcher();
 
-    virtual int search_from_root(int alpha, int beta, int depth, Move &best_move, const std::vector<Board> &boards);
+    virtual int search_from_root(int alpha, int beta, int depth, Move &best_move, const std::vector<Board> &boards, const Board *last_board);
   protected:
     virtual bool before(int &alpha, int &beta, int depth, int ply, int &best_value, Move &best_move);
 
@@ -200,6 +204,47 @@ namespace peacockspider
     virtual void cutoff(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
 
     int search(int alpha, int beta, int depth, int ply);
+  };
+
+  class Thinker
+  {
+    Searcher *_M_searcher;
+    std::unique_ptr<MovePair> _M_move_pairs;
+    int _M_depth;
+    int _M_alpha;
+    int _M_beta;
+    int _M_value;
+    bool _M_has_second_search;
+    bool _M_must_continue;
+    bool _M_has_pondering;
+    Move _M_best_move;
+    bool _M_has_best_move;
+    Move _M_hint_move;
+    bool _M_has_hint_move;
+    Move _M_next_hint_move;
+    bool _M_has_next_hint_move;
+  public:
+    Thinker(Searcher *searcher);
+
+    void stop_thinking()
+    { _M_searcher->stop_searching(); }
+
+    void clear();
+  private:
+    bool think(int max_depth, unsigned ms, Move &best_move, const std::vector<Board> &boards, const Board *last_board, std::function<void (int, int, unsigned, Searcher *searcher)> fun);
+  public:
+    bool think(int max_depth, unsigned ms, Move &best_move, const std::vector<Board> &boards, std::function<void (int, int, unsigned, Searcher *searcher)> fun)
+    { return think(max_depth, ms, best_move, boards, nullptr, fun); }
+
+    bool ponder(int max_depth, const std::vector<Board> &boards, std::function<void (int, int, unsigned, Searcher *searcher)> fun);
+  private:
+    bool search(int alpha, int beta, Move &best_move, const std::vector<Board> &boards, const Board *last_board, std::function<void (int, int, unsigned, Searcher *searcher)> fun);
+  public:
+    bool has_hint_move() const
+    { return _M_has_hint_move; }
+
+    Move hint_move() const
+    { return _M_hint_move; }
   };
 }
 

@@ -25,4 +25,7 @@ namespace peacockspider
   
   void Searcher::set_time(unsigned ms)
   { set_stop_time(chrono::high_resolution_clock::now() + chrono::milliseconds(ms)); }
+
+  void Searcher::clear_for_new_game()
+  { clear(); }
 }

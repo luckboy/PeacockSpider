@@ -680,6 +680,8 @@ namespace peacockspider
   bool is_row_char(char c);
 
   std::size_t repetitions(const Board &board, const std::vector<Board> &boards);
+
+  std::size_t repetitions(const Board &board, const std::vector<Board> &boards, const Board *last_board);
 }
 
 #endif
