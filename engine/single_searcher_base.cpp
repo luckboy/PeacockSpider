@@ -56,11 +56,13 @@ namespace peacockspider
   { _M_has_stop_time = false; }
 
   void SingleSearcherBase::clear()
-  {
-    _M_move_order.clear();
-    _M_thinking_stop_flag.store(false);
-    _M_searching_stop_flag.store(false);
-  }
+  { _M_move_order.clear(); }
+
+  void SingleSearcherBase::clear_thinking_stop_flag()
+  { _M_thinking_stop_flag.store(false); }
+
+  void SingleSearcherBase::clear_searching_stop_flag()
+  { _M_searching_stop_flag.store(false); }
 
   void SingleSearcherBase::stop_thinking()
   { _M_thinking_stop_flag.store(true); }

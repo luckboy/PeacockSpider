@@ -124,6 +124,10 @@ namespace peacockspider
 
     virtual int search_from_root(int alpha, int beta, int depth, Move &best_move, const std::vector<Board> &boards, const Board *last_board) = 0;
     
+    virtual void clear_thinking_stop_flag() = 0;
+
+    virtual void clear_searching_stop_flag() = 0;
+    
     virtual void stop_thinking() = 0;
     
     virtual void stop_searching() = 0;
@@ -172,6 +176,10 @@ namespace peacockspider
     virtual void unset_stop_time();
     
     virtual void clear();
+
+    virtual void clear_thinking_stop_flag();
+
+    virtual void clear_searching_stop_flag();
 
     virtual void stop_thinking();
 
@@ -230,8 +238,14 @@ namespace peacockspider
   public:
     Thinker(Searcher *searcher);
 
-    void stop_thinking()
-    { _M_searcher->stop_searching(); }
+    void clear_stop_flags()
+    {
+      _M_searcher->clear_thinking_stop_flag();
+      _M_searcher->clear_searching_stop_flag();
+    }
+
+    void stop()
+    { _M_searcher->stop_thinking(); }
 
     void discard_hint_move()
     { _M_must_continue = false; }

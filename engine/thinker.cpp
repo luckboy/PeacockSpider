@@ -30,6 +30,8 @@ namespace peacockspider
   void Thinker::clear()
   {
     _M_searcher->clear_for_new_game();
+    _M_searcher->clear_thinking_stop_flag();
+    _M_searcher->clear_searching_stop_flag();
     _M_must_continue = false;
     _M_has_pondering = false;
     _M_has_hint_move = false;
