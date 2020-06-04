@@ -36,7 +36,7 @@ namespace peacockspider
     _M_has_next_hint_move = false;
   }
 
-  bool Thinker::think(int max_depth, unsigned ms, Move &best_move, const vector<Board> &boards, const Board *last_board, function<void (int, int, unsigned, Searcher *searcher)> fun)
+  bool Thinker::think(int max_depth, unsigned ms, Move &best_move, const vector<Board> &boards, const Board *last_board, function<void (int, int, unsigned, const Searcher *)> fun)
   {
     if(!_M_must_continue) {
       _M_searcher->clear();
@@ -81,7 +81,7 @@ namespace peacockspider
     return true;
   }
 
-  bool Thinker::ponder(int max_depth, const vector<Board> &boards, function<void (int, int, unsigned, Searcher *searcher)> fun)
+  bool Thinker::ponder(int max_depth, const vector<Board> &boards, function<void (int, int, unsigned, const Searcher *)> fun)
   {
     _M_must_continue = false;
     _M_has_pondering = true;
@@ -114,7 +114,7 @@ namespace peacockspider
     return true;
   }
 
-  bool Thinker::search(int alpha, int beta, Move &best_move, const vector<Board> &boards, const Board *last_board, function<void (int, int, unsigned, Searcher *searcher)> fun)
+  bool Thinker::search(int alpha, int beta, Move &best_move, const vector<Board> &boards, const Board *last_board, function<void (int, int, unsigned, const Searcher *)> fun)
   {
     auto start_search_time = chrono::high_resolution_clock::now();
     _M_searcher->set_non_stop_flag(_M_depth == 1);
