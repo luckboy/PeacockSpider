@@ -73,6 +73,7 @@ namespace peacockspider
         _M_has_second_search = true;
         if(!search(MIN_VALUE, MAX_VALUE, best_move, boards, last_board, fun)) break;
       }
+      _M_has_second_search = false;
       _M_alpha = max(_M_value - VALUE_WINDOW, MIN_VALUE);
       _M_beta = min(_M_value + VALUE_WINDOW, MAX_VALUE);
     }
