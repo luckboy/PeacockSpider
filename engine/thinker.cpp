@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <algorithm>
+#include <limits>
 #include "search.hpp"
 
 using namespace std;
@@ -59,7 +60,7 @@ namespace peacockspider
       _M_hint_move = _M_next_hint_move;
       _M_has_hint_move = _M_has_next_hint_move;
     }
-    if(ms != 0)
+    if(ms != numeric_limits<unsigned>::max())
       _M_searcher->set_time(ms);
     else
       _M_searcher->unset_stop_time();
@@ -103,7 +104,7 @@ namespace peacockspider
       _M_has_pondering = false;
       return false;
     }
-    if(!think(max_depth, 0, _M_best_move, boards, &tmp_board, fun)) {
+    if(!think(max_depth, numeric_limits<unsigned>::max(), _M_best_move, boards, &tmp_board, fun)) {
       _M_has_pondering = false;
       return false;
     }
