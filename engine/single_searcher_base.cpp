@@ -39,7 +39,10 @@ namespace peacockspider
   }
  
   SingleSearcherBase::~SingleSearcherBase() {}
-
+  
+  const Board &SingleSearcherBase::board() const
+  { return _M_stack[0].board; }
+  
   void SingleSearcherBase::set_board(const Board &board)
   { _M_stack[0].board = board; }
 

@@ -106,6 +106,8 @@ namespace peacockspider
   public:
     virtual ~Searcher();
 
+    virtual const Board &board() const = 0;
+
     virtual void set_board(const Board &board) = 0;
 
     void set_time(unsigned ms);
@@ -160,6 +162,8 @@ namespace peacockspider
     SingleSearcherBase(EvaluationFunction *eval_fun, int max_depth, int max_quiescence_depth);
   public:
     virtual ~SingleSearcherBase();
+
+    virtual const Board &board() const;
 
     virtual void set_board(const Board &board);
     
