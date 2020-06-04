@@ -71,7 +71,7 @@ namespace peacockspider
   const PVLine &SingleSearcherBase::pv_line() const
   { return _M_stack[0].pv_line; }
 
-  std::uint64_t SingleSearcherBase::nodes() const
+  uint64_t SingleSearcherBase::nodes() const
   { return _M_nodes; }
 
   unsigned SingleSearcherBase::thread_count() const
