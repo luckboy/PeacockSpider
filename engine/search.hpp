@@ -229,6 +229,9 @@ namespace peacockspider
     void stop_thinking()
     { _M_searcher->stop_searching(); }
 
+    void discard_hint_move()
+    { _M_must_continue = false; }
+
     void clear();
   private:
     bool think(int max_depth, unsigned ms, Move &best_move, const std::vector<Board> &boards, const Board *last_board, std::function<void (int, int, unsigned, Searcher *searcher)> fun);
