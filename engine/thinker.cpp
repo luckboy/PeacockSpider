@@ -31,6 +31,7 @@ namespace peacockspider
   {
     _M_searcher->clear_for_new_game();
     _M_searcher->clear_thinking_stop_flag();
+    _M_searcher->clear_pondering_stop_flag();
     _M_searcher->clear_searching_stop_flag();
     _M_must_continue = false;
     _M_has_pondering = false;
@@ -62,6 +63,7 @@ namespace peacockspider
       _M_hint_move = _M_next_hint_move;
       _M_has_hint_move = _M_has_next_hint_move;
     }
+    _M_searcher->set_pondering_flag(_M_has_pondering);
     if(ms != numeric_limits<unsigned>::max())
       _M_searcher->set_time(ms);
     else

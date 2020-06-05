@@ -29,8 +29,10 @@ namespace peacockspider
     _M_move_order(max_depth + max_quiescence_depth + 1),
     _M_nodes(0),
     _M_has_stop_time(false),
+    _M_pondering_flag(false),
     _M_searching_stop_flag(false),
     _M_thinking_stop_flag(false),
+    _M_pondering_stop_flag(false),
     _M_non_stop_flag(false)
   {
     for(int i = 0; i < max_depth + max_quiescence_depth; i++) {
@@ -58,14 +60,23 @@ namespace peacockspider
   void SingleSearcherBase::clear()
   { _M_move_order.clear(); }
 
+  void SingleSearcherBase::set_pondering_flag(bool flag)
+  { _M_pondering_flag = flag; }
+  
   void SingleSearcherBase::clear_thinking_stop_flag()
   { _M_thinking_stop_flag.store(false); }
 
+  void SingleSearcherBase::clear_pondering_stop_flag()
+  { _M_pondering_stop_flag.store(false); }
+  
   void SingleSearcherBase::clear_searching_stop_flag()
   { _M_searching_stop_flag.store(false); }
 
   void SingleSearcherBase::stop_thinking()
   { _M_thinking_stop_flag.store(true); }
+  
+  void SingleSearcherBase::stop_pondering()
+  { _M_pondering_stop_flag.store(true); }
 
   void SingleSearcherBase::stop_searching()
   { _M_searching_stop_flag.store(true); }
@@ -86,7 +97,8 @@ namespace peacockspider
   {
     if(!_M_non_stop_flag) {
       auto now = chrono::high_resolution_clock::now();
-      if((_M_has_stop_time && now >= _M_stop_time) || _M_thinking_stop_flag.load()) throw ThinkingStopException();
+      if(_M_has_stop_time && now >= _M_stop_time) throw ThinkingStopException();
+      if(!_M_pondering_flag ? _M_thinking_stop_flag.load() : _M_pondering_stop_flag.load()) throw ThinkingStopException();
     }
     if(_M_searching_stop_flag) throw SearchingStopException();
   }

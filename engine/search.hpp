@@ -123,12 +123,18 @@ namespace peacockspider
     virtual void clear_for_new_game();
 
     virtual int search_from_root(int alpha, int beta, int depth, Move &best_move, const std::vector<Board> &boards, const Board *last_board) = 0;
+
+    virtual void set_pondering_flag(bool flag) = 0;
     
     virtual void clear_thinking_stop_flag() = 0;
+    
+    virtual void clear_pondering_stop_flag() = 0;
 
     virtual void clear_searching_stop_flag() = 0;
     
     virtual void stop_thinking() = 0;
+
+    virtual void stop_pondering() = 0;
     
     virtual void stop_searching() = 0;
 
@@ -159,8 +165,10 @@ namespace peacockspider
     std::uint64_t _M_nodes;
     std::chrono::high_resolution_clock::time_point _M_stop_time;
     bool _M_has_stop_time;
+    bool _M_pondering_flag;
     std::atomic<bool> _M_searching_stop_flag;
     std::atomic<bool> _M_thinking_stop_flag;
+    std::atomic<bool> _M_pondering_stop_flag;
     bool _M_non_stop_flag;
   
     SingleSearcherBase(EvaluationFunction *eval_fun, int max_depth, int max_quiescence_depth);
@@ -176,13 +184,19 @@ namespace peacockspider
     virtual void unset_stop_time();
     
     virtual void clear();
+    
+    virtual void set_pondering_flag(bool flag);
 
     virtual void clear_thinking_stop_flag();
+
+    virtual void clear_pondering_stop_flag();
 
     virtual void clear_searching_stop_flag();
 
     virtual void stop_thinking();
 
+    virtual void stop_pondering();
+    
     virtual void stop_searching();
 
     virtual void set_non_stop_flag(bool flag);
@@ -241,11 +255,15 @@ namespace peacockspider
     void clear_stop_flags()
     {
       _M_searcher->clear_thinking_stop_flag();
+      _M_searcher->clear_pondering_stop_flag();
       _M_searcher->clear_searching_stop_flag();
     }
 
-    void stop()
+    void stop_thinking()
     { _M_searcher->stop_thinking(); }
+
+    void stop_pondering()
+    { _M_searcher->stop_pondering(); }
 
     void discard_hint_move()
     { _M_must_continue = false; }
