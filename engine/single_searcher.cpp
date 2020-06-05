@@ -29,7 +29,13 @@ namespace peacockspider
   int SingleSearcher::search_from_root(int alpha, int beta, int depth, Move &best_move, const vector<Board> &boards, const Board *last_board)
   {
     _M_stack[0].pv_line.clear();
-    _M_nodes = 1;
+    _M_nodes = 0;
+    try {
+      check_stop_for_nodes();
+    } catch(SearchingStopException &e) {
+      return 0;
+    }
+    _M_nodes++;
     _M_stack[0].move_pairs = MovePairList(_M_move_pairs.get(), 0);
     _M_stack[0].board.generate_pseudolegal_moves(_M_stack[0].move_pairs);
     _M_move_order.set_move_scores(_M_stack[0].move_pairs, 0, _M_stack[0].board, _M_evaluation_function, nullptr);
