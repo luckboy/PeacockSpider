@@ -23,6 +23,11 @@ using namespace std;
 
 namespace peacockspider
 {
+  namespace
+  {
+    const int VALUE_WINDOW = 100;
+  }
+
   Thinker::Thinker(Searcher *searcher) :
     _M_searcher(searcher), _M_move_pairs(new MovePair[MAX_MOVE_COUNT])
   { clear(); }

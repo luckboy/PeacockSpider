@@ -29,10 +29,9 @@
 
 namespace peacockspider
 {
-  const int MAX_VALUE = 32767;
-  const int MIN_VALUE = -32767;
-  const int VALUE_WINDOW = 100;
-  
+  const int MAX_VALUE = 30000;
+  const int MIN_VALUE = -30000;
+
   const int MOVE_SCORE_PV = 2000000000;
   const int MOVE_SCORE_BEST_MOVE = 1500000000;
   const int MOVE_SCORE_GOOD_MOVE = 1000000000;
