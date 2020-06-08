@@ -42,6 +42,7 @@ namespace peacockspider
     _M_has_pondering = false;
     _M_has_hint_move = false;
     _M_has_next_hint_move = false;
+    _M_has_pondering_move = false;
   }
 
   bool Thinker::think(int max_depth, unsigned ms, Move &best_move, const vector<Board> &boards, const Board *last_board, function<void (int, int, unsigned, const Searcher *)> fun)
@@ -99,8 +100,8 @@ namespace peacockspider
       return false;
     }
     Board tmp_board;
-    if(_M_has_hint_move) {
-      if(!boards.back().make_move(_M_hint_move, tmp_board)) {
+    if(_M_has_pondering_move) {
+      if(!boards.back().make_move(_M_pondering_move, tmp_board)) {
         _M_has_pondering = false;
         return false;
       }
