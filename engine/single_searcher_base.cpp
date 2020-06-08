@@ -30,9 +30,9 @@ namespace peacockspider
     _M_nodes(0),
     _M_has_stop_time(false),
     _M_pondering_flag(false),
-    _M_searching_stop_flag(false),
     _M_thinking_stop_flag(false),
     _M_pondering_stop_flag(false),
+    _M_searching_stop_flag(false),
     _M_non_stop_flag(false)
   {
     for(int i = 0; i < max_depth + max_quiescence_depth; i++) {

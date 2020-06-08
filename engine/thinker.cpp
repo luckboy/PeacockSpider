@@ -65,8 +65,8 @@ namespace peacockspider
         best_move = _M_best_move;
       else
         return false;
-      _M_hint_move = _M_next_hint_move;
       _M_has_hint_move = _M_has_next_hint_move;
+      _M_hint_move = _M_next_hint_move;
     }
     _M_searcher->set_pondering_flag(_M_has_pondering);
     if(ms != numeric_limits<unsigned>::max())
@@ -139,11 +139,11 @@ namespace peacockspider
     _M_searcher->set_previous_pv_line(_M_searcher->pv_line());
     if(_M_searcher->pv_line().length() >= 2) {
       if(!_M_has_pondering) {
-        _M_hint_move = _M_searcher->pv_line()[1];
         _M_has_hint_move = true;
+        _M_hint_move = _M_searcher->pv_line()[1];
       } else {
-        _M_next_hint_move = _M_searcher->pv_line()[1];
         _M_has_next_hint_move = true;
+        _M_next_hint_move = _M_searcher->pv_line()[1];
       }
     } else {
       if(!_M_has_pondering)

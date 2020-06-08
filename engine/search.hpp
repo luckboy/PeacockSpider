@@ -165,9 +165,9 @@ namespace peacockspider
     std::chrono::high_resolution_clock::time_point _M_stop_time;
     bool _M_has_stop_time;
     bool _M_pondering_flag;
-    std::atomic<bool> _M_searching_stop_flag;
     std::atomic<bool> _M_thinking_stop_flag;
     std::atomic<bool> _M_pondering_stop_flag;
+    std::atomic<bool> _M_searching_stop_flag;
     bool _M_non_stop_flag;
   
     SingleSearcherBase(EvaluationFunction *eval_fun, int max_depth, int max_quiescence_depth);
@@ -242,12 +242,12 @@ namespace peacockspider
     bool _M_has_second_search;
     bool _M_must_continue;
     bool _M_has_pondering;
-    Move _M_best_move;
     bool _M_has_best_move;
-    Move _M_hint_move;
+    Move _M_best_move;
     bool _M_has_hint_move;
-    Move _M_next_hint_move;
+    Move _M_hint_move;
     bool _M_has_next_hint_move;
+    Move _M_next_hint_move;
   public:
     Thinker(Searcher *searcher);
 
