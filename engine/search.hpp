@@ -38,12 +38,17 @@ namespace peacockspider
   const int MOVE_SCORE_HISTORY = 500000000;
   const int MOVE_SCORE_NONE = 0;
 
-  class SearchingStopException
+  class ThinkingStopException
   {
     char _M_x;
   };
 
-  class ThinkingStopException
+  class PonderingStopException
+  {
+    char _M_x;
+  };
+  
+  class SearchingStopException
   {
     char _M_x;
   };

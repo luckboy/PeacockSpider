@@ -131,6 +131,8 @@ namespace peacockspider
       _M_value = _M_searcher->search_from_root(alpha, beta, _M_depth, best_move, boards, last_board);
     } catch(ThinkingStopException &e) {
       return false;
+    } catch(PonderingStopException &e) {
+      return false;
     }
     auto end_search_time = chrono::high_resolution_clock::now();
     auto diff = end_search_time - start_search_time;

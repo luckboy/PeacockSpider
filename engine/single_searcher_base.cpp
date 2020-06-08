@@ -97,8 +97,17 @@ namespace peacockspider
   {
     if(!_M_non_stop_flag) {
       auto now = chrono::high_resolution_clock::now();
-      if(_M_has_stop_time && now >= _M_stop_time) throw ThinkingStopException();
-      if(!_M_pondering_flag ? _M_thinking_stop_flag.load() : _M_pondering_stop_flag.load()) throw ThinkingStopException();
+      if(_M_has_stop_time && now >= _M_stop_time) {
+        if(!_M_pondering_flag)
+          throw ThinkingStopException();
+        else
+          throw PonderingStopException();
+      }
+      if(!_M_pondering_flag) {
+        if(_M_thinking_stop_flag.load()) throw ThinkingStopException();
+      } else {
+        if(_M_pondering_stop_flag.load()) throw PonderingStopException();
+      }
     }
     if(_M_searching_stop_flag) throw SearchingStopException();
   }
