@@ -34,9 +34,9 @@ namespace peacockspider
 
     int operator()(const Board &board) const;
 
-    int material_piece_value(Piece piece) const;
+    int piece_material_value(Piece piece) const;
     
-    int meterial_promotion_piece_value(PromotionPiece piece) const;
+    int promotion_piece_material_value(PromotionPiece piece) const;
   };
 }
 

@@ -32,13 +32,13 @@ namespace peacockspider
     return 0;
   }
 
-  int EvaluationFunction::material_piece_value(Piece piece) const
+  int EvaluationFunction::piece_material_value(Piece piece) const
   {
     // Not implemented.
     return 0;
   }
 
-  int EvaluationFunction::meterial_promotion_piece_value(PromotionPiece piece) const
+  int EvaluationFunction::promotion_piece_material_value(PromotionPiece piece) const
   {
     // Not implemented.
     return 0;

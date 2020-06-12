@@ -31,10 +31,10 @@ namespace peacockspider
       bool is_cap = move.is_capture(board);
       if(is_cap || move.promotion_piece() != PromotionPiece::NONE) {
         int score = MOVE_SCORE_GOOD_MOVE;
-        if(is_cap) score += eval_fun->material_piece_value(board.piece(move.to()));
+        if(is_cap) score += eval_fun->piece_material_value(board.piece(move.to()));
         if(move.promotion_piece() != PromotionPiece::NONE) {
-          score -= eval_fun->material_piece_value(Piece::PAWN);
-          score += eval_fun->meterial_promotion_piece_value(move.promotion_piece());
+          score -= eval_fun->piece_material_value(Piece::PAWN);
+          score += eval_fun->promotion_piece_material_value(move.promotion_piece());
         }
         return score;
       } else if(_M_history[side_to_index(board.side())][move.from()][move.to()] > 0) {
