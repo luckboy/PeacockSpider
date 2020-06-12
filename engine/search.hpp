@@ -161,7 +161,7 @@ namespace peacockspider
   class SingleSearcherBase : public Searcher
   {
   protected:
-    EvaluationFunction *_M_evaluation_function;
+    const EvaluationFunction *_M_evaluation_function;
     std::unique_ptr<MovePair []> _M_move_pairs;
     std::unique_ptr<SearchStackElement []> _M_stack;
     int _M_max_quiescence_depth;
@@ -175,7 +175,7 @@ namespace peacockspider
     std::atomic<bool> _M_searching_stop_flag;
     bool _M_non_stop_flag;
   
-    SingleSearcherBase(EvaluationFunction *eval_fun, int max_depth, int max_quiescence_depth);
+    SingleSearcherBase(const EvaluationFunction *eval_fun, int max_depth, int max_quiescence_depth);
   public:
     virtual ~SingleSearcherBase();
 
@@ -221,7 +221,7 @@ namespace peacockspider
 
   class SingleSearcher : public SingleSearcherBase
   {
-    SingleSearcher(EvaluationFunction *eval_fun, int max_depth = MAX_DEPTH, int max_quiescence_depth = MAX_QUIESCENCE_DEPTH);
+    SingleSearcher(const EvaluationFunction *eval_fun, int max_depth = MAX_DEPTH, int max_quiescence_depth = MAX_QUIESCENCE_DEPTH);
 
     virtual ~SingleSearcher();
 

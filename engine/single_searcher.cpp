@@ -21,7 +21,7 @@ using namespace std;
 
 namespace peacockspider
 {
-  SingleSearcher::SingleSearcher(EvaluationFunction *eval_fun, int max_depth, int max_quiescence_depth) :
+  SingleSearcher::SingleSearcher(const EvaluationFunction *eval_fun, int max_depth, int max_quiescence_depth) :
     SingleSearcherBase(eval_fun, max_depth, max_quiescence_depth) {}
 
   SingleSearcher::~SingleSearcher() {}
