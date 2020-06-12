@@ -332,9 +332,9 @@ namespace peacockspider
         });
         tmp_value += board.fold_pawn_squares(side, from, 0, [&](int sum2, Square to) {
           if(board.has_empty(to))
-            return make_pair(_M_piece_mobilities[piece_to_index(Piece::PAWN)], true);
+            return make_pair(sum2 + _M_piece_mobilities[piece_to_index(Piece::PAWN)], true);
           else
-            return make_pair(0, false);
+            return make_pair(sum2, false);
         });
       } else if(board.has_piece(Piece::KNIGHT, from)) {
         tmp_value = board.fold_knight_squares(from, 0, [&](int sum2, Square to) {
@@ -343,7 +343,7 @@ namespace peacockspider
           else if(board.has_color(side, to))
             return sum2 + _M_piece_defences[piece_to_index(board.piece(to))];
           else
-            return sum2;
+            return sum2 + _M_piece_mobilities[piece_to_index(Piece::KNIGHT)];
         });
       } else if(board.has_piece(Piece::BISHOP, from)) {
         tmp_value = board.fold_bishop_slides(from, 0, [&](int sum2) { return sum2; }, [&](int sum2, Square to) {
@@ -352,7 +352,7 @@ namespace peacockspider
           else if(board.has_color(side, to))
             return make_pair(sum2 + _M_piece_defences[piece_to_index(board.piece(to))], false);
           else
-            return make_pair(sum2, true);
+            return make_pair(sum2 + _M_piece_mobilities[piece_to_index(Piece::BISHOP)], true);
         });
       } else if(board.has_piece(Piece::ROOK, from)) {
         tmp_value = board.fold_rook_slides(from, 0, [&](int sum2) { return sum2; }, [&](int sum2, Square to) {
@@ -361,7 +361,7 @@ namespace peacockspider
           else if(board.has_color(side, to))
             return make_pair(sum2 + _M_piece_defences[piece_to_index(board.piece(to))], false);
           else
-            return make_pair(sum2, true);
+            return make_pair(sum2 + _M_piece_mobilities[piece_to_index(Piece::ROOK)], true);
         });
       } else if(board.has_piece(Piece::QUEEN, from)) {
         tmp_value = board.fold_queen_slides(from, 0, [&](int sum2) { return sum2; }, [&](int sum2, Square to) {
@@ -370,7 +370,7 @@ namespace peacockspider
           else if(board.has_color(side, to))
             return make_pair(sum2 + _M_piece_defences[piece_to_index(board.piece(to))], false);
           else
-            return make_pair(sum2, true);
+            return make_pair(sum2 + _M_piece_mobilities[piece_to_index(Piece::QUEEN)], true);
         });
       } else if(board.has_piece(Piece::KING, from)) {
         tmp_value = board.fold_king_squares(from, 0, [&](int sum2, Square to) {
@@ -379,7 +379,7 @@ namespace peacockspider
           else if(board.has_color(side, to))
             return sum2 + _M_piece_defences[piece_to_index(board.piece(to))];
           else
-            return sum2;
+            return sum2 + _M_piece_mobilities[piece_to_index(Piece::KING)];
         });
       } else
         tmp_value = 0;
