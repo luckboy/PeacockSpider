@@ -321,7 +321,7 @@ namespace peacockspider
       Side side = board.has_color(Side::WHITE, from) ? Side::WHITE : Side::BLACK;
       int tmp_value;
       if(board.has_piece(Piece::PAWN, from)) {
-        tmp_value = board.fold_pawn_capture_squares(side, from, 0, [&](int sum2, Square to) {
+        tmp_value = fold_pawn_capture_squares(side, from, 0, [&](int sum2, Square to) {
           Square en_passant_squ = (board.en_passant_column() != -1 ? board.en_passant_column() + (board.side() == Side::WHITE ? 050 : 020) : -1);
           if(board.has_color(~side, to) || to == en_passant_squ)
             return sum2 + _M_piece_mobilities[piece_to_index(Piece::PAWN)];
@@ -330,14 +330,14 @@ namespace peacockspider
           else
             return sum2;
         });
-        tmp_value += board.fold_pawn_squares(side, from, 0, [&](int sum2, Square to) {
+        tmp_value += fold_pawn_squares(side, from, 0, [&](int sum2, Square to) {
           if(board.has_empty(to))
             return make_pair(sum2 + _M_piece_mobilities[piece_to_index(Piece::PAWN)], true);
           else
             return make_pair(sum2, false);
         });
       } else if(board.has_piece(Piece::KNIGHT, from)) {
-        tmp_value = board.fold_knight_squares(from, 0, [&](int sum2, Square to) {
+        tmp_value = fold_knight_squares(from, 0, [&](int sum2, Square to) {
           if(board.has_color(~side, to))
             return sum2 + _M_piece_mobilities[piece_to_index(Piece::KNIGHT)];
           else if(board.has_color(side, to))
@@ -346,7 +346,7 @@ namespace peacockspider
             return sum2 + _M_piece_mobilities[piece_to_index(Piece::KNIGHT)];
         });
       } else if(board.has_piece(Piece::BISHOP, from)) {
-        tmp_value = board.fold_bishop_slides(from, 0, [&](int sum2) { return sum2; }, [&](int sum2, Square to) {
+        tmp_value = fold_bishop_slides(from, 0, [&](int sum2) { return sum2; }, [&](int sum2, Square to) {
           if(board.has_color(~side, to))
             return make_pair(sum2 + _M_piece_mobilities[piece_to_index(Piece::BISHOP)], false);
           else if(board.has_color(side, to))
@@ -355,7 +355,7 @@ namespace peacockspider
             return make_pair(sum2 + _M_piece_mobilities[piece_to_index(Piece::BISHOP)], true);
         });
       } else if(board.has_piece(Piece::ROOK, from)) {
-        tmp_value = board.fold_rook_slides(from, 0, [&](int sum2) { return sum2; }, [&](int sum2, Square to) {
+        tmp_value = fold_rook_slides(from, 0, [&](int sum2) { return sum2; }, [&](int sum2, Square to) {
           if(board.has_color(~side, to))
             return make_pair(sum2 + _M_piece_mobilities[piece_to_index(Piece::ROOK)], false);
           else if(board.has_color(side, to))
@@ -364,7 +364,7 @@ namespace peacockspider
             return make_pair(sum2 + _M_piece_mobilities[piece_to_index(Piece::ROOK)], true);
         });
       } else if(board.has_piece(Piece::QUEEN, from)) {
-        tmp_value = board.fold_queen_slides(from, 0, [&](int sum2) { return sum2; }, [&](int sum2, Square to) {
+        tmp_value = fold_queen_slides(from, 0, [&](int sum2) { return sum2; }, [&](int sum2, Square to) {
           if(board.has_color(~side, to))
             return make_pair(sum2 + _M_piece_mobilities[piece_to_index(Piece::QUEEN)], false);
           else if(board.has_color(side, to))
@@ -373,7 +373,7 @@ namespace peacockspider
             return make_pair(sum2 + _M_piece_mobilities[piece_to_index(Piece::QUEEN)], true);
         });
       } else if(board.has_piece(Piece::KING, from)) {
-        tmp_value = board.fold_king_squares(from, 0, [&](int sum2, Square to) {
+        tmp_value = fold_king_squares(from, 0, [&](int sum2, Square to) {
           if(board.has_color(~side, to))
             return sum2 + _M_piece_mobilities[piece_to_index(Piece::KING)];
           else if(board.has_color(side, to))
@@ -390,7 +390,7 @@ namespace peacockspider
       Piece piece1;
       Piece piece2 = board.piece(to);
       int tmp_value;
-      tmp_value = board.fold_bishop_slides(to, make_pair(0, false), [&](pair<int, bool> tmp_pair) {
+      tmp_value = fold_bishop_slides(to, make_pair(0, false), [&](pair<int, bool> tmp_pair) {
         return make_pair(tmp_pair.first, false);
       }, [&](pair<int, bool> tmp_pair, Square from) {
         if(board.has_empty(from)) {
@@ -411,7 +411,7 @@ namespace peacockspider
           }
         }
       }).first;
-      tmp_value += board.fold_rook_slides(to, make_pair(0, false), [&](pair<int, bool> tmp_pair) {
+      tmp_value += fold_rook_slides(to, make_pair(0, false), [&](pair<int, bool> tmp_pair) {
         return make_pair(tmp_pair.first, false);
       }, [&](pair<int, bool> tmp_pair, Square from) {
         if(board.has_empty(from)) {

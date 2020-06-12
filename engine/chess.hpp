@@ -644,107 +644,6 @@ namespace peacockspider
     bool in_checkmate(MovePairList &move_pairs) const;
     
     bool in_stalemate(MovePairList &move_pairs) const;
-    
-    template<typename _T, typename _Fun>
-    _T fold_pawn_capture_squares(Side side, Square squ, _T z, _Fun fun) const
-    {
-      _T x = z;
-      int count = tab_pawn_capture_square_counts[side_to_index(side)][squ];
-      for(int i = 0; i < count; i++) {
-        Square to = tab_pawn_capture_squares[side_to_index(side)][squ][i];
-        x = fun(x, to);
-      }
-      return x;
-    }
-    
-    template<typename _T, typename _Fun>
-    _T fold_pawn_squares(Side side, Square squ, _T z, _Fun fun) const
-    {
-      _T x = z;
-      int count = tab_pawn_square_counts[side_to_index(side)][squ];
-      for(int i = 0; i < count; i++) {
-        Square to = tab_pawn_squares[side_to_index(side)][squ][i];
-        std::pair<_T, bool> tmp_pair = fun(x, to);
-        x = tmp_pair.first;
-        if(!tmp_pair.second) break;
-      }
-      return x;
-    }
-
-    template<typename _T, typename _Fun>
-    _T fold_knight_squares(Square squ, _T z, _Fun fun) const
-    {
-      _T x = z;
-      int count = tab_knight_square_counts[squ];
-      for(int i = 0; i < count; i++) {
-        Square to = tab_knight_squares[squ][i];
-        x = fun(x, to);
-      }
-      return x;
-    }
-
-    template<typename _T, typename _Fun>
-    _T fold_king_squares(Square squ, _T z, _Fun fun) const
-    {
-      _T x = z;
-      int count = tab_king_square_counts[squ];
-      for(int i = 0; i < count; i++) {
-        Square to = tab_king_squares[squ][i];
-        x = fun(x, to);
-      }
-      return x;
-    }
-
-    template<typename _T, typename _Fun1, typename _Fun2>
-    _T fold_bishop_slides(Square squ, _T z, _Fun1 fun1, _Fun2 fun2) const
-    {
-      _T x = z;
-      for(int i = 0; i < 4; i++) {
-        x = fun1(x);
-        int count = tab_bishop_square_counts[squ][i];
-        for(int j = 0; j < count; j++) {
-          Square to = tab_bishop_squares[squ][i][j];
-          std::pair<_T, bool> tmp_pair = fun2(x, to);
-          x = tmp_pair.first;
-          if(!tmp_pair.second) break;
-        }
-      }
-      return x;
-    }
-
-    template<typename _T, typename _Fun1, typename _Fun2>
-    _T fold_rook_slides(Square squ, _T z, _Fun1 fun1, _Fun2 fun2) const
-    {
-      _T x = z;
-      for(int i = 0; i < 4; i++) {
-        x = fun1(x);
-        int count = tab_rook_square_counts[squ][i];
-        for(int j = 0; j < count; j++) {
-          Square to = tab_rook_squares[squ][i][j];
-          std::pair<_T, bool> tmp_pair = fun2(x, to);
-          x = tmp_pair.first;
-          if(!tmp_pair.second) break;
-        }
-      }
-      return x;
-    }
-
-    template<typename _T, typename _Fun1, typename _Fun2>
-    _T fold_queen_slides(Square squ, _T z, _Fun1 fun1, _Fun2 fun2) const
-    {
-      _T x = z;
-      for(int i = 0; i < 8; i++) {
-        x = fun1(x);
-        int count = tab_queen_square_counts[squ][i];
-        for(int j = 0; j < count; j++) {
-          Square to = tab_queen_squares[squ][i][j];
-          std::pair<_T, bool> tmp_pair = fun2(x, to);
-          x = tmp_pair.first;
-          if(!tmp_pair.second) break;
-        }
-      }
-      return x;
-    }
   private:
     bool unsafely_set(const std::string &str);
   public:
@@ -797,6 +696,107 @@ namespace peacockspider
         x = fun(x, squ);
       }
       bbd >>= 4;
+    }
+    return x;
+  }
+
+  template<typename _T, typename _Fun>
+  inline _T fold_pawn_capture_squares(Side side, Square squ, _T z, _Fun fun)
+  {
+    _T x = z;
+    int count = tab_pawn_capture_square_counts[side_to_index(side)][squ];
+    for(int i = 0; i < count; i++) {
+      Square to = tab_pawn_capture_squares[side_to_index(side)][squ][i];
+      x = fun(x, to);
+    }
+    return x;
+  }
+    
+  template<typename _T, typename _Fun>
+  inline _T fold_pawn_squares(Side side, Square squ, _T z, _Fun fun)
+  {
+    _T x = z;
+    int count = tab_pawn_square_counts[side_to_index(side)][squ];
+    for(int i = 0; i < count; i++) {
+      Square to = tab_pawn_squares[side_to_index(side)][squ][i];
+      std::pair<_T, bool> tmp_pair = fun(x, to);
+      x = tmp_pair.first;
+      if(!tmp_pair.second) break;
+    }
+    return x;
+  }
+
+  template<typename _T, typename _Fun>
+  inline _T fold_knight_squares(Square squ, _T z, _Fun fun)
+  {
+    _T x = z;
+    int count = tab_knight_square_counts[squ];
+    for(int i = 0; i < count; i++) {
+      Square to = tab_knight_squares[squ][i];
+      x = fun(x, to);
+    }
+    return x;
+  }
+
+  template<typename _T, typename _Fun>
+  inline _T fold_king_squares(Square squ, _T z, _Fun fun)
+  {
+    _T x = z;
+    int count = tab_king_square_counts[squ];
+    for(int i = 0; i < count; i++) {
+      Square to = tab_king_squares[squ][i];
+      x = fun(x, to);
+    }
+    return x;
+  }
+
+  template<typename _T, typename _Fun1, typename _Fun2>
+  inline _T fold_bishop_slides(Square squ, _T z, _Fun1 fun1, _Fun2 fun2)
+  {
+    _T x = z;
+    for(int i = 0; i < 4; i++) {
+      x = fun1(x);
+      int count = tab_bishop_square_counts[squ][i];
+      for(int j = 0; j < count; j++) {
+        Square to = tab_bishop_squares[squ][i][j];
+        std::pair<_T, bool> tmp_pair = fun2(x, to);
+        x = tmp_pair.first;
+        if(!tmp_pair.second) break;
+      }
+    }
+    return x;
+  }
+
+  template<typename _T, typename _Fun1, typename _Fun2>
+  inline _T fold_rook_slides(Square squ, _T z, _Fun1 fun1, _Fun2 fun2)
+  {
+    _T x = z;
+    for(int i = 0; i < 4; i++) {
+      x = fun1(x);
+      int count = tab_rook_square_counts[squ][i];
+      for(int j = 0; j < count; j++) {
+        Square to = tab_rook_squares[squ][i][j];
+        std::pair<_T, bool> tmp_pair = fun2(x, to);
+        x = tmp_pair.first;
+        if(!tmp_pair.second) break;
+      }
+    }
+    return x;
+  }
+
+  template<typename _T, typename _Fun1, typename _Fun2>
+  inline _T fold_queen_slides(Square squ, _T z, _Fun1 fun1, _Fun2 fun2)
+  {
+    _T x = z;
+    for(int i = 0; i < 8; i++) {
+      x = fun1(x);
+      int count = tab_queen_square_counts[squ][i];
+      for(int j = 0; j < count; j++) {
+        Square to = tab_queen_squares[squ][i][j];
+        std::pair<_T, bool> tmp_pair = fun2(x, to);
+        x = tmp_pair.first;
+        if(!tmp_pair.second) break;
+      }
     }
     return x;
   }
