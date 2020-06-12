@@ -55,6 +55,9 @@ namespace peacockspider
   extern int tab_square_offset_counts[16];
   extern Square8 tab_square_offsets[16][4];
 
+  extern Bitboard tab_column_bitboards[8];
+  extern Bitboard tab_neighbour_column_bitboards[8];
+
   void initialize_tables();
 }
 

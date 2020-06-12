@@ -93,9 +93,12 @@ namespace peacockspider
   int tab_square_offset_counts[16];
   Square8 tab_square_offsets[16][4];
 
+  Bitboard tab_column_bitboards[8];
+  Bitboard tab_neighbour_column_bitboards[8];
+
   void initialize_tables()
   {
-    // Initializes pawn compture bitboards.
+    // Initializes pawn capture bitboards.
     for(int side = 0; side < 2; side++) {
       for(Square from = 0; from < 64; from++) {
         int from120 = mailbox64[from];
@@ -260,6 +263,19 @@ namespace peacockspider
         }
       }
       tab_square_offset_counts[bits] = count;
+    }
+    // Initializes column bitboards.
+    for(Column col = 0; col < 8; col++) {
+      tab_column_bitboards[col] = 0;
+      for(Row row = 0; row < 8; row++) {
+        tab_column_bitboards[col] |= static_cast<Bitboard>(1) << (col + (row << 3));
+      }
+    }
+    // Initializes neighbour column bitboards.
+    for(Column col = 0; col < 8; col++) {
+      tab_neighbour_column_bitboards[col] = 0;
+      if(col - 1 >= 0) tab_neighbour_column_bitboards[col] |= tab_column_bitboards[col - 1];
+      if(col + 1 < 8) tab_neighbour_column_bitboards[col] |= tab_column_bitboards[col + 1];
     }
   }
 }
