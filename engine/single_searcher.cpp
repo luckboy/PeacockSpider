@@ -101,9 +101,9 @@ namespace peacockspider
         }
         return tt_best_value;
       }
-      if(ply == 0) {
+      if(ply == 0)
         _M_stack[ply].move_pairs = MovePairList(_M_move_pairs.get(), 0);
-      } else
+      else
         _M_stack[ply].move_pairs = _M_stack[ply - 1].move_pairs.to_next_list();
       _M_stack[ply].board.generate_pseudolegal_moves(_M_stack[ply].move_pairs);
       _M_move_order.set_move_scores(_M_stack[ply].move_pairs, ply, _M_stack[ply].board, _M_evaluation_function, &tt_best_move);
