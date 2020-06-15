@@ -390,6 +390,7 @@ namespace peacockspider
       Piece piece1;
       Piece piece2 = board.piece(to);
       int tmp_value;
+      if(piece2 == Piece::PAWN) return sum;
       tmp_value = fold_bishop_slides(to, make_pair(0, false), [&](pair<int, bool> tmp_pair) {
         return make_pair(tmp_pair.first, false);
       }, [&](pair<int, bool> tmp_pair, Square from) {
