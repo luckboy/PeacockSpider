@@ -36,7 +36,7 @@ namespace peacockspider
   void PVLine::update(Move move, const PVLine &pv_line)
   {
     _M_moves[0] = move;
-    for(size_t i = 0; pv_line._M_length; i++) {
+    for(size_t i = 0; i < pv_line._M_length; i++) {
       _M_moves[i + 1] = pv_line._M_moves[i];
     }
     _M_length = pv_line._M_length + 1;

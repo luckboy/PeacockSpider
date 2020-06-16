@@ -57,6 +57,9 @@ namespace peacockspider
   void SingleSearcherBase::unset_stop_time()
   { _M_has_stop_time = false; }
 
+  void SingleSearcherBase::set_previous_pv_line(const PVLine &pv_line)
+  { _M_move_order.set_previous_pv_line(pv_line); }
+  
   void SingleSearcherBase::clear()
   { _M_move_order.clear(); }
 

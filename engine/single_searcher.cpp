@@ -59,6 +59,7 @@ namespace peacockspider
               alpha = value;
               if(best_value >= beta) {
                 _M_move_order.increase_history_for_cutoff(_M_stack[0].board.side(), move.from(), move.to(), depth);
+                best_move = tmp_best_move;
                 return best_value;
               }
               _M_move_order.increase_history_for_alpha(_M_stack[0].board.side(), move.from(), move.to(), depth);
@@ -118,8 +119,9 @@ namespace peacockspider
           is_legal_move = true;
           int value = -search(-beta, -alpha, depth - 1, ply + 1);
           if(value > best_value) {
-            _M_stack[0].pv_line.update(move, _M_stack[1].pv_line);
+            _M_stack[ply].pv_line.update(move, _M_stack[ply + 1].pv_line);
             best_move = move;
+            best_value = value;
             if(best_value > alpha) {
               alpha = best_value;
               if(best_value >= beta) {

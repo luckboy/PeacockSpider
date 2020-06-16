@@ -32,7 +32,7 @@ namespace peacockspider
   void MovePairList::select_sort_move(size_t i)
   {
     size_t k = i;
-    for(size_t j = i + 1; j < _M_length; i++) {
+    for(size_t j = i + 1; j < _M_length; j++) {
       if(_M_move_pairs[j].score > _M_move_pairs[k].score) k = j; 
     }
     if(k != i) {

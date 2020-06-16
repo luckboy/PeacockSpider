@@ -186,6 +186,8 @@ namespace peacockspider
     virtual void set_stop_time(const std::chrono::high_resolution_clock::time_point &time);
 
     virtual void unset_stop_time();
+
+    virtual void set_previous_pv_line(const PVLine &pv_line);
     
     virtual void clear();
     
@@ -221,6 +223,7 @@ namespace peacockspider
 
   class SingleSearcher : public SingleSearcherBase
   {
+  public:
     SingleSearcher(const EvaluationFunction *eval_fun, int max_depth = MAX_DEPTH, int max_quiescence_depth = MAX_QUIESCENCE_DEPTH);
 
     virtual ~SingleSearcher();
