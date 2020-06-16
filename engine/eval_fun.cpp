@@ -387,7 +387,7 @@ namespace peacockspider
     });
     value += fold_squares(board.color_bitboard(Side::WHITE) | board.color_bitboard(Side::BLACK), 0, [&](int sum, Square to) {
       Side side = board.has_color(Side::WHITE, to) ? Side::WHITE : Side::BLACK;
-      Piece piece1;
+      Piece piece1 = Piece::PAWN;
       Piece piece2 = board.piece(to);
       int tmp_value;
       if(piece2 == Piece::PAWN) return sum;
