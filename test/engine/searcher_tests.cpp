@@ -40,6 +40,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(board.has_legal_move(best_move));
       CPPUNIT_ASSERT(0 < _M_searcher->nodes());
       CPPUNIT_ASSERT(0 < _M_searcher->pv_line().length());
+      CPPUNIT_ASSERT(best_move == _M_searcher->pv_line()[0]);
       Board tmp_board = board;
       bool are_pv_line_legal_moves = true;
       for(size_t i = 0; i < _M_searcher->pv_line().length(); i++) {
@@ -75,6 +76,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(board.has_legal_move(best_move));
       CPPUNIT_ASSERT(0 < _M_searcher->nodes());
       CPPUNIT_ASSERT(0 < _M_searcher->pv_line().length());
+      CPPUNIT_ASSERT(best_move == _M_searcher->pv_line()[0]);
       Board tmp_board = board;
       bool are_pv_line_legal_moves = true;
       for(size_t i = 0; i < _M_searcher->pv_line().length(); i++) {
@@ -110,6 +112,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(board.has_legal_move(best_move));
       CPPUNIT_ASSERT(0 < _M_searcher->nodes());
       CPPUNIT_ASSERT(0 < _M_searcher->pv_line().length());
+      CPPUNIT_ASSERT(best_move == _M_searcher->pv_line()[0]);
       Board tmp_board = board;
       bool are_pv_line_legal_moves = true;
       for(size_t i = 0; i < _M_searcher->pv_line().length(); i++) {
@@ -145,6 +148,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(board.has_legal_move(best_move));
       CPPUNIT_ASSERT(0 < _M_searcher->nodes());
       CPPUNIT_ASSERT(0 < _M_searcher->pv_line().length());
+      CPPUNIT_ASSERT(best_move == _M_searcher->pv_line()[0]);
       Board tmp_board = board;
       bool are_pv_line_legal_moves = true;
       for(size_t i = 0; i < _M_searcher->pv_line().length(); i++) {
@@ -180,6 +184,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(board.has_legal_move(best_move));
       CPPUNIT_ASSERT(0 < _M_searcher->nodes());
       CPPUNIT_ASSERT(0 < _M_searcher->pv_line().length());
+      CPPUNIT_ASSERT(best_move == _M_searcher->pv_line()[0]);
       Board tmp_board = board;
       bool are_pv_line_legal_moves = true;
       for(size_t i = 0; i < _M_searcher->pv_line().length(); i++) {
