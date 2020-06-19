@@ -75,14 +75,16 @@ namespace peacockspider
     else
       _M_searcher->unset_stop_time();
     for(; _M_depth < max_depth; _M_depth++) {
+      Move tmp_best_move;
       if(!_M_has_second_search) {
         _M_has_second_search = false;
-        if(!search(_M_alpha, _M_beta, best_move, boards, last_board, fun)) break;
+        if(!search(_M_alpha, _M_beta, tmp_best_move, boards, last_board, fun)) break;
       }
       if(_M_value <= _M_alpha || _M_value >= _M_beta) {
         _M_has_second_search = true;
         if(!search(MIN_VALUE, MAX_VALUE, best_move, boards, last_board, fun)) break;
-      }
+      } else
+        best_move = tmp_best_move;
       _M_has_second_search = false;
       _M_alpha = max(_M_value - VALUE_WINDOW, MIN_VALUE);
       _M_beta = min(_M_value + VALUE_WINDOW, MAX_VALUE);
