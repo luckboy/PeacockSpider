@@ -290,7 +290,7 @@ namespace peacockspider
     bool think(int max_depth, unsigned ms, Move &best_move, const std::vector<Board> &boards, std::function<void (int, int, unsigned, const Searcher *)> fun)
     { return think(max_depth, ms, best_move, boards, nullptr, fun); }
 
-    bool ponder(int max_depth, const std::vector<Board> &boards, std::function<void (int, int, unsigned, const Searcher *)> fun);
+    bool ponder(int max_depth, const std::vector<Board> &boards, std::function<void (int, int, unsigned, const Searcher *)> fun, bool is_pondering_move = true);
   private:
     bool search(int alpha, int beta, Move &best_move, const std::vector<Board> &boards, const Board *last_board, std::function<void (int, int, unsigned, const Searcher *)> fun);
   public:

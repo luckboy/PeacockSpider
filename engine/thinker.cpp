@@ -93,33 +93,40 @@ namespace peacockspider
     return true;
   }
 
-  bool Thinker::ponder(int max_depth, const vector<Board> &boards, function<void (int, int, unsigned, const Searcher *)> fun)
+  bool Thinker::ponder(int max_depth, const vector<Board> &boards, function<void (int, int, unsigned, const Searcher *)> fun, bool is_pondering_move)
   {
     _M_must_continue = false;
     _M_has_pondering = true;
-    if(boards.empty()) {
-      _M_has_pondering = false;
-      return false;
-    }
-    Board tmp_board;
-    if(_M_has_pondering_move) {
-      if(!boards.back().make_move(_M_pondering_move, tmp_board)) {
+    if(is_pondering_move) {
+      if(boards.empty()) {
+        _M_has_pondering = false;
+        return false;
+      }
+      Board tmp_board;
+      if(_M_has_pondering_move) {
+        if(!boards.back().make_move(_M_pondering_move, tmp_board)) {
+          _M_has_pondering = false;
+          return false;
+        }
+      } else {
+        _M_has_pondering = false;
+        return false;
+      }
+      MovePairList move_pairs(_M_move_pairs.get(), 0);
+      if(tmp_board.in_checkmate(move_pairs) || tmp_board.in_stalemate(move_pairs)) {
+        _M_has_best_move = false;
+        _M_has_pondering = false;
+        return false;
+      }
+      if(!think(max_depth, numeric_limits<unsigned>::max(), _M_best_move, boards, &tmp_board, fun)) {
         _M_has_pondering = false;
         return false;
       }
     } else {
-      _M_has_pondering = false;
-      return false;
-    }
-    MovePairList move_pairs(_M_move_pairs.get(), 0);
-    if(tmp_board.in_checkmate(move_pairs) || tmp_board.in_stalemate(move_pairs)) {
-      _M_has_best_move = false;
-      _M_has_pondering = false;
-      return false;
-    }
-    if(!think(max_depth, numeric_limits<unsigned>::max(), _M_best_move, boards, &tmp_board, fun)) {
-      _M_has_pondering = false;
-      return false;
+      if(!think(max_depth, numeric_limits<unsigned>::max(), _M_best_move, boards, nullptr, fun)) {
+        _M_has_pondering = false;
+        return false;
+      }
     }
     _M_must_continue = true;
     _M_has_pondering = false;
