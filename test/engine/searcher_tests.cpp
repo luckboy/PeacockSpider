@@ -33,7 +33,7 @@ namespace peacockspider
       _M_searcher->clear_for_new_game();
       _M_searcher->set_board(board);
       boards.push_back(board);
-      int value = _M_searcher->search_from_root(MIN_VALUE, MAX_VALUE, 3, best_move, boards, nullptr);
+      int value = _M_searcher->search_from_root(MIN_VALUE, MAX_VALUE, 3, nullptr, best_move, boards, nullptr);
       CPPUNIT_ASSERT(value >= MIN_VALUE && value <= MAX_VALUE);
       board.generate_pseudolegal_moves(move_pairs);
       CPPUNIT_ASSERT(move_pairs.contain_move(best_move));
@@ -69,7 +69,7 @@ namespace peacockspider
       _M_searcher->clear_for_new_game();
       _M_searcher->set_board(board);
       boards.push_back(board);
-      int value = _M_searcher->search_from_root(MIN_VALUE, MAX_VALUE, 3, best_move, boards, nullptr);
+      int value = _M_searcher->search_from_root(MIN_VALUE, MAX_VALUE, 3, nullptr, best_move, boards, nullptr);
       CPPUNIT_ASSERT(value >= MIN_VALUE && value <= MAX_VALUE);
       board.generate_pseudolegal_moves(move_pairs);
       CPPUNIT_ASSERT(move_pairs.contain_move(best_move));
@@ -105,7 +105,7 @@ namespace peacockspider
       _M_searcher->clear_for_new_game();
       _M_searcher->set_board(board);
       boards.push_back(board);
-      int value = _M_searcher->search_from_root(MIN_VALUE, MAX_VALUE, 3, best_move, boards, nullptr);
+      int value = _M_searcher->search_from_root(MIN_VALUE, MAX_VALUE, 3, nullptr, best_move, boards, nullptr);
       CPPUNIT_ASSERT(value >= MIN_VALUE && value <= MAX_VALUE);
       board.generate_pseudolegal_moves(move_pairs);
       CPPUNIT_ASSERT(move_pairs.contain_move(best_move));
@@ -141,7 +141,7 @@ namespace peacockspider
       _M_searcher->clear_for_new_game();
       _M_searcher->set_board(board);
       boards.push_back(board);
-      int value = _M_searcher->search_from_root(MIN_VALUE, MAX_VALUE, 3, best_move, boards, nullptr);
+      int value = _M_searcher->search_from_root(MIN_VALUE, MAX_VALUE, 3, nullptr, best_move, boards, nullptr);
       CPPUNIT_ASSERT(value >= MIN_VALUE && value <= MAX_VALUE);
       board.generate_pseudolegal_moves(move_pairs);
       CPPUNIT_ASSERT(move_pairs.contain_move(best_move));
@@ -177,7 +177,7 @@ namespace peacockspider
       _M_searcher->clear_for_new_game();
       _M_searcher->set_board(board);
       boards.push_back(board);
-      int value = _M_searcher->search_from_root(MIN_VALUE, MAX_VALUE, 3, best_move, boards, nullptr);
+      int value = _M_searcher->search_from_root(MIN_VALUE, MAX_VALUE, 3, nullptr, best_move, boards, nullptr);
       CPPUNIT_ASSERT(value >= MIN_VALUE && value <= MAX_VALUE);
       board.generate_pseudolegal_moves(move_pairs);
       CPPUNIT_ASSERT(move_pairs.contain_move(best_move));

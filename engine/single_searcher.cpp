@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <algorithm>
 #include "search.hpp"
 
 using namespace std;
@@ -26,7 +27,7 @@ namespace peacockspider
 
   SingleSearcher::~SingleSearcher() {}
 
-  int SingleSearcher::search_from_root(int alpha, int beta, int depth, Move &best_move, const vector<Board> &boards, const Board *last_board)
+  int SingleSearcher::search_from_root(int alpha, int beta, int depth, const std::vector<Move> *search_moves, Move &best_move, const vector<Board> &boards, const Board *last_board)
   {
     _M_stack[0].pv_line.clear();
     _M_nodes = 0;
@@ -45,24 +46,26 @@ namespace peacockspider
       for(size_t i = 0; i < _M_stack[0].move_pairs.length(); i++) {
         _M_stack[0].move_pairs.select_sort_move(i);
         Move move = _M_stack[0].move_pairs[i].move;
-        if(_M_stack[0].board.make_move(move, _M_stack[1].board)) {
-          int value;
-          if(repetitions(_M_stack[1].board, boards, last_board) >= 1)
-            value = 0;
-          else
-            value = -search(-beta, -alpha, depth - 1, 1);
-          if(value > best_value) {
-            _M_stack[0].pv_line.update(move, _M_stack[1].pv_line);
-            tmp_best_move = move;
-            best_value = value;
-            if(best_value > alpha) {
-              alpha = value;
-              if(best_value >= beta) {
-                _M_move_order.increase_history_for_cutoff(_M_stack[0].board.side(), move.from(), move.to(), depth);
-                best_move = tmp_best_move;
-                return best_value;
+        if(search_moves != nullptr ? find(search_moves->begin(), search_moves->end(), move) != search_moves->end() : true) {
+          if(_M_stack[0].board.make_move(move, _M_stack[1].board)) {
+            int value;
+            if(repetitions(_M_stack[1].board, boards, last_board) >= 1)
+              value = 0;
+            else
+              value = -search(-beta, -alpha, depth - 1, 1);
+            if(value > best_value) {
+              _M_stack[0].pv_line.update(move, _M_stack[1].pv_line);
+              tmp_best_move = move;
+              best_value = value;
+              if(best_value > alpha) {
+                alpha = value;
+                if(best_value >= beta) {
+                  _M_move_order.increase_history_for_cutoff(_M_stack[0].board.side(), move.from(), move.to(), depth);
+                  best_move = tmp_best_move;
+                  return best_value;
+                }
+                _M_move_order.increase_history_for_alpha(_M_stack[0].board.side(), move.from(), move.to(), depth);
               }
-              _M_move_order.increase_history_for_alpha(_M_stack[0].board.side(), move.from(), move.to(), depth);
             }
           }
         }

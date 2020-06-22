@@ -29,6 +29,7 @@ namespace peacockspider
     _M_move_order(max_depth + max_quiescence_depth + 1),
     _M_nodes(0),
     _M_has_stop_time(false),
+    _M_has_stop_nodes(false),
     _M_pondering_flag(false),
     _M_thinking_stop_flag(false),
     _M_pondering_stop_flag(false),
@@ -50,12 +51,21 @@ namespace peacockspider
 
   void SingleSearcherBase::set_stop_time(const chrono::high_resolution_clock::time_point &time)
   {
-    _M_stop_time = time;
     _M_has_stop_time = true;
+    _M_stop_time = time;
   }
 
   void SingleSearcherBase::unset_stop_time()
   { _M_has_stop_time = false; }
+  
+  void SingleSearcherBase::set_stop_nodes(uint64_t nodes)
+  {
+    _M_has_stop_nodes = true;
+    _M_stop_nodes = nodes;
+  }
+
+  void SingleSearcherBase::unset_stop_nodes()
+  { _M_has_stop_nodes = false; }
 
   void SingleSearcherBase::set_previous_pv_line(const PVLine &pv_line)
   { _M_move_order.set_previous_pv_line(pv_line); }
@@ -101,6 +111,12 @@ namespace peacockspider
     if(!_M_non_stop_flag) {
       auto now = chrono::high_resolution_clock::now();
       if(_M_has_stop_time && now >= _M_stop_time) {
+        if(!_M_pondering_flag)
+          throw ThinkingStopException();
+        else
+          throw PonderingStopException();
+      }
+      if(_M_has_stop_nodes && _M_nodes >= _M_stop_nodes) {
         if(!_M_pondering_flag)
           throw ThinkingStopException();
         else

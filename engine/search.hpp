@@ -119,6 +119,10 @@ namespace peacockspider
     virtual void set_stop_time(const std::chrono::high_resolution_clock::time_point &time) = 0;
 
     virtual void unset_stop_time() = 0;
+    
+    virtual void set_stop_nodes(std::uint64_t nodes) = 0;
+
+    virtual void unset_stop_nodes() = 0;
 
     virtual void set_previous_pv_line(const PVLine &pv_line) = 0;
 
@@ -126,7 +130,7 @@ namespace peacockspider
 
     virtual void clear_for_new_game();
 
-    virtual int search_from_root(int alpha, int beta, int depth, Move &best_move, const std::vector<Board> &boards, const Board *last_board) = 0;
+    virtual int search_from_root(int alpha, int beta, int depth, const std::vector<Move> *search_moves, Move &best_move, const std::vector<Board> &boards, const Board *last_board) = 0;
 
     virtual void set_pondering_flag(bool flag) = 0;
     
@@ -167,8 +171,10 @@ namespace peacockspider
     int _M_max_quiescence_depth;
     MoveOrder _M_move_order;
     std::uint64_t _M_nodes;
-    std::chrono::high_resolution_clock::time_point _M_stop_time;
     bool _M_has_stop_time;
+    std::chrono::high_resolution_clock::time_point _M_stop_time;
+    bool _M_has_stop_nodes;
+    std::uint64_t _M_stop_nodes;
     bool _M_pondering_flag;
     std::atomic<bool> _M_thinking_stop_flag;
     std::atomic<bool> _M_pondering_stop_flag;
@@ -186,6 +192,10 @@ namespace peacockspider
     virtual void set_stop_time(const std::chrono::high_resolution_clock::time_point &time);
 
     virtual void unset_stop_time();
+    
+    virtual void set_stop_nodes(std::uint64_t nodes);
+
+    virtual void unset_stop_nodes();
 
     virtual void set_previous_pv_line(const PVLine &pv_line);
     
@@ -228,7 +238,7 @@ namespace peacockspider
 
     virtual ~SingleSearcher();
 
-    virtual int search_from_root(int alpha, int beta, int depth, Move &best_move, const std::vector<Board> &boards, const Board *last_board);
+    virtual int search_from_root(int alpha, int beta, int depth, const std::vector<Move> *search_moves, Move &best_move, const std::vector<Board> &boards, const Board *last_board);
   protected:
     virtual bool before(int &alpha, int &beta, int depth, int ply, int &best_value, Move &best_move);
 
@@ -285,14 +295,14 @@ namespace peacockspider
       _M_pondering_move = _M_hint_move;
     }
   private:
-    bool think(int max_depth, unsigned ms, Move &best_move, const std::vector<Board> &boards, const Board *last_board, std::function<void (int, int, unsigned, const Searcher *)> fun);
+    bool think(int max_depth, unsigned ms, const std::vector<Move> *search_moves, std::uint64_t nodes, int checkmate_move_count, Move &best_move, const std::vector<Board> &boards, const Board *last_board, std::function<void (int, int, unsigned, const Searcher *)> fun);
   public:
-    bool think(int max_depth, unsigned ms, Move &best_move, const std::vector<Board> &boards, std::function<void (int, int, unsigned, const Searcher *)> fun)
-    { return think(max_depth, ms, best_move, boards, nullptr, fun); }
+    bool think(int max_depth, unsigned ms, const std::vector<Move> *search_moves, std::uint64_t nodes, int checkmate_move_count, Move &best_move, const std::vector<Board> &boards, std::function<void (int, int, unsigned, const Searcher *)> fun)
+    { return think(max_depth, ms, search_moves, nodes, checkmate_move_count, best_move, boards, nullptr, fun); }
 
-    bool ponder(int max_depth, const std::vector<Board> &boards, std::function<void (int, int, unsigned, const Searcher *)> fun, bool is_pondering_move = true);
+    bool ponder(int max_depth, const std::vector<Move> *search_moves, std::uint64_t nodes, int checkmate_move_count, const std::vector<Board> &boards, std::function<void (int, int, unsigned, const Searcher *)> fun, bool is_pondering_move = true);
   private:
-    bool search(int alpha, int beta, Move &best_move, const std::vector<Board> &boards, const Board *last_board, std::function<void (int, int, unsigned, const Searcher *)> fun);
+    bool search(int alpha, int beta, const std::vector<Move> *search_moves, Move &best_move, const std::vector<Board> &boards, const Board *last_board, std::function<void (int, int, unsigned, const Searcher *)> fun);
   public:
     bool has_hint_move() const
     { return _M_has_hint_move; }
