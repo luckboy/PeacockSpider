@@ -42,7 +42,8 @@ namespace peacockspider
     _M_pondering_move_flag(false),
     _M_thinking_output_flag(false),
     _M_auto_pondering_flag(false),
-    _M_auto_move_making_flag(true)
+    _M_auto_move_making_flag(true),
+    _M_board(Board())
   {
     _M_boards.reserve(256);
     _M_boards.push_back(Board());
@@ -128,6 +129,10 @@ namespace peacockspider
     _M_thinker->clear();
     _M_boards.clear();
     _M_boards.push_back(Board());
+    {
+      unique_lock<mutex> board_lock(_M_board_mutex);
+      _M_board = Board();
+    }
     _M_result = Result::NONE;
     _M_result_comment = "";
   }
