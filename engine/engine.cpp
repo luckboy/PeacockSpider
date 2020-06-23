@@ -42,7 +42,7 @@ namespace peacockspider
     _M_pondering_move_flag(false),
     _M_thinking_output_flag(false),
     _M_auto_pondering_flag(false),
-    _M_auto_move_making_flag(false)
+    _M_auto_move_making_flag(true)
   {
     _M_boards.reserve(256);
     _M_boards.push_back(Board());
@@ -249,6 +249,7 @@ namespace peacockspider
   {
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
+    _M_thinker->discard_hint_move();
     _M_thinker->clear_hint_moves();
     Board new_board;
     if(!fun(_M_boards.back(), new_board)) return false;
@@ -346,6 +347,7 @@ namespace peacockspider
     vector<Move> moves;
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
+    _M_thinker->discard_hint_move();
     _M_thinker->clear_hint_moves();
     Board new_board;
     if(!fun(_M_boards.back(), new_board, moves)) return false;
