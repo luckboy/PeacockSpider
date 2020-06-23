@@ -103,19 +103,19 @@ namespace peacockspider
     _M_thread.join();
   }
 
-  void Engine::set_thinking_output_function(std::function<void (int, int, unsigned, const Searcher *, const Board *, const Move *)> fun)
+  void Engine::set_thinking_output_function(function<void (int, int, unsigned, const Searcher *, const Board *, const Move *)> fun)
   {
     unique_lock<mutex> lock;
     _M_thinking_output_function = fun;
   }
 
-  void Engine::set_move_output_function(std::function<void (const Board &, Move, const Move *)> fun)
+  void Engine::set_move_output_function(function<void (const Board &, Move, const Move *)> fun)
   {
     unique_lock<mutex> lock;
     _M_move_output_function = fun;
   }
 
-  void Engine::set_result_function(std::function<void (Result, const std::string &)> fun)
+  void Engine::set_result_function(function<void (Result, const string &)> fun)
   {
     unique_lock<mutex> lock;
     _M_result_output_function = fun;
@@ -344,7 +344,7 @@ namespace peacockspider
     _M_auto_move_making_flag = flag;
   }
 
-  bool Engine::set_board_and_make_moves(function<bool (const Board &, Board &, std::vector<Move> &)> fun)
+  bool Engine::set_board_and_make_moves(function<bool (const Board &, Board &, vector<Move> &)> fun)
   {
     vector<Move> moves;
     _M_thinker->stop_pondering();
