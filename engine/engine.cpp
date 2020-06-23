@@ -303,6 +303,9 @@ namespace peacockspider
   void Engine::stop_thinking()
   { _M_thinker->stop_thinking(); }
   
+  void Engine::stop_pondering()
+  { _M_thinker->stop_pondering(); }
+
   bool Engine::get_hint_move(Move &move)
   {
     unique_lock<mutex> lock(_M_hint_move_mutex);

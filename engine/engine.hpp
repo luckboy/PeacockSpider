@@ -153,6 +153,8 @@ namespace peacockspider
 
     void stop_thinking();
 
+    void stop_pondering();
+
     bool get_hint_move(Move &move);
 
     void set_result(Result result, const std::string &comment);
