@@ -93,6 +93,8 @@ namespace peacockspider
     
   Engine::~Engine()
   {
+    _M_thinker->stop_thinking();
+    _M_thinker->stop_pondering();
     {
       unique_lock<mutex> lock;
       _M_thread_command = ThreadCommand::QUIT;
@@ -481,12 +483,12 @@ namespace peacockspider
         } else
           moves_to_go = _M_time_control.mps;
       }
-      unsigned remaining_time = (_M_has_remaining_engine_time ? _M_remaining_engine_time : _M_time_control.base);
+      unsigned remaining_time = (_M_has_remaining_engine_time ? _M_remaining_engine_time : (_M_time_control.mode != TimeControlMode::NONE ? _M_time_control.base : 5 * 60 * 1000));
       time = remaining_time / moves_to_go;
     } else if(_M_time_control.mode == TimeControlMode::FIXED_MAX) {
       time = _M_time_control.time;
     } else {
-      unsigned remaining_time = (_M_has_remaining_engine_time ? _M_remaining_engine_time : _M_time_control.base);
+      unsigned remaining_time = (_M_has_remaining_engine_time ? _M_remaining_engine_time : (_M_time_control.mode != TimeControlMode::NONE ? _M_time_control.base : 5 * 60 * 1000));
       time = remaining_time / 30;
     }
     return time;
