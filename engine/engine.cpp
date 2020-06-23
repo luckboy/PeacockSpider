@@ -278,6 +278,7 @@ namespace peacockspider
     _M_previous_mode = _M_mode;
     _M_mode = Mode::ANALISIS;
     if(_M_result != Result::NONE) return;
+    _M_thinker->discard_hint_move();
     unsafely_go(false, false);
   }
 
@@ -299,8 +300,9 @@ namespace peacockspider
   {
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
+    if(_M_result != Result::NONE) return;
     _M_thinker->discard_hint_move();
-    if(_M_result == Result::NONE) unsafely_go(false, true);
+    unsafely_go(false, true);
   }
 
   void Engine::stop_thinking()
