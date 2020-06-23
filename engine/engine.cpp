@@ -506,14 +506,17 @@ namespace peacockspider
       nodes = _M_nodes;
       checkmate_move_count = _M_checkmate_move_count;
     }
-    _M_thinker->think(depth, time, search_moves, nodes, checkmate_move_count, best_move, _M_boards, [this](int depth, int value, unsigned ms, const Searcher *searcher) {
-      bool thinking_output_flag = false;
-      {
-        unique_lock<mutex> other_lock(_M_other_mutex);
-        thinking_output_flag = _M_thinking_output_flag;
-      }
-      if(thinking_output_flag) _M_thinking_output_function(depth, value, ms, searcher, nullptr, nullptr);
-    });
+    {
+      unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
+      _M_thinker->think(depth, time, search_moves, nodes, checkmate_move_count, best_move, _M_boards, [this](int depth, int value, unsigned ms, const Searcher *searcher) {
+        bool thinking_output_flag = false;
+        {
+          unique_lock<mutex> other_lock(_M_other_mutex);
+          thinking_output_flag = _M_thinking_output_flag;
+        }
+        if(thinking_output_flag) _M_thinking_output_function(depth, value, ms, searcher, nullptr, nullptr);
+      });
+    }
     if(_M_mode != Mode::ANALISIS) {
       Move pondering_move = _M_thinker->hint_move();
       _M_move_output_function(_M_boards.back(), best_move, _M_thinker->has_hint_move() ? &pondering_move : nullptr);
