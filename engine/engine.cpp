@@ -249,6 +249,7 @@ namespace peacockspider
   {
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
+    _M_thinker->clear_hint_moves();
     Board new_board;
     if(!fun(_M_boards.back(), new_board)) return false;
     _M_boards.clear();
@@ -263,6 +264,7 @@ namespace peacockspider
 
   void Engine::set_force_mode()
   {
+    _M_thinker->stop_thinking();
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     _M_mode = Mode::FORCE;
@@ -344,6 +346,7 @@ namespace peacockspider
     vector<Move> moves;
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
+    _M_thinker->clear_hint_moves();
     Board new_board;
     if(!fun(_M_boards.back(), new_board, moves)) return false;
     _M_boards.clear();

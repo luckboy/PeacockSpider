@@ -294,6 +294,12 @@ namespace peacockspider
       _M_has_pondering_move = _M_has_hint_move;
       _M_pondering_move = _M_hint_move;
     }
+    
+    void clear_hint_moves()
+    {
+      _M_has_hint_move = false;
+      _M_has_next_hint_move = false;
+    }
   private:
     bool think(int max_depth, unsigned ms, const std::vector<Move> *search_moves, std::uint64_t nodes, int checkmate_move_count, Move &best_move, const std::vector<Board> &boards, const Board *last_board, std::function<void (int, int, unsigned, const Searcher *)> fun);
   public:
