@@ -127,6 +127,11 @@ namespace peacockspider
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     _M_thinker->clear();
+    {
+      unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
+      _M_thinker->unset_hint_move();
+    }
+    _M_thinker->unset_next_hint_move();
     _M_boards.clear();
     _M_boards.push_back(Board());
     {
@@ -255,7 +260,11 @@ namespace peacockspider
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     _M_thinker->discard_hint_move();
-    _M_thinker->clear_hint_moves();
+    {
+      unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
+      _M_thinker->unset_hint_move();
+    }
+    _M_thinker->unset_next_hint_move();
     Board new_board;
     if(!fun(_M_boards.back(), new_board)) return false;
     _M_boards.clear();
@@ -355,7 +364,11 @@ namespace peacockspider
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     _M_thinker->discard_hint_move();
-    _M_thinker->clear_hint_moves();
+    {
+      unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
+      _M_thinker->unset_hint_move();
+    }
+    _M_thinker->unset_next_hint_move();
     Board new_board;
     if(!fun(_M_boards.back(), new_board, moves)) return false;
     _M_boards.clear();

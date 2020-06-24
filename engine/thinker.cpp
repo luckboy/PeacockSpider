@@ -30,7 +30,11 @@ namespace peacockspider
 
   Thinker::Thinker(Searcher *searcher) :
     _M_searcher(searcher), _M_move_pairs(new MovePair[MAX_MOVE_COUNT])
-  { clear(); }
+  {
+    clear();
+    unset_hint_move();
+    unset_next_hint_move();
+  }
 
   void Thinker::clear()
   {
@@ -40,8 +44,6 @@ namespace peacockspider
     _M_searcher->clear_searching_stop_flag();
     _M_must_continue = false;
     _M_has_pondering = false;
-    _M_has_hint_move = false;
-    _M_has_next_hint_move = false;
     _M_has_pondering_move = false;
   }
 
