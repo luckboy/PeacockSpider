@@ -373,16 +373,20 @@ namespace peacockspider
     if(!fun(_M_boards.back(), new_board, moves)) return false;
     _M_boards.clear();
     _M_boards.push_back(new_board);
+    {
+      unique_lock<mutex> board_lock(_M_board_mutex);
+      _M_board = new_board;
+    }
     unsafely_set_result_for_last_board();
     for(Move move : moves) {
       if(_M_result != Result::NONE) return false;
       if(!_M_boards.back().make_move(move, new_board)) return false;
       _M_boards.push_back(new_board);
+      {
+        unique_lock<mutex> board_lock(_M_board_mutex);
+        _M_board = new_board;
+      }
       unsafely_set_result_for_last_board();
-    }
-    {
-      unique_lock<mutex> board_lock(_M_board_mutex);
-      _M_board = new_board;
     }
     return true;
   }
