@@ -82,6 +82,7 @@ namespace peacockspider
     std::function<void (int, int, unsigned, const Searcher *, const Board *, const Move *move)> _M_thinking_output_function;
     std::function<void (const Board &, Move, const Move *)> _M_move_output_function;
     std::function<void (Result, const std::string &)> _M_result_output_function;
+    std::function<void (const Board &)> _M_board_output_function;
     std::vector<Board> _M_boards;
     Result _M_result;
     std::string _M_result_comment;
@@ -117,6 +118,8 @@ namespace peacockspider
 
     void set_result_ouptut_function(std::function<void (Result, const std::string &)> fun);
 
+    void set_board_output_function(std::function<void (const Board &)> fun);
+    
     void new_game();
 
     void set_level(unsigned mps, unsigned base, unsigned inc);

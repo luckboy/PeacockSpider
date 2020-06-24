@@ -30,6 +30,7 @@ namespace peacockspider
     _M_thinking_output_function([](int depth, int value, unsigned ms, const Searcher *searcher, const Board *board, const Move *move) {}),
     _M_move_output_function([](const Board &board, Move move, const Move *pondering_move) {}),
     _M_result_output_function([](Result result, const string &comment) {}),
+    _M_board_output_function([](const Board &board) {}),
     _M_result(Result::NONE),
     _M_has_search_moves(false),
     _M_move_pairs(new MovePair[MAX_MOVE_COUNT]),
@@ -74,6 +75,7 @@ namespace peacockspider
                   unique_lock<mutex> board_lock(_M_board_mutex);
                   _M_board = new_board;
                 }
+                _M_board_output_function(_M_boards.back());
                 unsafely_set_result_for_last_board();
                 if(_M_result != Result::NONE) _M_result_output_function(_M_result, _M_result_comment);
                 if(auto_pondering_flag) ponder();
@@ -115,13 +117,19 @@ namespace peacockspider
     unique_lock<mutex> lock(_M_mutex);
     _M_move_output_function = fun;
   }
-
+  
   void Engine::set_result_ouptut_function(function<void (Result, const string &)> fun)
   {
     unique_lock<mutex> lock(_M_mutex);
     _M_result_output_function = fun;
   }
 
+  void Engine::set_board_output_function(function<void (const Board &)> fun)
+  {
+    unique_lock<mutex> lock(_M_mutex);
+    _M_board_output_function = fun;
+  }
+  
   void Engine::new_game()
   {
     _M_thinker->stop_pondering();
@@ -138,6 +146,7 @@ namespace peacockspider
       unique_lock<mutex> board_lock(_M_board_mutex);
       _M_board = Board();
     }
+    _M_board_output_function(_M_boards.back());
     _M_result = Result::NONE;
     _M_result_comment = "";
   }
@@ -206,6 +215,7 @@ namespace peacockspider
       unique_lock<mutex> board_lock(_M_board_mutex);
       _M_board = new_board;
     }
+    _M_board_output_function(_M_boards.back());
     unsafely_set_result_for_last_board();
     if(_M_result == Result::NONE) {
       if(_M_mode != Mode::FORCE) {
@@ -273,6 +283,7 @@ namespace peacockspider
       unique_lock<mutex> board_lock(_M_board_mutex);
       _M_board = new_board;
     }
+    _M_board_output_function(_M_boards.back());
     unsafely_set_result_for_last_board();
     return true;
   }
@@ -379,8 +390,14 @@ namespace peacockspider
     }
     unsafely_set_result_for_last_board();
     for(Move move : moves) {
-      if(_M_result != Result::NONE) return false;
-      if(!_M_boards.back().make_move(move, new_board)) return false;
+      if(_M_result != Result::NONE) {
+        _M_board_output_function(_M_boards.back());
+        return false;
+      }
+      if(!_M_boards.back().make_move(move, new_board)) {
+        _M_board_output_function(_M_boards.back());
+        return false;
+      }
       _M_boards.push_back(new_board);
       {
         unique_lock<mutex> board_lock(_M_board_mutex);
@@ -388,6 +405,7 @@ namespace peacockspider
       }
       unsafely_set_result_for_last_board();
     }
+    _M_board_output_function(_M_boards.back());
     return true;
   }
   
