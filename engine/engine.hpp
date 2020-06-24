@@ -115,7 +115,7 @@ namespace peacockspider
 
     void set_move_output_function(std::function<void (const Board &, Move, const Move *)> fun);
 
-    void set_result_function(std::function<void (Result, const std::string &)> fun);
+    void set_result_ouptut_function(std::function<void (Result, const std::string &)> fun);
 
     void new_game();
 

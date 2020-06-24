@@ -116,7 +116,7 @@ namespace peacockspider
     _M_move_output_function = fun;
   }
 
-  void Engine::set_result_function(function<void (Result, const string &)> fun)
+  void Engine::set_result_ouptut_function(function<void (Result, const string &)> fun)
   {
     unique_lock<mutex> lock;
     _M_result_output_function = fun;
