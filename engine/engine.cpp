@@ -67,7 +67,7 @@ namespace peacockspider
               auto_pondering_flag = _M_auto_pondering_flag;
               auto_move_making_flag = _M_auto_move_making_flag;
             }
-            if(auto_move_making_flag && _M_mode != Mode::ANALISIS) {
+            if(auto_move_making_flag && _M_mode != Mode::ANALISIS && best_move.to() != -1) {
               Board new_board;
               if(_M_boards.back().make_move(best_move, new_board)) {
                 _M_boards.push_back(new_board);
@@ -581,7 +581,7 @@ namespace peacockspider
         if(thinking_output_flag) _M_thinking_output_function(depth, value, ms, searcher, nullptr, nullptr);
       });
     }
-    if(_M_mode != Mode::ANALISIS) {
+    if(_M_mode != Mode::ANALISIS && best_move.to() != -1) {
       Move pondering_move = _M_thinker->hint_move();
       _M_move_output_function(_M_boards.back(), best_move, _M_thinker->has_hint_move() ? &pondering_move : nullptr);
     }
