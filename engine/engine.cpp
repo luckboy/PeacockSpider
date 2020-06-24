@@ -239,6 +239,12 @@ namespace peacockspider
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     if(_M_boards.size() >= 2) {
+      _M_thinker->discard_hint_move();
+      {
+        unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
+        _M_thinker->unset_hint_move();
+      }
+      _M_thinker->unset_next_hint_move();
       _M_boards.pop_back();
       {
         unique_lock<mutex> board_lock(_M_board_mutex);
@@ -254,6 +260,12 @@ namespace peacockspider
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     if(_M_boards.size() >= 3) {
+      _M_thinker->discard_hint_move();
+      {
+        unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
+        _M_thinker->unset_hint_move();
+      }
+      _M_thinker->unset_next_hint_move();
       _M_boards.pop_back();
       _M_boards.pop_back();
       {
