@@ -52,7 +52,7 @@ namespace peacockspider
       QUIT
     };
 
-    enum class TimeControlMode
+    enum class TimeControlType
     {
       NONE,
       CLASSICAL,
@@ -62,7 +62,7 @@ namespace peacockspider
 
     struct TimeControl
     {
-      TimeControlMode mode;
+      TimeControlType type;
       unsigned mps;
       unsigned base;
       union

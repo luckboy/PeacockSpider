@@ -48,7 +48,7 @@ namespace peacockspider
   {
     _M_boards.reserve(256);
     _M_boards.push_back(Board());
-    _M_time_control.mode = TimeControlMode::NONE;
+    _M_time_control.type = TimeControlType::NONE;
     _M_time_control.mps = 0;
     _M_time_control.base = 0;
     _M_time_control.inc = 0;
@@ -154,7 +154,7 @@ namespace peacockspider
   void Engine::set_level(unsigned mps, unsigned base, unsigned inc)
   {
     unique_lock<mutex> lock(_M_limit_mutex);
-    _M_time_control.mode = (mps != 0 ? TimeControlMode::CLASSICAL : TimeControlMode::INCREMENTAL);
+    _M_time_control.type = (mps != 0 ? TimeControlType::CLASSICAL : TimeControlType::INCREMENTAL);
     _M_time_control.mps = mps;
     _M_time_control.base = base;
     _M_time_control.inc = inc;
@@ -163,7 +163,7 @@ namespace peacockspider
   void Engine::set_time(unsigned time)
   {
     unique_lock<mutex> lock(_M_limit_mutex);
-    _M_time_control.mode = TimeControlMode::FIXED_MAX;
+    _M_time_control.type = TimeControlType::FIXED_MAX;
     _M_time_control.mps = 0;
     _M_time_control.base = 0;
     _M_time_control.time = time;
@@ -536,8 +536,8 @@ namespace peacockspider
   unsigned Engine::unsafely_calculate_time(unsigned moves_to_go)
   {
     unsigned time;
-    if(_M_time_control.mode == TimeControlMode::CLASSICAL || 
-      (_M_time_control.mode == TimeControlMode::NONE && moves_to_go != numeric_limits<unsigned>::max())) {
+    if(_M_time_control.type == TimeControlType::CLASSICAL || 
+      (_M_time_control.type == TimeControlType::NONE && moves_to_go != numeric_limits<unsigned>::max())) {
       if(moves_to_go == numeric_limits<unsigned>::max()) {
         if(_M_has_remaining_engine_time) {
           moves_to_go = (_M_boards.size() - 1) % _M_time_control.mps;
@@ -545,12 +545,12 @@ namespace peacockspider
         } else
           moves_to_go = _M_time_control.mps;
       }
-      unsigned remaining_time = (_M_has_remaining_engine_time ? _M_remaining_engine_time : (_M_time_control.mode != TimeControlMode::NONE ? _M_time_control.base : 5 * 60 * 1000));
+      unsigned remaining_time = (_M_has_remaining_engine_time ? _M_remaining_engine_time : (_M_time_control.type != TimeControlType::NONE ? _M_time_control.base : 5 * 60 * 1000));
       time = remaining_time / moves_to_go;
-    } else if(_M_time_control.mode == TimeControlMode::FIXED_MAX) {
+    } else if(_M_time_control.type == TimeControlType::FIXED_MAX) {
       time = _M_time_control.time;
     } else {
-      unsigned remaining_time = (_M_has_remaining_engine_time ? _M_remaining_engine_time : (_M_time_control.mode != TimeControlMode::NONE ? _M_time_control.base : 5 * 60 * 1000));
+      unsigned remaining_time = (_M_has_remaining_engine_time ? _M_remaining_engine_time : (_M_time_control.type != TimeControlType::NONE ? _M_time_control.base : 5 * 60 * 1000));
       time = remaining_time / 30;
     }
     return time;
