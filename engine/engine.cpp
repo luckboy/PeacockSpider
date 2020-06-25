@@ -512,11 +512,11 @@ namespace peacockspider
     MovePairList move_pairs(_M_move_pairs.get(), 0);
     if(_M_boards.back().in_checkmate(move_pairs)) {
       if(_M_boards.back().side() == Side::WHITE) {
-        _M_result = Result::WHITE_WIN;
-        _M_result_comment = "White mates";
+        _M_result = Result::BLACK_WIN;
+        _M_result_comment = "Black mates";
       } else {
         _M_result = Result::WHITE_WIN;
-        _M_result_comment = "Black mates";
+        _M_result_comment = "White mates";
       }
     } else if(_M_boards.back().in_stalemate(move_pairs)) {
       _M_result = Result::DRAW;
