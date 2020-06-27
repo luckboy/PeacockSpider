@@ -89,6 +89,7 @@ namespace peacockspider
           default:
             break;
         }
+        _M_thread_command = ThreadCommand::NO_COMMAND;
         _M_condition_variable.wait(lock);
       }
     });
