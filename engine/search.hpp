@@ -315,6 +315,12 @@ namespace peacockspider
 
     Move hint_move() const
     { return _M_hint_move; }
+    
+    bool has_podering_move() const
+    { return _M_has_pondering_move; }
+
+    Move pondering_move() const
+    { return _M_pondering_move; }
   };
 }
 

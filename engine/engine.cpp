@@ -604,11 +604,9 @@ namespace peacockspider
       pondering_move_flag = _M_pondering_move_flag;
     }
     if(pondering_move_flag) {
+      unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
       if(!_M_thinker->has_hint_move()) return;
-      {
-        unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
-        _M_thinker->set_pondering_move();
-      }
+      _M_thinker->set_pondering_move();
     }
     _M_thinker->ponder(depth, search_moves, nodes, checkmate_move_count, _M_boards, [this, pondering_move_flag](int depth, int value, unsigned ms, const Searcher *searcher) {
       bool thinking_output_flag = false;
@@ -617,7 +615,7 @@ namespace peacockspider
         thinking_output_flag = _M_thinking_output_flag;
       }
       if(thinking_output_flag) {
-        Move pondering_move = (pondering_move_flag ? _M_thinker->hint_move() : Move());
+        Move pondering_move = (pondering_move_flag ? _M_thinker->pondering_move() : Move());
         const Board *board_ptr = (pondering_move_flag ? &(_M_boards.back()) : nullptr); 
         const Move *move_ptr = (pondering_move_flag ? &pondering_move : nullptr); 
         _M_thinking_output_function(depth, value, ms, searcher, board_ptr, move_ptr);
