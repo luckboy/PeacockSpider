@@ -329,9 +329,17 @@ namespace peacockspider
 
   void Engine::play_other()
   {
+    bool auto_pondering_flag = false;
     _M_thinker->stop_pondering();
+    {
+      unique_lock<mutex> other_lock(_M_other_mutex);
+      auto_pondering_flag = _M_auto_pondering_flag;
+    }
     unique_lock<mutex> lock(_M_mutex);
-    unsafely_go(true, false);
+    if(auto_pondering_flag)
+      unsafely_go(true, false);
+    else
+      _M_mode = Mode::GAME;
   }
 
   void Engine::go()
