@@ -336,16 +336,15 @@ namespace peacockspider
       auto_pondering_flag = _M_auto_pondering_flag;
     }
     unique_lock<mutex> lock(_M_mutex);
-    if(auto_pondering_flag)
-      unsafely_go(true, false);
-    else
-      _M_mode = Mode::GAME;
+    _M_mode = Mode::GAME;
+    if(auto_pondering_flag) unsafely_go(true, false);
   }
 
   void Engine::go()
   {
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
+    _M_mode = Mode::GAME;
     if(_M_result != Result::NONE) return;
     _M_thinker->discard_hint_move();
     unsafely_go(false, true);
@@ -509,7 +508,6 @@ namespace peacockspider
       _M_pondering_move_flag = true;
     }
     _M_thread_command = (is_pondering ? ThreadCommand::PONDER : ThreadCommand::THINK);
-    _M_mode = Mode::GAME;
     _M_has_search_moves = false;
     _M_search_moves.clear();
     _M_thinker->clear_stop_flags();
