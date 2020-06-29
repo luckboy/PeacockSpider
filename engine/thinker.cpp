@@ -81,7 +81,7 @@ namespace peacockspider
       _M_searcher->set_stop_nodes(nodes);
     else
       _M_searcher->unset_stop_nodes();
-    for(; _M_depth < max_depth; _M_depth++) {
+    for(; _M_depth <= max_depth; _M_depth++) {
       Move tmp_best_move;
       if(checkmate_move_count > 0 ? _M_value >= MAX_VALUE - MAX_DEPTH && MAX_VALUE - _M_value <= checkmate_move_count * 2 : false) break;
       if(!_M_has_second_search) {
