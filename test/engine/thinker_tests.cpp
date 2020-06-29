@@ -58,6 +58,7 @@ namespace peacockspider
       bool result = _M_thinker->think(4, numeric_limits<unsigned>::max(), nullptr, numeric_limits<uint64_t>::max(), 0, best_move, boards, [&](int depth, int value, unsigned ms, const Searcher *searcher) {
         if(old_depth == 0) first_depth = depth;
         is_ok &= (old_depth <= depth);
+        is_ok &= (0 < searcher->nodes());
         is_ok &= (0 < searcher->pv_line().length());
         Board tmp_board = searcher->board();
         Board new_tmp_board;
@@ -102,6 +103,7 @@ namespace peacockspider
       bool result = _M_thinker->think(4, numeric_limits<unsigned>::max(), nullptr, numeric_limits<uint64_t>::max(), 0, best_move, boards, [&](int depth, int value, unsigned ms, const Searcher *searcher) {
         if(old_depth == 0) first_depth = depth;
         is_ok &= (old_depth <= depth);
+        is_ok &= (0 < searcher->nodes());
         is_ok &= (0 < searcher->pv_line().length());
         Board board = searcher->board();
         Board new_board;
@@ -135,6 +137,7 @@ namespace peacockspider
       result = _M_thinker->ponder(4, nullptr, numeric_limits<uint64_t>::max(), 0, boards, [&](int depth, int value, unsigned ms, const Searcher *searcher) {
         if(old_depth == 0) first_depth = depth;
         is_ok &= (old_depth <= depth);
+        is_ok &= (0 < searcher->nodes());
         is_ok &= (0 < searcher->pv_line().length());
         Board tmp_board = searcher->board();
         Board new_tmp_board;
@@ -172,6 +175,7 @@ namespace peacockspider
       bool result = _M_thinker->think(4, numeric_limits<unsigned>::max(), nullptr, numeric_limits<uint64_t>::max(), 0, best_move, boards, [&](int depth, int value, unsigned ms, const Searcher *searcher) {
         if(old_depth == 0) first_depth = depth;
         is_ok &= (old_depth <= depth);
+        is_ok &= (0 < searcher->nodes());
         is_ok &= (0 < searcher->pv_line().length());
         Board tmp_board = searcher->board();
         Board new_tmp_board;
@@ -205,6 +209,7 @@ namespace peacockspider
       result = _M_thinker->ponder(2, nullptr, numeric_limits<uint64_t>::max(), 0, boards, [&](int depth, int value, unsigned ms, const Searcher *searcher) {
         if(old_depth == 0) first_depth = depth;
         is_ok &= (old_depth <= depth);
+        is_ok &= (0 < searcher->nodes());
         is_ok &= (0 < searcher->pv_line().length());
         Board tmp_board = searcher->board();
         Board new_tmp_board;
@@ -229,6 +234,7 @@ namespace peacockspider
       result = _M_thinker->think(4, numeric_limits<unsigned>::max(), nullptr, numeric_limits<uint64_t>::max(), 0, best_move, boards, [&](int depth, int value, unsigned ms, const Searcher *searcher) {
         if(old_depth == 0) first_depth = depth;
         is_ok &= (old_depth <= depth);
+        is_ok &= (0 < searcher->nodes());
         is_ok &= (0 < searcher->pv_line().length());
         Board tmp_board = searcher->board();
         Board new_tmp_board;
@@ -273,6 +279,7 @@ namespace peacockspider
       bool result = _M_thinker->think(4, numeric_limits<unsigned>::max(), nullptr, numeric_limits<uint64_t>::max(), 0, best_move, boards, [&](int depth, int value, unsigned ms, const Searcher *searcher) {
         if(old_depth == 0) first_depth = depth;
         is_ok &= (old_depth <= depth);
+        is_ok &= (0 < searcher->nodes());
         is_ok &= (0 < searcher->pv_line().length());
         Board tmp_board = searcher->board();
         Board new_tmp_board;
@@ -306,6 +313,7 @@ namespace peacockspider
       result = _M_thinker->ponder(2, nullptr, numeric_limits<uint64_t>::max(), 0, boards, [&](int depth, int value, unsigned ms, const Searcher *searcher) {
         if(old_depth == 0) first_depth = depth;
         is_ok &= (old_depth <= depth);
+        is_ok &= (0 < searcher->nodes());
         is_ok &= (0 < searcher->pv_line().length());
         Board tmp_board = searcher->board();
         Board new_tmp_board;
@@ -339,6 +347,7 @@ namespace peacockspider
       result = _M_thinker->think(4, numeric_limits<unsigned>::max(), nullptr, numeric_limits<uint64_t>::max(), 0, best_move, boards, [&](int depth, int value, unsigned ms, const Searcher *searcher) {
         if(old_depth == 0) first_depth = depth;
         is_ok &= (old_depth <= depth);
+        is_ok &= (0 < searcher->nodes());
         is_ok &= (0 < searcher->pv_line().length());
         Board tmp_board = searcher->board();
         Board new_tmp_board;
@@ -385,6 +394,7 @@ namespace peacockspider
       bool result = _M_thinker->ponder(4, nullptr, numeric_limits<uint64_t>::max(), 0, boards, [&](int depth, int value, unsigned ms, const Searcher *searcher) {
         if(old_depth == 0) first_depth = depth;
         is_ok &= (old_depth <= depth);
+        is_ok &= (0 < searcher->nodes());
         is_ok &= (0 < searcher->pv_line().length());
         Board tmp_board = searcher->board();
         Board new_tmp_board;
