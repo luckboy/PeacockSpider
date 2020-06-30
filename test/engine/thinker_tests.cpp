@@ -334,9 +334,11 @@ namespace peacockspider
       boards.back().generate_pseudolegal_moves(move_pairs);
       Move other_move;
       for(size_t i = 0; i < move_pairs.length(); i++) {
-        if(move_pairs[i].move != _M_thinker->hint_move()) {
-          other_move = move_pairs[i].move;
-          break;
+        if(boards.back().has_legal_move(move_pairs[i].move)) {
+          if(move_pairs[i].move != _M_thinker->hint_move()) {
+            other_move = move_pairs[i].move;
+            break;
+          }
         }
       }
       boards.back().make_move(other_move, new_board);
