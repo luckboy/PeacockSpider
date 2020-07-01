@@ -26,15 +26,6 @@
 
 namespace peacockspider
 {
-  enum class Result
-  {
-    NONE,
-    WHITE_WIN,
-    BLACK_WIN,
-    DRAW,
-    UNFINISHED
-  };
-  
   class Engine
   {
     enum class Mode

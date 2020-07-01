@@ -114,6 +114,15 @@ namespace peacockspider
   inline SideCastlings operator^=(SideCastlings &castlings1, SideCastlings castlings2)
   { castlings1 = castlings1 ^ castlings2; return castlings1; }
 
+  enum class Result
+  {
+    NONE,
+    WHITE_WIN,
+    BLACK_WIN,
+    DRAW,
+    UNFINISHED
+  };
+
   class CANMove
   {
     Square _M_from;
