@@ -96,8 +96,8 @@ namespace peacockspider
     bool _M_thinking_output_flag;
     bool _M_auto_pondering_flag;
     bool _M_auto_move_making_flag;
-    std::mutex _M_board_mutex;
-    Board _M_board;
+    std::mutex _M_last_board_mutex;
+    Board _M_last_board;
   public:
     Engine(Thinker *thinker);
 
@@ -169,7 +169,7 @@ namespace peacockspider
   private:
     void unsafely_go(bool is_pondering, bool is_time_calculation);
 
-    void unsafely_set_result_for_last_board();
+    void unsafely_set_result_for_boards();
 
     unsigned unsafely_calculate_time(unsigned moves_to_go);
 
