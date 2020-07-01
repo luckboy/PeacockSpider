@@ -693,6 +693,8 @@ namespace peacockspider
 
   std::size_t repetitions(const Board &board, const std::vector<Board> &boards, const Board *last_board);
 
+  Result result_for_boards(const std::vector<Board> &boards, MovePairList &move_pairs);
+
   template<typename _T, typename _Fun>
   inline _T fold_squares(Bitboard bbd, _T z, _Fun fun)
   {

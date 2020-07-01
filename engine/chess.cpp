@@ -185,4 +185,21 @@ namespace peacockspider
     }
     return count;
   }
+
+  Result result_for_boards(const vector<Board> &boards, MovePairList &move_pairs)
+  {
+    if(!boards.empty() && boards.back().in_checkmate(move_pairs)) {
+      if(boards.back().side() == Side::WHITE)
+        return Result::BLACK_WIN;
+      else
+        return Result::WHITE_WIN;
+    } else if(!boards.empty() && boards.back().in_stalemate(move_pairs)) {
+      return Result::DRAW;
+    } else if(!boards.empty() && boards.back().halfmove_clock() >= 100) {
+      return Result::DRAW;
+    } else if(!boards.empty() && repetitions(boards.back(), boards) >= 3) {
+      return Result::DRAW;
+    } else
+      return Result::NONE;
+  }
 }
