@@ -61,7 +61,7 @@ namespace peacockspider
             Move best_move;
             think(best_move);
             bool auto_pondering_flag = false;
-            bool auto_move_making_flag = false;
+            bool auto_move_making_flag = true;
             {
               unique_lock<mutex> other_mutex(_M_other_mutex);
               auto_pondering_flag = _M_auto_pondering_flag;
