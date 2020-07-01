@@ -173,6 +173,10 @@ namespace peacockspider
 
     unsigned unsafely_calculate_time(unsigned moves_to_go);
 
+    void unsafely_pre_set_board();
+
+    void set_last_board(const Board &board);
+
     void think(Move &best_move);
     
     void ponder();

@@ -71,10 +71,7 @@ namespace peacockspider
               Board new_board;
               if(_M_boards.back().make_move(best_move, new_board)) {
                 _M_boards.push_back(new_board);
-                {
-                  unique_lock<mutex> last_board_lock(_M_last_board_mutex);
-                  _M_last_board = new_board;
-                }
+                set_last_board(new_board);
                 _M_board_output_function(_M_boards.back());
                 unsafely_set_result_for_boards();
                 if(_M_result != Result::NONE) _M_result_output_function(_M_result, _M_result_comment);
@@ -135,18 +132,10 @@ namespace peacockspider
   {
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
-    _M_thinker->clear();
-    {
-      unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
-      _M_thinker->unset_hint_move();
-    }
-    _M_thinker->unset_next_hint_move();
+    unsafely_pre_set_board();
     _M_boards.clear();
     _M_boards.push_back(Board());
-    {
-      unique_lock<mutex> last_board_lock(_M_last_board_mutex);
-      _M_last_board = Board();
-    }
+    set_last_board(Board());
     _M_board_output_function(_M_boards.back());
     _M_result = Result::NONE;
     _M_result_comment = "";
@@ -212,10 +201,7 @@ namespace peacockspider
     Board new_board;
     if(!_M_boards.back().make_move(move, new_board)) return false;
     _M_boards.push_back(new_board);
-    {
-      unique_lock<mutex> last_board_lock(_M_last_board_mutex);
-      _M_last_board = new_board;
-    }
+    set_last_board(new_board);
     _M_board_output_function(_M_boards.back());
     unsafely_set_result_for_boards();
     if(_M_result == Result::NONE) {
@@ -240,17 +226,9 @@ namespace peacockspider
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     if(_M_boards.size() >= 2) {
-      _M_thinker->discard_hint_move();
-      {
-        unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
-        _M_thinker->unset_hint_move();
-      }
-      _M_thinker->unset_next_hint_move();
+      unsafely_pre_set_board();
       _M_boards.pop_back();
-      {
-        unique_lock<mutex> last_board_lock(_M_last_board_mutex);
-        _M_last_board = _M_boards.back();
-      }      
+      set_last_board(_M_boards.back());
       return true;
     } else
       return false;
@@ -261,18 +239,10 @@ namespace peacockspider
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     if(_M_boards.size() >= 3) {
-      _M_thinker->discard_hint_move();
-      {
-        unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
-        _M_thinker->unset_hint_move();
-      }
-      _M_thinker->unset_next_hint_move();
+      unsafely_pre_set_board();
       _M_boards.pop_back();
       _M_boards.pop_back();
-      {
-        unique_lock<mutex> last_board_lock(_M_last_board_mutex);
-        _M_last_board = _M_boards.back();
-      }
+      set_last_board(_M_boards.back());
       return true;
     } else
       return false;
@@ -282,20 +252,12 @@ namespace peacockspider
   {
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
-    _M_thinker->discard_hint_move();
-    {
-      unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
-      _M_thinker->unset_hint_move();
-    }
-    _M_thinker->unset_next_hint_move();
+    unsafely_pre_set_board();
     Board new_board;
     if(!fun(_M_boards.back(), new_board)) return false;
     _M_boards.clear();
     _M_boards.push_back(new_board);
-    {
-      unique_lock<mutex> last_board_lock(_M_last_board_mutex);
-      _M_last_board = new_board;
-    }
+    set_last_board(new_board);
     _M_board_output_function(_M_boards.back());
     unsafely_set_result_for_boards();
     return true;
@@ -394,20 +356,12 @@ namespace peacockspider
     vector<Move> moves;
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
-    _M_thinker->discard_hint_move();
-    {
-      unique_lock<mutex> hint_move_lock(_M_hint_move_mutex);
-      _M_thinker->unset_hint_move();
-    }
-    _M_thinker->unset_next_hint_move();
+    unsafely_pre_set_board();
     Board new_board;
     if(!fun(_M_boards.back(), new_board, moves)) return false;
     _M_boards.clear();
     _M_boards.push_back(new_board);
-    {
-      unique_lock<mutex> last_board_lock(_M_last_board_mutex);
-      _M_last_board = new_board;
-    }
+    set_last_board(new_board);
     unsafely_set_result_for_boards();
     for(Move move : moves) {
       if(_M_result != Result::NONE) {
@@ -419,10 +373,7 @@ namespace peacockspider
         return false;
       }
       _M_boards.push_back(new_board);
-      {
-        unique_lock<mutex> last_board_lock(_M_last_board_mutex);
-        _M_last_board = new_board;
-      }
+      set_last_board(new_board);
       unsafely_set_result_for_boards();
     }
     _M_board_output_function(_M_boards.back());
@@ -561,6 +512,22 @@ namespace peacockspider
       time = remaining_time / 30;
     }
     return time;
+  }
+  
+  void Engine::unsafely_pre_set_board()
+  {
+    _M_thinker->discard_hint_move();
+    {
+      unique_lock<mutex> lock(_M_hint_move_mutex);
+      _M_thinker->unset_hint_move();
+    }
+    _M_thinker->unset_next_hint_move();
+  }
+
+  void Engine::set_last_board(const Board &board)
+  {
+    unique_lock<mutex> lock(_M_last_board_mutex);
+    _M_last_board = board;
   }
   
   void Engine::think(Move &best_move)
