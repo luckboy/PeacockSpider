@@ -288,18 +288,30 @@ namespace peacockspider
     { _M_must_continue = false; }
 
     void clear();
-    
-    void set_pondering_move()
-    {
-      _M_has_pondering_move = _M_has_hint_move;
-      _M_pondering_move = _M_hint_move;
-    }
-    
+
+    bool has_hint_move() const
+    { return _M_has_hint_move; }
+
+    Move hint_move() const
+    { return _M_hint_move; }
+
     void unset_hint_move()
     { _M_has_hint_move = false; }
 
     void unset_next_hint_move()
     { _M_has_next_hint_move = false; }
+
+    bool has_pondering_move() const
+    { return _M_has_pondering_move; }
+
+    Move pondering_move() const
+    { return _M_pondering_move; }
+
+    void set_pondering_move()
+    {
+      _M_has_pondering_move = _M_has_hint_move;
+      _M_pondering_move = _M_hint_move;
+    }
   private:
     bool think(int max_depth, unsigned ms, const std::vector<Move> *search_moves, std::uint64_t nodes, int checkmate_move_count, Move &best_move, const std::vector<Board> &boards, const Board *last_board, std::function<void (int, int, unsigned, const Searcher *)> fun);
   public:
@@ -309,18 +321,6 @@ namespace peacockspider
     bool ponder(int max_depth, const std::vector<Move> *search_moves, std::uint64_t nodes, int checkmate_move_count, const std::vector<Board> &boards, std::function<void (int, int, unsigned, const Searcher *)> fun, bool is_pondering_move = true);
   private:
     bool search(int alpha, int beta, const std::vector<Move> *search_moves, Move &best_move, const std::vector<Board> &boards, const Board *last_board, std::function<void (int, int, unsigned, const Searcher *)> fun);
-  public:
-    bool has_hint_move() const
-    { return _M_has_hint_move; }
-
-    Move hint_move() const
-    { return _M_hint_move; }
-    
-    bool has_pondering_move() const
-    { return _M_has_pondering_move; }
-
-    Move pondering_move() const
-    { return _M_pondering_move; }
   };
 }
 
