@@ -149,6 +149,8 @@ namespace peacockspider
 
     void stop_pondering();
 
+    std::pair<Move, bool> hint_move_pair();
+
     bool get_hint_move(Move &move);
 
     void set_result(Result result, const std::string &comment);
