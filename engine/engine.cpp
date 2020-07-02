@@ -598,10 +598,10 @@ namespace peacockspider
         thinking_output_flag = _M_thinking_output_flag;
       }
       if(thinking_output_flag) {
-        Move pondering_move = (pondering_move_flag ? _M_thinker->pondering_move() : Move());
-        const Board *board_ptr = (pondering_move_flag ? &(_M_boards.back()) : nullptr); 
-        const Move *move_ptr = (pondering_move_flag ? &pondering_move : nullptr); 
-        _M_thinking_output_function(depth, value, ms, searcher, board_ptr, move_ptr);
+        Move tmp_pondering_move = (pondering_move_flag ? _M_thinker->pondering_move() : Move());
+        const Board *pondering_board = (pondering_move_flag ? &(_M_boards.back()) : nullptr); 
+        const Move *pondering_move = (pondering_move_flag ? &tmp_pondering_move : nullptr); 
+        _M_thinking_output_function(depth, value, ms, searcher, pondering_board, pondering_move);
       }
     }, pondering_move_flag);
   }
