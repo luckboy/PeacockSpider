@@ -32,7 +32,7 @@ namespace peacockspider
     {
       GAME,
       FORCE,
-      ANALISIS
+      ANALYSIS
     };
 
     enum class ThreadCommand
@@ -139,7 +139,7 @@ namespace peacockspider
 
     void analyze();
 
-    void quit_from_analisis();
+    void quit_from_analysis();
 
     void play_other();
 

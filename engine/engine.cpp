@@ -67,7 +67,7 @@ namespace peacockspider
               auto_pondering_flag = _M_auto_pondering_flag;
               auto_move_making_flag = _M_auto_move_making_flag;
             }
-            if(auto_move_making_flag && _M_mode != Mode::ANALISIS && best_move.to() != -1) {
+            if(auto_move_making_flag && _M_mode != Mode::ANALYSIS && best_move.to() != -1) {
               Board new_board;
               if(_M_boards.back().make_move(best_move, new_board)) {
                 _M_boards.push_back(new_board);
@@ -207,7 +207,7 @@ namespace peacockspider
     _M_board_output_function(_M_boards.back());
     unsafely_set_result_for_boards();
     if(_M_result == Result::NONE) {
-      if(must_stop_thinking && _M_mode == Mode::ANALISIS) {
+      if(must_stop_thinking && _M_mode == Mode::ANALYSIS) {
         _M_thinker->discard_hint_move();
         unsafely_go(false, false);
       } else if(_M_mode != Mode::FORCE) {
@@ -235,7 +235,7 @@ namespace peacockspider
       unsafely_pre_set_board();
       _M_boards.pop_back();
       set_last_board(_M_boards.back());
-      if(must_stop_thinking && _M_mode == Mode::ANALISIS) unsafely_go(false, false);
+      if(must_stop_thinking && _M_mode == Mode::ANALYSIS) unsafely_go(false, false);
       return true;
     } else
       return false;
@@ -269,7 +269,7 @@ namespace peacockspider
     _M_board_output_function(_M_boards.back());
     unsafely_set_result_for_boards();
     if(_M_result == Result::NONE) {
-      if(must_stop_thinking && _M_mode == Mode::ANALISIS) unsafely_go(false, false);
+      if(must_stop_thinking && _M_mode == Mode::ANALYSIS) unsafely_go(false, false);
     }
     return true;
   }
@@ -287,13 +287,13 @@ namespace peacockspider
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     _M_previous_mode = _M_mode;
-    _M_mode = Mode::ANALISIS;
+    _M_mode = Mode::ANALYSIS;
     if(_M_result != Result::NONE) return;
     _M_thinker->discard_hint_move();
     unsafely_go(false, false);
   }
 
-  void Engine::quit_from_analisis()
+  void Engine::quit_from_analysis()
   {
     _M_thinker->stop_thinking();
     unique_lock<mutex> lock(_M_mutex);
@@ -575,7 +575,7 @@ namespace peacockspider
         if(thinking_output_flag) _M_thinking_output_function(depth, value, ms, searcher, nullptr, nullptr);
       });
     }
-    if(_M_mode != Mode::ANALISIS && best_move.to() != -1) {
+    if(_M_mode != Mode::ANALYSIS && best_move.to() != -1) {
       Move pondering_move = _M_thinker->hint_move();
       _M_move_output_function(_M_boards.back(), best_move, _M_thinker->has_hint_move() ? &pondering_move : nullptr);
     }
