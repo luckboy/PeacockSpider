@@ -127,13 +127,13 @@ namespace peacockspider
 
     void unset_remaining_opponent_time();
 
-    bool make_move(std::function<bool (const Board &, Move &)> fun);
+    bool make_move(std::function<bool (const Board &, Move &)> fun, bool must_stop_thinking = false);
     
-    bool undo();
+    bool undo(bool must_stop_thinking = false);
 
     bool remove();
 
-    bool set_board(std::function<bool (const Board &, Board &)> fun);
+    bool set_board(std::function<bool (const Board &, Board &)> fun, bool must_stop_thinking = false);
 
     void set_force_mode();
 

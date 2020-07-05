@@ -192,8 +192,9 @@ namespace peacockspider
     _M_has_remaining_opponent_time = false;
   }
 
-  bool Engine::make_move(function<bool (const Board &, Move &)> fun)
+  bool Engine::make_move(function<bool (const Board &, Move &)> fun, bool must_stop_thinking)
   {
+    if(must_stop_thinking) _M_thinker->stop_thinking();
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     Move move;
@@ -206,7 +207,10 @@ namespace peacockspider
     _M_board_output_function(_M_boards.back());
     unsafely_set_result_for_boards();
     if(_M_result == Result::NONE) {
-      if(_M_mode != Mode::FORCE) {
+      if(must_stop_thinking && _M_mode == Mode::ANALISIS) {
+        _M_thinker->discard_hint_move();
+        unsafely_go(false, false);
+      } else if(_M_mode != Mode::FORCE) {
         bool is_hint_move = false;
         Move hint_move;
         {
@@ -222,14 +226,16 @@ namespace peacockspider
     return true;
   }
   
-  bool Engine::undo()
+  bool Engine::undo(bool must_stop_thinking)
   {
+    if(must_stop_thinking) _M_thinker->stop_thinking();
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     if(_M_boards.size() >= 2) {
       unsafely_pre_set_board();
       _M_boards.pop_back();
       set_last_board(_M_boards.back());
+      if(must_stop_thinking && _M_mode == Mode::ANALISIS) unsafely_go(false, false);
       return true;
     } else
       return false;
@@ -249,8 +255,9 @@ namespace peacockspider
       return false;
   }
 
-  bool Engine::set_board(function<bool (const Board &, Board &)> fun)
+  bool Engine::set_board(function<bool (const Board &, Board &)> fun, bool must_stop_thinking)
   {
+    if(must_stop_thinking) _M_thinker->stop_thinking();
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     unsafely_pre_set_board();
@@ -261,6 +268,9 @@ namespace peacockspider
     set_last_board(new_board);
     _M_board_output_function(_M_boards.back());
     unsafely_set_result_for_boards();
+    if(_M_result == Result::NONE) {
+      if(must_stop_thinking && _M_mode == Mode::ANALISIS) unsafely_go(false, false);
+    }
     return true;
   }
 
