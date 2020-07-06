@@ -168,6 +168,38 @@ namespace peacockspider
   bool is_row_char(char c)
   { return c >= '1' && c <= '8'; }
 
+  Result string_to_result(const string &str)
+  {
+    if(str == "1-0")
+      return Result::WHITE_WIN;
+    else if(str == "0-1")
+      return Result::BLACK_WIN;
+    else if(str == "1/2-1/2")
+      return Result::DRAW;
+    else if(str == "*")
+      return Result::UNFINISHED;
+    else
+      return Result::NONE;
+  }
+  
+  string result_to_string(Result result)
+  {
+    switch(result) {
+      case Result::NONE:
+        return "";
+      case Result::WHITE_WIN:
+        return "1-0";
+      case Result::BLACK_WIN:
+        return "0-1";
+      case Result::DRAW:
+        return "1/2-1/2";
+      case Result::UNFINISHED:
+        return "*";
+      default:
+        return "";
+    }
+  }
+
   size_t repetitions(const Board &board, const vector<Board> &boards)
   {
     size_t count = 0;
