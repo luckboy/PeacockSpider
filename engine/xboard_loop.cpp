@@ -422,7 +422,7 @@ namespace peacockspider
           }
           unsigned base_sec = 0;
           if(iter != args[1].end()) {
-            string base_sec_str(iter, args[1].end());
+            string base_sec_str(iter + 1, args[1].end());
             istringstream base_sec_iss(base_sec_str);
             base_sec_iss >> base_sec;
             if(base_min_iss.fail() || !base_min_iss.eof()) {
