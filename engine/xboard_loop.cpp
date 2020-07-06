@@ -63,13 +63,13 @@ namespace peacockspider
       }
     }
 
-    void print_illegal_move(ostream *ols, const string &cmd_line)
+    void print_illegal_move(ostream *ols, const string &move_str)
     {
       unique_lock<mutex> output_lock(output_mutex);
-      cout << "Illegal move: " << cmd_line << endl;
+      cout << "Illegal move: " << move_str << endl;
       if(ols != nullptr) {
         *ols << output_prefix;
-        *ols << "Illegal move: " << cmd_line << endl;
+        *ols << "Illegal move: " << move_str << endl;
       }
     }
     
