@@ -478,14 +478,15 @@ namespace peacockspider
         "time",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           istringstream iss(arg_str);
-          unsigned time;
+          int time;
           iss >> time;
           if(iss.fail() || !iss.eof()) {
             print_error(ols, "incorrect number", cmd_line);
             return true;
           }
+          if(time < 0) time = 0;
           time *= 10;
-          engine->set_remaining_engine_time(time);
+          engine->set_remaining_engine_time(static_cast<unsigned>(time));
           return true;
         }
       },
@@ -493,14 +494,15 @@ namespace peacockspider
         "otim",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           istringstream iss(arg_str);
-          unsigned time;
+          int time;
           iss >> time;
           if(iss.fail() || !iss.eof()) {
             print_error(ols, "incorrect number", cmd_line);
             return true;
           }
+          if(time < 0) time = 0;
           time *= 10;
-          engine->set_remaining_opponent_time(time);
+          engine->set_remaining_opponent_time(static_cast<unsigned>(time));
           return true;
         }
       },
