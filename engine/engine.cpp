@@ -104,10 +104,22 @@ namespace peacockspider
     _M_thread.join();
   }
 
+  function<void (int, int, unsigned, const Searcher *, const Board *, const Move *)> Engine::thinking_output_function()
+  {
+    unique_lock<mutex> lock(_M_mutex);
+    return _M_thinking_output_function;
+  }
+  
   void Engine::set_thinking_output_function(function<void (int, int, unsigned, const Searcher *, const Board *, const Move *)> fun)
   {
     unique_lock<mutex> lock(_M_mutex);
     _M_thinking_output_function = fun;
+  }
+
+  function<void (const Board &, Move, const Move *)> Engine::move_output_function()
+  {
+    unique_lock<mutex> lock(_M_mutex);
+    return _M_move_output_function;
   }
 
   void Engine::set_move_output_function(function<void (const Board &, Move, const Move *)> fun)
@@ -116,10 +128,22 @@ namespace peacockspider
     _M_move_output_function = fun;
   }
   
-  void Engine::set_result_ouptut_function(function<void (Result, const string &)> fun)
+  function<void (Result, const string &)> Engine::result_output_function()
+  {
+    unique_lock<mutex> lock(_M_mutex);
+    return _M_result_output_function;
+  }
+
+  void Engine::set_result_output_function(function<void (Result, const string &)> fun)
   {
     unique_lock<mutex> lock(_M_mutex);
     _M_result_output_function = fun;
+  }
+  
+  function<void (const Board &)> Engine::board_output_function()
+  {
+    unique_lock<mutex> lock(_M_mutex);
+    return _M_board_output_function;
   }
 
   void Engine::set_board_output_function(function<void (const Board &)> fun)

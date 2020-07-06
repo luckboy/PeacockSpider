@@ -103,11 +103,19 @@ namespace peacockspider
 
     ~Engine();
 
+    std::function<void (int, int, unsigned, const Searcher *, const Board *, const Move *)> thinking_output_function();
+
     void set_thinking_output_function(std::function<void (int, int, unsigned, const Searcher *, const Board *, const Move *)> fun);
+
+    std::function<void (const Board &, Move, const Move *)> move_output_function();
 
     void set_move_output_function(std::function<void (const Board &, Move, const Move *)> fun);
 
-    void set_result_ouptut_function(std::function<void (Result, const std::string &)> fun);
+    std::function<void (Result, const std::string &)> result_output_function();
+
+    void set_result_output_function(std::function<void (Result, const std::string &)> fun);
+
+    std::function<void (const Board &)> board_output_function();
 
     void set_board_output_function(std::function<void (const Board &)> fun);
     
@@ -182,6 +190,40 @@ namespace peacockspider
     void think(Move &best_move);
     
     void ponder();
+  };
+  
+  class OutputFunctionSettings
+  {
+    Engine *_M_engine;
+    std::function<void (int, int, unsigned, const Searcher *, const Board *, const Move *move)> _M_saved_thinking_output_function;
+    std::function<void (const Board &, Move, const Move *)> _M_saved_move_output_function;
+    std::function<void (Result, const std::string &)> _M_saved_result_output_function;
+    std::function<void (const Board &)> _M_saved_board_output_function;
+  public:
+    OutputFunctionSettings(
+      Engine *engine,
+      std::function<void (int, int, unsigned, const Searcher *, const Board *, const Move *)> thinking_output_fun,
+      std::function<void (const Board &, Move, const Move *)> move_output_fun,
+      std::function<void (Result, const std::string &)> result_output_fun,
+      std::function<void (const Board &)> board_output_fun) : _M_engine(engine)
+    {
+      _M_saved_thinking_output_function = _M_engine->thinking_output_function();
+      _M_saved_move_output_function = _M_engine->move_output_function();
+      _M_saved_result_output_function = _M_engine->result_output_function();
+      _M_saved_board_output_function = _M_engine->board_output_function();
+      _M_engine->set_thinking_output_function(thinking_output_fun);
+      _M_engine->set_move_output_function(move_output_fun);
+      _M_engine->set_result_output_function(result_output_fun);
+      _M_engine->set_board_output_function(board_output_fun);
+    }
+
+    ~OutputFunctionSettings()
+    {
+      _M_engine->set_board_output_function(_M_saved_board_output_function);
+      _M_engine->set_result_output_function(_M_saved_result_output_function);
+      _M_engine->set_move_output_function(_M_saved_move_output_function);
+      _M_engine->set_thinking_output_function(_M_saved_thinking_output_function);
+    }    
   };
 }
 
