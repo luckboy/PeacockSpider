@@ -19,7 +19,7 @@
 #define _CHESS_HPP
 
 #include <cstddef>
-#include <iostream>
+#include <ostream>
 #include <string>
 #include <vector>
 #include <utility>
