@@ -209,7 +209,7 @@ namespace peacockspider
       {
         "setboard",
         [](Engine *engine, bool is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          if(engine->set_board([&arg_str](const Board &old_board, Board &new_board) {
+          if(!engine->set_board([&arg_str](const Board &old_board, Board &new_board) {
             return new_board.set(arg_str);
           }, true)) print_error(ols, "invalid fen", cmd_line);
           return true;
@@ -218,7 +218,7 @@ namespace peacockspider
       {
         "edit",
         [](Engine *engine, bool is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          if(engine->set_board([is_prompt, ols](const Board &old_board, Board &new_board) {
+          if(!engine->set_board([is_prompt, ols](const Board &old_board, Board &new_board) {
             return editor_loop(old_board, new_board, is_prompt, ols);
           }, true)) print_error(ols, "invalid position", cmd_line);
           return true;
@@ -572,7 +572,7 @@ namespace peacockspider
       {
         "setboard",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          if(engine->set_board([&arg_str](const Board &old_board, Board &new_board) {
+          if(!engine->set_board([&arg_str](const Board &old_board, Board &new_board) {
             return new_board.set(arg_str);
           })) print_error(ols, "invalid fen", cmd_line);
           return true;
@@ -581,7 +581,7 @@ namespace peacockspider
       {
         "edit",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          if(engine->set_board([is_prompt, ols](const Board &old_board, Board &new_board) {
+          if(!engine->set_board([is_prompt, ols](const Board &old_board, Board &new_board) {
             return editor_loop(old_board, new_board, is_prompt, ols);
           })) print_error(ols, "invalid position", cmd_line);
           return true;
