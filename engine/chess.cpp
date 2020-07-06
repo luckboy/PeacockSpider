@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <cctype>
 #include "chess.hpp"
 
 using namespace std;
@@ -201,5 +202,47 @@ namespace peacockspider
       return Result::DRAW;
     } else
       return Result::NONE;
+  }
+
+  ostream &operator<<(ostream &os, const PrefixAndBoard &pab)
+  {
+    for(Row row = 7; row >= 0; row++) {
+      os << pab.prefix << "  ";
+      for(Column col = 0; col < 8; col++) {
+        os << "+---";
+      }
+      os << "+" << endl;
+      os << pab.prefix << row_to_char(row) << " ";
+      for(Column col = 0; col < 8; col++) {
+        Color color = pab.board.color(col + (row << 3));
+        Piece piece = pab.board.piece(col + (row << 3));
+        os << "| ";
+        switch(color) {
+          case Color::WHITE:
+            os << static_cast<char>(toupper(piece_to_char(piece)));
+            break;
+          case Color::BLACK:
+            os << static_cast<char>(tolower(piece_to_char(piece)));
+            break;
+          default:
+            os << ' ';
+            break;
+        }
+        os << " ";
+      }
+      os << "|" << endl;
+    }
+    os << pab.prefix << "  ";
+    for(Column col = 0; col < 8; col++) {
+      os << "+---";
+    }
+    os << "+" << endl;
+    os << pab.prefix << "  ";
+    for(Column col = 0; col < 8; col++) {
+      os << "  " << column_to_char(col) << " ";
+    }
+    os << endl;
+    os << pab.prefix << pab.board.to_string() << endl;
+    return os;
   }
 }

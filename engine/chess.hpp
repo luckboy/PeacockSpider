@@ -19,6 +19,7 @@
 #define _CHESS_HPP
 
 #include <cstddef>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <utility>
@@ -661,6 +662,15 @@ namespace peacockspider
     std::string to_string() const;
   };
   
+  struct PrefixAndBoard
+  {
+    const std::string &prefix;
+    const Board &board;
+    
+    PrefixAndBoard(const std::string &prefix, const Board &board) :
+      prefix(prefix), board(board) {}
+  };
+
   Square string_to_square(const std::string &str);
 
   std::string square_to_string(Square squ);
@@ -695,6 +705,14 @@ namespace peacockspider
 
   Result result_for_boards(const std::vector<Board> &boards, MovePairList &move_pairs);
 
+  inline PrefixAndBoard prefix_and_board(const std::string &prefix, const Board &board)
+  { return PrefixAndBoard(prefix, board); }
+
+  std::ostream &operator<<(std::ostream &os, const PrefixAndBoard &pab);
+
+  inline std::ostream &operator<<(std::ostream &os, const Board &board)
+  { return os << prefix_and_board("", board); }
+  
   template<typename _T, typename _Fun>
   inline _T fold_squares(Bitboard bbd, _T z, _Fun fun)
   {
