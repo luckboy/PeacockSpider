@@ -94,7 +94,7 @@ namespace peacockspider
       }
     }
     
-    bool editor_loop(const Board &old_board, Board &new_board, bool is_prompt, ostream *ols)
+    pair<bool, bool> editor_loop(const Board &old_board, Board &new_board, bool is_prompt, ostream *ols)
     {
       new_board = old_board;
       Color color = Color::WHITE;
@@ -108,7 +108,7 @@ namespace peacockspider
         getline(cin, cmd_line);
         if(cin.fail()) {
           cerr << "I/O error" << endl;
-          break;
+          return make_pair(false, false);
         }
         if(ols != nullptr) {
           unique_lock<mutex> output_lock(output_mutex);
@@ -156,7 +156,7 @@ namespace peacockspider
               if(new_board.king_square(Side::WHITE) == -1)
                 new_board.set_king_square(Side::WHITE, squ);
               else
-                return false;
+                return make_pair(false, true);
             }
             break;
           case Color::BLACK:
@@ -164,7 +164,7 @@ namespace peacockspider
               if(new_board.king_square(Side::BLACK) == -1)
                 new_board.set_king_square(Side::BLACK, squ);
               else
-                return false;
+                return make_pair(false, true);
             }
             break;
           default:
@@ -197,15 +197,15 @@ namespace peacockspider
         if((new_board.color_bitboard(new_board.side()) & new_board.piece_bitboard(Piece::PAWN) & tab_pawn_capture_bitboards[side_to_index(~new_board.side())][en_passant_squ]) == 0)
           new_board.set_en_passant_column(-1);
       }
-      return true;
+      return make_pair(true, true);
     }
 
-    unordered_map<string, function<bool (Engine *, bool, const string &, ostream *, const string &, MovePairList &)>> analysis_command_map {
+    unordered_map<string, function<pair<bool, bool> (Engine *, bool, const string &, ostream *, const string &, MovePairList &)>> analysis_command_map {
       {
         "undo",
         [](Engine *engine, bool is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->undo(true);
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -215,7 +215,7 @@ namespace peacockspider
             new_board = Board();
             return true;
           }, true);
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -224,29 +224,32 @@ namespace peacockspider
           if(!engine->set_board([&arg_str](const Board &old_board, Board &new_board) {
             return new_board.set(arg_str);
           }, true)) print_error(ols, "invalid fen", cmd_line);
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "edit",
         [](Engine *engine, bool is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          if(!engine->set_board([is_prompt, ols](const Board &old_board, Board &new_board) {
-            return editor_loop(old_board, new_board, is_prompt, ols);
+          bool is_success = true;
+          if(!engine->set_board([is_prompt, ols, &is_success](const Board &old_board, Board &new_board) {
+            pair<bool, bool> tmp_pair = editor_loop(old_board, new_board, is_prompt, ols);
+            is_success = tmp_pair.second;
+            return tmp_pair.first;
           }, true)) print_error(ols, "invalid position", cmd_line);
-          return true;
+          return make_pair(is_success, is_success);
         }
       },
       {
         "exit",
         [](Engine *engine, bool is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          return false;
+          return make_pair(false, true);
         }
       },
       {
         ".",
         [](Engine *engine, bool is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           print_line(ols, "stat01...");
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -254,18 +257,18 @@ namespace peacockspider
         [](Engine *engine, bool is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           print_line(ols, "");
           print_line(ols, "");
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "hint",
         [](Engine *engine, bool is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          return true;
+          return make_pair(true, true);
         }
       }
     };
     
-    void analysis_loop(Engine *engine, bool is_prompt, ostream *ols, MovePairList &move_pairs)
+    bool analysis_loop(Engine *engine, bool is_prompt, ostream *ols, MovePairList &move_pairs)
     {
       while(true) {
         string cmd_line;
@@ -278,7 +281,7 @@ namespace peacockspider
         getline(cin, cmd_line);
         if(cin.fail()) {
           cerr << "I/O error" << endl;
-          break;
+          return false;
         }
         {
           unique_lock<mutex> output_lock(output_mutex);
@@ -294,7 +297,8 @@ namespace peacockspider
         split_command_line(cmd_line, cmd_name, arg_str);
         auto iter = analysis_command_map.find(cmd_line);
         if(iter != analysis_command_map.end()) {
-          if(!(iter->second)(engine, is_prompt, arg_str, ols, cmd_line, move_pairs)) break;
+          pair<bool, bool> tmp_pair = (iter->second)(engine, is_prompt, arg_str, ols, cmd_line, move_pairs);
+          if(!tmp_pair.first) return tmp_pair.second;
         } else {
           if(!engine->make_move([&cmd_line, &move_pairs](const Board &board, Move &move) {
             if(!move.set_can(cmd_line, board, move_pairs)) {
@@ -304,15 +308,16 @@ namespace peacockspider
           }, true)) print_illegal_move(ols, cmd_line);
         }
       }
+      return true;
     }
     
-    unordered_map<string, function<bool (Engine *, bool &, const string &, ostream *, const string &, MovePairList &)>> command_map {
+    unordered_map<string, function<pair<bool, bool> (Engine *, bool &, const string &, ostream *, const string &, MovePairList &)>> command_map {
       {
         "xboard",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           print_line(ols, "");
           is_prompt = false;
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -323,66 +328,66 @@ namespace peacockspider
           iss >> version;
           if(iss.fail() || !iss.eof()) {
             print_error(ols, "incorrect number", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           if(version >= 2) {
             for(int i = 0; features[i] != nullptr; i++) {
               print_line(ols, features[i]);
             }
           }
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "accepted",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "rejected",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "new",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->new_game();
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "quit",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          return false;
+          return make_pair(false, true);
         }
       },
       {
         "random",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "force",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->set_force_mode();
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "go",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->go();
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "playother",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->play_other();
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -394,7 +399,7 @@ namespace peacockspider
             if(old_board.side() != new_board.side()) new_board.set_en_passant_column(-1);
             return true;
           });
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -406,7 +411,7 @@ namespace peacockspider
             if(old_board.side() != new_board.side()) new_board.set_en_passant_column(-1);
             return true;
           });
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -416,18 +421,18 @@ namespace peacockspider
           split_argument_string(arg_str, args);
           if(args.size() < 3) {
             print_error(ols, "too few arguments", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           if(args.size() > 3) {
             print_error(ols, "too many arguments", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           istringstream mps_iss(args[0]);
           unsigned mps;
           mps_iss >> mps;
           if(mps_iss.fail() || !mps_iss.eof()) {
             print_error(ols, "incorrect number", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           auto iter = find(args[1].begin(), args[1].end(), ':');
           string base_min_str(args[1].begin(), iter);
@@ -436,7 +441,7 @@ namespace peacockspider
           base_min_iss >> base_min;
           if(base_min_iss.fail() || !base_min_iss.eof()) {
             print_error(ols, "incorrect number", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           unsigned base_sec = 0;
           if(iter != args[1].end()) {
@@ -445,7 +450,7 @@ namespace peacockspider
             base_sec_iss >> base_sec;
             if(base_min_iss.fail() || !base_min_iss.eof()) {
               print_error(ols, "incorrect number", cmd_line);
-              return true;
+              return make_pair(true, true);
             }
           }
           unsigned base = ((base_min * 60) + base_sec) * 1000;
@@ -454,11 +459,11 @@ namespace peacockspider
           inc_iss >> inc;
           if(inc_iss.fail() || !inc_iss.eof()) {
             print_error(ols, "incorrect number", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           inc *= 1000;
           engine->set_level(mps, base, inc);
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -469,11 +474,11 @@ namespace peacockspider
           iss >> time;
           if(iss.fail() || !iss.eof()) {
             print_error(ols, "incorrect number", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           time *= 1000;
           engine->set_time(time);
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -484,12 +489,12 @@ namespace peacockspider
           iss >> depth;
           if(iss.fail() || !iss.eof()) {
             print_error(ols, "incorrect number", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           if(depth < 1) depth = 1;
           if(depth > MAX_DEPTH) depth = MAX_DEPTH;
           engine->set_depth(depth);
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -500,12 +505,12 @@ namespace peacockspider
           iss >> time;
           if(iss.fail() || !iss.eof()) {
             print_error(ols, "incorrect number", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           if(time < 0) time = 0;
           time *= 10;
           engine->set_remaining_engine_time(static_cast<unsigned>(time));
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -516,19 +521,19 @@ namespace peacockspider
           iss >> time;
           if(iss.fail() || !iss.eof()) {
             print_error(ols, "incorrect number", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           if(time < 0) time = 0;
           time *= 10;
           engine->set_remaining_opponent_time(static_cast<unsigned>(time));
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "?",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->stop_thinking();
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -539,7 +544,7 @@ namespace peacockspider
           iss >> n;
           if(iss.fail() || !iss.eof()) {
             print_error(ols, "incorrect number", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           unique_lock<mutex> output_lock(output_mutex);
           cout << "pong " << n << endl;
@@ -547,13 +552,13 @@ namespace peacockspider
             *ols << output_prefix;
             *ols << "pong " << n << endl;
           }
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "draw",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -566,27 +571,27 @@ namespace peacockspider
           while(iter != arg_str.end() && (*iter == ' ' || *iter == '\t')) iter++;
           if(iter == arg_str.end() || *iter != '{') {
             print_error(ols, "invalid result comment", cmd_line);
-            return true;
+            return make_pair(true, true);
           } else
             iter++;
           auto end_iter = arg_str.end();
           if(end_iter == arg_str.begin()) {
             print_error(ols, "invalid result comment", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           end_iter--;
           if(*end_iter != '}') {
             print_error(ols, "invalid result comment", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           string result_comment(iter, end_iter);
           Result result = string_to_result(result_str);
           if(result == Result::NONE) {
             print_error(ols, "invalid result", cmd_line);
-            return true;
+            return make_pair(true, true);
           }
           engine->set_result(result, result_comment);
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -595,16 +600,19 @@ namespace peacockspider
           if(!engine->set_board([&arg_str](const Board &old_board, Board &new_board) {
             return new_board.set(arg_str);
           })) print_error(ols, "invalid fen", cmd_line);
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "edit",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          if(!engine->set_board([is_prompt, ols](const Board &old_board, Board &new_board) {
-            return editor_loop(old_board, new_board, is_prompt, ols);
+          bool is_success = true;
+          if(!engine->set_board([is_prompt, ols, &is_success](const Board &old_board, Board &new_board) {
+            pair<bool, bool> tmp_pair = editor_loop(old_board, new_board, is_prompt, ols);
+            is_success = tmp_pair.second;
+            return tmp_pair.first;
           })) print_error(ols, "invalid position", cmd_line);
-          return true;
+          return make_pair(is_success, is_success);
         }
       },
       {
@@ -612,7 +620,7 @@ namespace peacockspider
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           Move hint_move;
           if(engine->get_hint_move(hint_move)) print_line(ols, "Hint: " + hint_move.to_can_string());
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -620,70 +628,70 @@ namespace peacockspider
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           print_line(ols, "");
           print_line(ols, "");
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "undo",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->undo();
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "remove",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->remove();
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "hard",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->set_auto_pondering_flag(true);
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "easy",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->set_auto_pondering_flag(false);
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "post",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->set_thinking_output_flag(true);
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "nopost",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->set_thinking_output_flag(false);
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "analyze",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           engine->analyze();
-          analysis_loop(engine, is_prompt, ols, move_pairs);
+          bool is_success = analysis_loop(engine, is_prompt, ols, move_pairs);
           engine->quit_from_analysis();
-          return true;
+          return make_pair(is_success, is_success);
         }
       },
       {
         "name",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          return true;
+          return make_pair(true, true);
         }
       },
       {
         "computer",
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
-          return true;
+          return make_pair(true, true);
         }
       },
       {
@@ -694,13 +702,13 @@ namespace peacockspider
           unique_lock<mutex> output_lock(output_mutex);
           cout << board << endl;
           if(ols != nullptr) *ols << prefix_and_board(output_prefix, board) << endl;
-          return true;
+          return make_pair(true, true);
         }
       }
     };
   }
   
-  void xboard_loop(Engine *engine, ostream *ols, function<bool (Engine *, const string &, ostream *)> fun)
+  bool xboard_loop(Engine *engine, ostream *ols, function<pair<bool, bool> (Engine *, const string &, ostream *)> fun)
   {
     unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
     MovePairList move_pairs(tmp_move_pairs.get(), 0);
@@ -779,7 +787,7 @@ namespace peacockspider
       getline(cin, cmd_line);
       if(cin.fail()) {
         cerr << "I/O error" << endl;
-        break;
+        return false;
       }
       {
         unique_lock<mutex> output_lock(output_mutex);
@@ -795,9 +803,11 @@ namespace peacockspider
       split_command_line(cmd_line, cmd_name, arg_str);
       auto iter = command_map.find(cmd_line);
       if(iter != command_map.end()) {
-        if(!(iter->second)(engine, is_prompt, arg_str, ols, cmd_line, move_pairs)) break;
+        pair<bool, bool> tmp_pair = (iter->second)(engine, is_prompt, arg_str, ols, cmd_line, move_pairs);
+        if(!tmp_pair.first) return tmp_pair.second;
       } else {
-        if(fun(engine, cmd_name, ols)) break;
+        pair<bool, bool> tmp_pair = fun(engine, cmd_name, ols);
+        if(tmp_pair.first) return tmp_pair.second;
         if(!engine->make_move([&cmd_line, &move_pairs](const Board &board, Move &move) {
           if(!move.set_can(cmd_line, board, move_pairs)) {
             if(!move.set_san(cmd_line, board, move_pairs)) return false;
@@ -806,5 +816,6 @@ namespace peacockspider
         })) print_illegal_move(ols, cmd_line);
       }
     }
+    return true;
   }
 }

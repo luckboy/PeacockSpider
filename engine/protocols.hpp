@@ -29,9 +29,9 @@ namespace peacockspider
 
   void split_argument_string(const std::string &arg_str, std::vector<std::string> &args);
   
-  void xboard_loop(Engine *engine, std::ostream *ols, std::function<bool (Engine *, const std::string &, std::ostream *)> fun);
+  bool xboard_loop(Engine *engine, std::ostream *ols, std::function<std::pair<bool, bool> (Engine *, const std::string &, std::ostream *)> fun);
 
-  bool uci_loop(Engine *engine, const std::string &first_cmd_line, std::ostream *ols);
+  std::pair<bool, bool> uci_loop(Engine *engine, const std::string &first_cmd_line, std::ostream *ols);
 }
 
 #endif
