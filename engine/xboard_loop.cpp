@@ -235,7 +235,9 @@ namespace peacockspider
             pair<bool, bool> tmp_pair = editor_loop(old_board, new_board, is_prompt, ols);
             is_success = tmp_pair.second;
             return tmp_pair.first;
-          }, true)) print_error(ols, "invalid position", cmd_line);
+          }, true)) {
+            if(is_success) print_error(ols, "invalid position", cmd_line);
+          }
           return make_pair(is_success, is_success);
         }
       },
@@ -611,7 +613,9 @@ namespace peacockspider
             pair<bool, bool> tmp_pair = editor_loop(old_board, new_board, is_prompt, ols);
             is_success = tmp_pair.second;
             return tmp_pair.first;
-          })) print_error(ols, "invalid position", cmd_line);
+          })) {
+            if(is_success) print_error(ols, "invalid position", cmd_line);
+          }
           return make_pair(is_success, is_success);
         }
       },
