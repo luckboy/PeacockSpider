@@ -53,6 +53,17 @@ namespace peacockspider
       nullptr
     };
 
+    bool is_prompt_newline;
+    
+    void unsafely_print_line(ostream *ols, const string &str)
+    {
+      cout << str << endl;
+      if(ols != nullptr) {
+        *ols << output_prefix;
+        *ols << str << endl;
+      }
+    }
+    
     void print_line(ostream *ols, const string &str)
     {
       unique_lock<mutex> output_lock(output_mutex);
@@ -262,11 +273,16 @@ namespace peacockspider
           unique_lock<mutex> output_lock(output_mutex);
           cout << editor_prompt;
           cout.flush();
+          is_prompt_newline = true;
         }
         getline(cin, cmd_line);
         if(cin.fail()) {
           cerr << "I/O error" << endl;
           break;
+        }
+        {
+          unique_lock<mutex> output_lock(output_mutex);
+          is_prompt_newline = false;
         }
         if(ols != nullptr) {
           unique_lock<mutex> output_lock(output_mutex);
@@ -693,6 +709,7 @@ namespace peacockspider
     OutputFunctionSettings settings(engine,
       [ols, &thread_move_pairs](int depth, int value, unsigned ms, const Searcher *searcher, const Board *pondering_board, const Move *pondering_move) {
         unique_lock<mutex> output_lock(output_mutex);
+        if(is_prompt_newline) cout << endl;
         cout << depth << " " << value << " " << ((ms + 9) / 10) << " " << searcher->nodes();
         if(ols != nullptr) {
           *ols << output_prefix;
@@ -720,12 +737,25 @@ namespace peacockspider
         }
         cout << endl;
         if(ols != nullptr) *ols << endl;
+        is_prompt_newline = false;
       },
       [ols](const Board &board, Move move, const Move *pondering_move) {
-        print_line(ols, string("move ") + move.to_can_string());
+        unique_lock<mutex> output_lock(output_mutex);
+        if(is_prompt_newline) cout << endl;
+        unsafely_print_line(ols, string("move ") + move.to_can_string());
+        if(is_prompt_newline) {
+          cout << prompt;
+          cout.flush();
+        }
       },
       [ols](Result result, const string &comment) {
-        print_line(ols, result_to_string(result) + " {" + comment + "}");
+        unique_lock<mutex> output_lock(output_mutex);
+        if(is_prompt_newline) cout << endl;
+        unsafely_print_line(ols, result_to_string(result) + " {" + comment + "}");
+        if(is_prompt_newline) {
+          cout << prompt;
+          cout.flush();
+        }
       },
       [ols](const Board &board) {
         if(ols != nullptr) {
@@ -734,17 +764,26 @@ namespace peacockspider
         }
       });
     bool is_prompt = true;
+    {
+      unique_lock<mutex> output_lock(output_mutex);
+      is_prompt_newline = false;
+    }
     while(true) {
       string cmd_line;
       if(prompt) {
         unique_lock<mutex> output_lock(output_mutex);
         cout << prompt;
         cout.flush();
+        is_prompt_newline = true;
       }
       getline(cin, cmd_line);
       if(cin.fail()) {
         cerr << "I/O error" << endl;
         break;
+      }
+      {
+        unique_lock<mutex> output_lock(output_mutex);
+        is_prompt_newline = false;
       }
       if(ols != nullptr) {
         unique_lock<mutex> output_lock(output_mutex);
