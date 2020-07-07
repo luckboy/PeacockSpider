@@ -219,6 +219,8 @@ namespace peacockspider
 
     ~OutputFunctionSettings()
     {
+      _M_engine->stop_thinking();
+      _M_engine->stop_pondering();
       _M_engine->set_board_output_function(_M_saved_board_output_function);
       _M_engine->set_result_output_function(_M_saved_result_output_function);
       _M_engine->set_move_output_function(_M_saved_move_output_function);
