@@ -271,7 +271,7 @@ namespace peacockspider
         string cmd_line;
         if(is_prompt) {
           unique_lock<mutex> output_lock(output_mutex);
-          cout << editor_prompt;
+          cout << prompt;
           cout.flush();
           is_prompt_newline = true;
         }
@@ -770,7 +770,7 @@ namespace peacockspider
     }
     while(true) {
       string cmd_line;
-      if(prompt) {
+      if(is_prompt) {
         unique_lock<mutex> output_lock(output_mutex);
         cout << prompt;
         cout.flush();
