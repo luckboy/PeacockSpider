@@ -104,6 +104,7 @@ namespace peacockspider
           *ols << input_prefix;
           *ols << cmd_line << endl;
         }
+        if(cmd_line.empty()) continue;
         if(cmd_line == ".") break;
         if(cmd_line == "c") {
           color = (color == Color::WHITE ? Color::BLACK : Color::WHITE);
@@ -272,6 +273,7 @@ namespace peacockspider
           *ols << input_prefix;
           *ols << cmd_line << endl;
         }
+        if(cmd_line.empty()) continue;
         string cmd_name, arg_str;
         split_command_line(cmd_line, cmd_name, arg_str);
         auto iter = analysis_command_map.find(cmd_line);
@@ -749,6 +751,7 @@ namespace peacockspider
         *ols << input_prefix;
         *ols << cmd_line << endl;
       }
+      if(cmd_line.empty()) continue;
       string cmd_name, arg_str;
       split_command_line(cmd_line, cmd_name, arg_str);
       auto iter = command_map.find(cmd_line);
