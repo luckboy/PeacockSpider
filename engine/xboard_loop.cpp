@@ -33,7 +33,7 @@ namespace peacockspider
     const char *board_prefix = "board: ";
 
     const char *prompt = "Peacock Spider> ";
-    const char *edit_prompt = "Peacock Spider:edit>";
+    const char *editor_prompt = "Peacock Spider:edit>";
     
     const char *features[] = {
       "ping=1",
@@ -91,7 +91,7 @@ namespace peacockspider
         string cmd_line;
         if(is_prompt) {
           unique_lock<mutex> output_lock(output_mutex);
-          cout << edit_prompt;
+          cout << editor_prompt;
           cout.flush();
         }
         getline(cin, cmd_line);
@@ -259,7 +259,7 @@ namespace peacockspider
         string cmd_line;
         if(is_prompt) {
           unique_lock<mutex> output_lock(output_mutex);
-          cout << edit_prompt;
+          cout << editor_prompt;
           cout.flush();
         }
         getline(cin, cmd_line);
