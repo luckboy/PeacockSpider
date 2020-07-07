@@ -685,9 +685,9 @@ namespace peacockspider
   void xboard_loop(Engine *engine, ostream *ols, function<bool (Engine *, const string &, ostream *)> fun)
   {
     unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
-    MovePairList move_pairs;
+    MovePairList move_pairs(tmp_move_pairs.get(), 0);
     unique_ptr<MovePair []> tmp_thread_move_pairs(new MovePair[MAX_MOVE_COUNT]);
-    MovePairList thread_move_pairs;
+    MovePairList thread_move_pairs(tmp_thread_move_pairs.get(), 0);
     OutputFunctionSettings settings(engine,
       [ols, &thread_move_pairs](int depth, int value, unsigned ms, const Searcher *searcher, const Board *pondering_board, const Move *pondering_move) {
         unique_lock<mutex> output_lock(output_mutex);
