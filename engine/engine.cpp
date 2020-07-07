@@ -15,7 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <iostream>
 #include <limits>
+#include <new>
 #include "engine.hpp"
 
 using namespace std;
@@ -53,41 +55,45 @@ namespace peacockspider
     _M_time_control.base = 0;
     _M_time_control.inc = 0;
     _M_thread = thread([this]() {
-      unique_lock<mutex> lock(_M_mutex);
-      while(_M_thread_command != ThreadCommand::QUIT) {
-        switch(_M_thread_command) {
-          case ThreadCommand::THINK:
-          {
-            Move best_move;
-            think(best_move);
-            bool auto_pondering_flag = false;
-            bool auto_move_making_flag = true;
+      try {
+        unique_lock<mutex> lock(_M_mutex);
+        while(_M_thread_command != ThreadCommand::QUIT) {
+          switch(_M_thread_command) {
+            case ThreadCommand::THINK:
             {
-              unique_lock<mutex> other_mutex(_M_other_mutex);
-              auto_pondering_flag = _M_auto_pondering_flag;
-              auto_move_making_flag = _M_auto_move_making_flag;
-            }
-            if(auto_move_making_flag && _M_mode != Mode::ANALYSIS && best_move.to() != -1) {
-              Board new_board;
-              if(_M_boards.back().make_move(best_move, new_board)) {
-                _M_boards.push_back(new_board);
-                set_last_board(new_board);
-                _M_board_output_function(_M_boards.back());
-                unsafely_set_result_for_boards();
-                if(_M_result != Result::NONE) _M_result_output_function(_M_result, _M_result_comment);
-                if(auto_pondering_flag) ponder();
+              Move best_move;
+              think(best_move);
+              bool auto_pondering_flag = false;
+              bool auto_move_making_flag = true;
+              {
+                unique_lock<mutex> other_mutex(_M_other_mutex);
+                auto_pondering_flag = _M_auto_pondering_flag;
+                auto_move_making_flag = _M_auto_move_making_flag;
               }
+              if(auto_move_making_flag && _M_mode != Mode::ANALYSIS && best_move.to() != -1) {
+                Board new_board;
+                if(_M_boards.back().make_move(best_move, new_board)) {
+                  _M_boards.push_back(new_board);
+                  set_last_board(new_board);
+                  _M_board_output_function(_M_boards.back());
+                  unsafely_set_result_for_boards();
+                  if(_M_result != Result::NONE) _M_result_output_function(_M_result, _M_result_comment);
+                  if(auto_pondering_flag) ponder();
+                }
+              }
+              break;
             }
-            break;
+            case ThreadCommand::PONDER:
+              ponder();
+              break;
+            default:
+              break;
           }
-          case ThreadCommand::PONDER:
-            ponder();
-            break;
-          default:
-            break;
+          _M_thread_command = ThreadCommand::NO_COMMAND;
+          _M_condition_variable.wait(lock);
         }
-        _M_thread_command = ThreadCommand::NO_COMMAND;
-        _M_condition_variable.wait(lock);
+      } catch(bad_alloc &e) {
+        cerr << "Can't allocate memory" << endl;
       }
     });
   }
