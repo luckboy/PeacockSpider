@@ -302,9 +302,9 @@ namespace peacockspider
           *ols << input_prefix;
           *ols << cmd_line << endl;
         }
-        if(cmd_line.empty()) continue;
         string cmd_name, arg_str;
         split_command_line(cmd_line, cmd_name, arg_str);
+        if(cmd_name.empty()) continue;
         auto iter = analysis_command_map.find(cmd_line);
         if(iter != analysis_command_map.end()) {
           pair<bool, bool> tmp_pair = (iter->second)(engine, is_prompt, arg_str, ols, cmd_line, move_pairs);
@@ -810,9 +810,9 @@ namespace peacockspider
         *ols << input_prefix;
         *ols << cmd_line << endl;
       }
-      if(cmd_line.empty()) continue;
       string cmd_name, arg_str;
       split_command_line(cmd_line, cmd_name, arg_str);
+      if(cmd_name.empty()) continue;
       auto iter = command_map.find(cmd_line);
       if(iter != command_map.end()) {
         pair<bool, bool> tmp_pair = (iter->second)(engine, is_prompt, arg_str, ols, cmd_line, move_pairs);
