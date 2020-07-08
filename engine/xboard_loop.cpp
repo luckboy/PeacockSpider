@@ -147,11 +147,14 @@ namespace peacockspider
             print_error(ols, "invalid piece", cmd_line);
         }
       }
+      int white_piece_count = 0;
+      int black_piece_count = 0;
       new_board.set_king_square(Side::WHITE, -1);
       new_board.set_king_square(Side::BLACK, -1);
       for(Square squ = 0; squ < 64; squ++) {
         switch(new_board.color(squ)) {
           case Color::WHITE:
+            white_piece_count++;
             if(new_board.piece(squ) == Piece::KING) {
               if(new_board.king_square(Side::WHITE) == -1)
                 new_board.set_king_square(Side::WHITE, squ);
@@ -160,6 +163,7 @@ namespace peacockspider
             }
             break;
           case Color::BLACK:
+            black_piece_count++;
             if(new_board.piece(squ) == Piece::KING) {
               if(new_board.king_square(Side::BLACK) == -1)
                 new_board.set_king_square(Side::BLACK, squ);
@@ -171,6 +175,10 @@ namespace peacockspider
             break;
         }
       }
+      if(new_board.king_square(Side::WHITE) == -1) return make_pair(false, true);
+      if(new_board.king_square(Side::BLACK) == -1) return make_pair(false, true);
+      if(white_piece_count > 16) return make_pair(false, true);
+      if(black_piece_count > 16) return make_pair(false, true);
       if(!new_board.has_color_piece(Side::WHITE, Piece::KING, E1)) {
         new_board.set_side_castlings(Side::WHITE, SideCastlings::NONE);
       }
