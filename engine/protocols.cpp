@@ -39,11 +39,10 @@ namespace peacockspider
   {
     args.clear();
     auto iter = arg_str.begin();
-    while(true) {
+    while(iter != arg_str.end()) {
       auto arg_iter = iter;
       while(iter != arg_str.end() && *iter != ' ' && *iter != '\t') iter++;
       args.push_back(string(arg_iter, iter));
-      if(iter == arg_str.end()) break;
       while(iter != arg_str.end() && (*iter == ' ' || *iter == '\t')) iter++;
     }
   }
