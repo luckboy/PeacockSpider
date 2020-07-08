@@ -342,7 +342,7 @@ namespace peacockspider
           }
           if(version >= 2) {
             for(int i = 0; features[i] != nullptr; i++) {
-              print_line(ols, features[i]);
+              print_line(ols, string("feature ") + features[i]);
             }
           }
           return make_pair(true, true);
