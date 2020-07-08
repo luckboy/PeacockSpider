@@ -33,7 +33,7 @@ namespace peacockspider
     const char *board_prefix = "board: ";
 
     const char *prompt = "Peacock Spider> ";
-    const char *editor_prompt = "Peacock Spider:edit>";
+    const char *editing_prompt = "Peacock Spider:edit>";
     
     const char *features[] = {
       "ping=1",
@@ -94,7 +94,7 @@ namespace peacockspider
       }
     }
     
-    pair<bool, bool> editor_loop(const Board &old_board, Board &new_board, bool is_prompt, ostream *ols)
+    pair<bool, bool> editing_loop(const Board &old_board, Board &new_board, bool is_prompt, ostream *ols)
     {
       new_board = old_board;
       Color color = Color::WHITE;
@@ -102,7 +102,7 @@ namespace peacockspider
         string cmd_line;
         if(is_prompt) {
           unique_lock<mutex> output_lock(output_mutex);
-          cout << editor_prompt;
+          cout << editing_prompt;
           cout.flush();
         }
         getline(cin, cmd_line);
@@ -232,7 +232,7 @@ namespace peacockspider
         [](Engine *engine, bool is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           bool is_success = true;
           if(!engine->set_board([is_prompt, ols, &is_success](const Board &old_board, Board &new_board) {
-            pair<bool, bool> tmp_pair = editor_loop(old_board, new_board, is_prompt, ols);
+            pair<bool, bool> tmp_pair = editing_loop(old_board, new_board, is_prompt, ols);
             is_success = tmp_pair.second;
             return tmp_pair.first;
           }, true)) {
@@ -610,7 +610,7 @@ namespace peacockspider
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           bool is_success = true;
           if(!engine->set_board([is_prompt, ols, &is_success](const Board &old_board, Board &new_board) {
-            pair<bool, bool> tmp_pair = editor_loop(old_board, new_board, is_prompt, ols);
+            pair<bool, bool> tmp_pair = editing_loop(old_board, new_board, is_prompt, ols);
             is_success = tmp_pair.second;
             return tmp_pair.first;
           })) {
