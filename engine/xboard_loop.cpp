@@ -310,9 +310,10 @@ namespace peacockspider
           pair<bool, bool> tmp_pair = (iter->second)(engine, is_prompt, arg_str, ols, cmd_line, move_pairs);
           if(!tmp_pair.first) return tmp_pair.second;
         } else {
-          if(!engine->make_move([&cmd_line, &move_pairs](const Board &board, Move &move) {
-            if(!move.set_can(cmd_line, board, move_pairs)) {
-              if(!move.set_san(cmd_line, board, move_pairs)) return false;
+          if(!engine->make_move([&cmd_name, &arg_str, &move_pairs](const Board &board, Move &move) {
+            if(!arg_str.empty()) return false;
+            if(!move.set_can(cmd_name, board, move_pairs)) {
+              if(!move.set_san(cmd_name, board, move_pairs)) return false;
             }
             return true;
           }, true)) print_illegal_move(ols, cmd_line);
@@ -820,9 +821,10 @@ namespace peacockspider
       } else {
         pair<bool, bool> tmp_pair = fun(engine, cmd_name, ols);
         if(tmp_pair.first) return tmp_pair.second;
-        if(!engine->make_move([&cmd_line, &move_pairs](const Board &board, Move &move) {
-          if(!move.set_can(cmd_line, board, move_pairs)) {
-            if(!move.set_san(cmd_line, board, move_pairs)) return false;
+        if(!engine->make_move([&cmd_name, &arg_str, &move_pairs](const Board &board, Move &move) {
+          if(!arg_str.empty()) return false;
+          if(!move.set_can(cmd_name, board, move_pairs)) {
+            if(!move.set_san(cmd_name, board, move_pairs)) return false;
           }
           return true;
         })) print_illegal_move(ols, cmd_line);
