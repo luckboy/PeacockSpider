@@ -75,6 +75,7 @@ namespace peacockspider
         [](Engine *engine, const vector<string> &args, ostream *ols, MovePairList &move_pairs) {
           engine->set_board_and_make_moves([&args, &move_pairs](const Board &old_board, Board &new_board, vector<Move> &moves) {
             size_t i = 0;
+            moves.clear();
             if(args.size() - i >= 1 && args[i] == "startpos") {
               new_board = Board();
               i++;
@@ -122,6 +123,7 @@ namespace peacockspider
             if(args.size() - i >= 1 && args[i] == "searchmoves") {
               if(engine->get_board_for_search_moves([&i, &args, &tmp_moves, &move_pairs](const Board &board) {
                 size_t j;
+                tmp_moves.clear();
                 for(j = 0; j < args.size() - i - 1; j++) {
                   Move move;
                   if(!move.set_can(args[i + j + 1], board, move_pairs)) break;
