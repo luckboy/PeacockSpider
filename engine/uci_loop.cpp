@@ -32,7 +32,6 @@ namespace peacockspider
       print_line(ols, "");
       print_line(ols, "id name Peacock Spider");
       print_line(ols, "id author Lukasz Szpakowski");
-      print_line(ols, "");
       print_line(ols, "uciok");
     }
 
@@ -225,10 +224,10 @@ namespace peacockspider
         unique_lock<mutex> output_lock(output_mutex);
         int selective_depth = depth + MAX_QUIESCENCE_DEPTH;
         int64_t nps = searcher->nodes() * 1000 / (ms > 0 ? ms : 1);
-        cout << "info depth " << depth << " seldepth " << selective_depth << " multipv 1";
+        cout << "info depth " << depth << " seldepth " << selective_depth;
         if(ols != nullptr) {
           *ols << output_prefix;
-          *ols << "info depth " << depth << " seldepth " << selective_depth << " multipv 1";
+          *ols << "info depth " << depth << " seldepth " << selective_depth;
         }
         cout << " score cp " << value;
         if(ols != nullptr) *ols << " score cp " << value;
