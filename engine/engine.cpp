@@ -436,14 +436,14 @@ namespace peacockspider
     return fun(_M_boards.back());
   }
   
-  void Engine::go(const vector<Move> *search_moves, unsigned white_time, unsigned black_time, unsigned moves_to_go, int depth, uint64_t nodes, int checkmate_move_count, unsigned move_time, bool is_infinity, bool is_pondering)
+  void Engine::go(const vector<Move> *search_moves, unsigned white_time, unsigned black_time, unsigned moves_to_go, int depth, uint64_t nodes, int checkmate_move_count, unsigned move_time, bool is_infinite, bool is_pondering)
   {
     unique_lock<mutex> lock(_M_mutex);
     if(_M_result != Result::NONE) return;
     _M_thinker->discard_hint_move();
     {
       unique_lock<mutex> limit_lock(_M_limit_mutex);
-      if(!is_infinity) {
+      if(!is_infinite) {
         if(move_time == numeric_limits<unsigned>::max()) {
           if(_M_boards.back().side() == Side::WHITE) {
             if(white_time != numeric_limits<unsigned>::max()) {
