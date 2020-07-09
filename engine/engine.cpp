@@ -430,40 +430,43 @@ namespace peacockspider
     return true;
   }
   
-  void Engine::go(const vector<Move> *search_moves, unsigned white_time, unsigned black_time, unsigned moves_to_go, int depth, uint64_t nodes, int checkmate_move_count, unsigned move_time, bool is_pondering)
+  void Engine::go(const vector<Move> *search_moves, unsigned white_time, unsigned black_time, unsigned moves_to_go, int depth, uint64_t nodes, int checkmate_move_count, unsigned move_time, bool is_infinity, bool is_pondering)
   {
     unique_lock<mutex> lock(_M_mutex);
     if(_M_result != Result::NONE) return;
     _M_thinker->discard_hint_move();
     {
       unique_lock<mutex> limit_lock(_M_limit_mutex);
-      if(move_time == numeric_limits<unsigned>::max()) {
-        if(_M_boards.back().side() == Side::WHITE) {
-          if(white_time != numeric_limits<unsigned>::max()) {
-            _M_has_remaining_engine_time = true;
-            _M_remaining_engine_time = white_time;
-          } else
-            _M_has_remaining_engine_time = false;
-          if(black_time != numeric_limits<unsigned>::max()) {
-            _M_has_remaining_opponent_time = true;
-            _M_remaining_opponent_time = black_time;
-          } else
-            _M_has_remaining_opponent_time = false;
-        } else {
-          if(white_time != numeric_limits<unsigned>::max()) {
-            _M_has_remaining_opponent_time = true;
-            _M_remaining_opponent_time = white_time;
-          } else
-            _M_has_remaining_engine_time = false;
-          if(black_time != numeric_limits<unsigned>::max()) {
-            _M_has_remaining_engine_time = true;
-            _M_remaining_engine_time = black_time;
-          } else
-            _M_has_remaining_engine_time = false;
-        }
-        _M_time = unsafely_calculate_time(moves_to_go);
+      if(!is_infinity) {
+        if(move_time == numeric_limits<unsigned>::max()) {
+          if(_M_boards.back().side() == Side::WHITE) {
+            if(white_time != numeric_limits<unsigned>::max()) {
+              _M_has_remaining_engine_time = true;
+              _M_remaining_engine_time = white_time;
+            } else
+              _M_has_remaining_engine_time = false;
+            if(black_time != numeric_limits<unsigned>::max()) {
+              _M_has_remaining_opponent_time = true;
+              _M_remaining_opponent_time = black_time;
+            } else
+              _M_has_remaining_opponent_time = false;
+          } else {
+            if(white_time != numeric_limits<unsigned>::max()) {
+              _M_has_remaining_opponent_time = true;
+              _M_remaining_opponent_time = white_time;
+            } else
+              _M_has_remaining_engine_time = false;
+            if(black_time != numeric_limits<unsigned>::max()) {
+              _M_has_remaining_engine_time = true;
+              _M_remaining_engine_time = black_time;
+            } else
+              _M_has_remaining_engine_time = false;
+          }
+          _M_time = unsafely_calculate_time(moves_to_go);
+        } else
+          _M_time = move_time;
       } else
-        _M_time = move_time;
+        _M_time = numeric_limits<unsigned>::max();
       _M_depth = depth;
       _M_nodes = nodes;
       _M_checkmate_move_count = checkmate_move_count;

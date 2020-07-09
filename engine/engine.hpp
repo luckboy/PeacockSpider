@@ -171,7 +171,7 @@ namespace peacockspider
 
     bool set_board_and_make_moves(std::function<bool (const Board &, Board &, std::vector<Move> &)> fun);
 
-    void go(const std::vector<Move> *search_moves, unsigned white_time, unsigned black_time, unsigned moves_to_go, int depth, std::uint64_t nodes, int checkmate_move_count, unsigned move_time, bool is_pondering);
+    void go(const std::vector<Move> *search_moves, unsigned white_time, unsigned black_time, unsigned moves_to_go, int depth, std::uint64_t nodes, int checkmate_move_count, unsigned move_time, bool is_infinity, bool is_pondering);
 
     void pondering_hit();
     
