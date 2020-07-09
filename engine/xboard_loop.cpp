@@ -28,10 +28,6 @@ namespace peacockspider
 {
   namespace
   {
-    const char *input_prefix = "input: ";
-    const char *output_prefix = "output: ";
-    const char *board_prefix = "board: ";
-
     const char *prompt = "Peacock Spider> ";
     const char *editing_prompt = "Peacock Spider:edit>";
     
@@ -54,25 +50,6 @@ namespace peacockspider
     };
 
     bool is_prompt_newline;
-    
-    void unsafely_print_line(ostream *ols, const string &str)
-    {
-      cout << str << endl;
-      if(ols != nullptr) {
-        *ols << output_prefix;
-        *ols << str << endl;
-      }
-    }
-    
-    void print_line(ostream *ols, const string &str)
-    {
-      unique_lock<mutex> output_lock(output_mutex);
-      cout << str << endl;
-      if(ols != nullptr) {
-        *ols << output_prefix;
-        *ols << str << endl;
-      }
-    }
 
     void print_illegal_move(ostream *ols, const string &move_str)
     {

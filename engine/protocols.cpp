@@ -21,8 +21,12 @@ using namespace std;
 
 namespace peacockspider
 {
-  mutex output_mutex;
+  const char *input_prefix = "input: ";
+  const char *output_prefix = "output: ";
+  const char *board_prefix = "board: ";
 
+  mutex output_mutex;  
+  
   void split_command_line(const string &cmd_line, string &cmd_name, string &arg_str)
   {
     auto iter = cmd_line.begin();
@@ -44,6 +48,25 @@ namespace peacockspider
       while(iter != arg_str.end() && *iter != ' ' && *iter != '\t') iter++;
       args.push_back(string(arg_iter, iter));
       while(iter != arg_str.end() && (*iter == ' ' || *iter == '\t')) iter++;
+    }
+  }
+
+  void unsafely_print_line(ostream *ols, const string &str)
+  {
+    cout << str << endl;
+    if(ols != nullptr) {
+      *ols << output_prefix;
+      *ols << str << endl;
+    }
+  }
+    
+  void print_line(ostream *ols, const string &str)
+  {
+    unique_lock<mutex> output_lock(output_mutex);
+    cout << str << endl;
+    if(ols != nullptr) {
+      *ols << output_prefix;
+      *ols << str << endl;
     }
   }
 }

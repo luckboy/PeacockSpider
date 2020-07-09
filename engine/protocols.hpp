@@ -23,12 +23,20 @@
 
 namespace peacockspider
 {
+  extern const char *input_prefix;
+  extern const char *output_prefix;
+  extern const char *board_prefix;
+
   extern std::mutex output_mutex;
 
   void split_command_line(const std::string &cmd_line, std::string &cmd_name, std::string &arg_str);
 
   void split_argument_string(const std::string &arg_str, std::vector<std::string> &args);
   
+  void unsafely_print_line(std::ostream *ols, const std::string &str);
+
+  void print_line(std::ostream *ols, const std::string &str);
+
   bool xboard_loop(Engine *engine, std::ostream *ols, std::function<std::pair<bool, bool> (Engine *, const std::string &, std::ostream *)> fun);
 
   std::pair<bool, bool> uci_loop(Engine *engine, const std::string &first_cmd_line, std::ostream *ols);
