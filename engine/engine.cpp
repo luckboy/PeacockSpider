@@ -430,6 +430,12 @@ namespace peacockspider
     return true;
   }
   
+  bool Engine::get_board_for_search_moves(function<bool (const Board &)> fun)
+  {
+    unique_lock<mutex> lock(_M_mutex);
+    return fun(_M_boards.back());
+  }
+  
   void Engine::go(const vector<Move> *search_moves, unsigned white_time, unsigned black_time, unsigned moves_to_go, int depth, uint64_t nodes, int checkmate_move_count, unsigned move_time, bool is_infinity, bool is_pondering)
   {
     unique_lock<mutex> lock(_M_mutex);
