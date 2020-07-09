@@ -208,9 +208,9 @@ namespace peacockspider
   {
     string first_cmd_name, first_arg_str;
     split_command_line(first_cmd_line, first_cmd_name, first_arg_str);
-    if(first_cmd_name == "uci") {
+    if(first_cmd_name == "uci")
       print_for_uci_command(ols);
-    } else
+    else
       return make_pair(false, true);
     engine->stop_thinking();
     engine->stop_pondering();
