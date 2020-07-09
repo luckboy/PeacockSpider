@@ -18,7 +18,7 @@
 #ifndef _PROTOCOLS_HPP
 #define _PROTOCOLS_HPP
 
-#include <iostream>
+#include <ostream>
 #include "engine.hpp"
 
 namespace peacockspider
