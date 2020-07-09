@@ -791,7 +791,7 @@ namespace peacockspider
       string cmd_name, arg_str;
       split_command_line(cmd_line, cmd_name, arg_str);
       if(cmd_name.empty()) continue;
-      auto iter = command_map.find(cmd_line);
+      auto iter = command_map.find(cmd_name);
       if(iter != command_map.end()) {
         pair<bool, bool> tmp_pair = (iter->second)(engine, is_prompt, arg_str, ols, cmd_line, move_pairs);
         if(!tmp_pair.first) return tmp_pair.second;
