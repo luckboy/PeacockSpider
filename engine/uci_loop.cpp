@@ -222,7 +222,7 @@ namespace peacockspider
     OutputFunctionSettings settings(engine,
       [ols](int depth, int value, unsigned ms, const Searcher *searcher, const Board *pondering_board, const Move *pondering_move) {
         unique_lock<mutex> output_lock(output_mutex);
-        int selective_depth = depth + MAX_QUIESCENCE_DEPTH;
+        int selective_depth = depth + searcher->max_quiescence_depth();
         int64_t nps = searcher->nodes() * 1000 / (ms > 0 ? ms : 1);
         cout << "info depth " << depth << " seldepth " << selective_depth;
         if(ols != nullptr) {

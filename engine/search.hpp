@@ -153,6 +153,8 @@ namespace peacockspider
     virtual std::uint64_t nodes() const = 0;
 
     virtual unsigned thread_count() const = 0;
+    
+    virtual int max_quiescence_depth() const = 0;
   };
 
   struct SearchStackElement
@@ -222,6 +224,8 @@ namespace peacockspider
     virtual std::uint64_t nodes() const;
 
     virtual unsigned thread_count() const;
+    
+    virtual int max_quiescence_depth() const;
   protected:
     virtual void check_stop();
     

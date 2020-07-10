@@ -105,6 +105,9 @@ namespace peacockspider
 
   unsigned SingleSearcherBase::thread_count() const
   { return 1; }
+  
+  int SingleSearcherBase::max_quiescence_depth() const
+  { return _M_max_quiescence_depth; }
 
   void SingleSearcherBase::check_stop()
   {
