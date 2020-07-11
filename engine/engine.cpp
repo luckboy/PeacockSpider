@@ -556,10 +556,9 @@ namespace peacockspider
     if(_M_time_control.type == TimeControlType::CLASSICAL || 
       (_M_time_control.type == TimeControlType::NONE && moves_to_go != numeric_limits<unsigned>::max())) {
       if(moves_to_go == numeric_limits<unsigned>::max()) {
-        if(_M_has_remaining_engine_time) {
-          moves_to_go = (_M_boards.size() - 1) % _M_time_control.mps;
-          if(moves_to_go == 0) moves_to_go = _M_time_control.mps;
-        } else
+        if(_M_has_remaining_engine_time)
+          moves_to_go = _M_time_control.mps - (((_M_boards.size() - 1) / 2) % _M_time_control.mps);
+        else
           moves_to_go = _M_time_control.mps;
       }
       unsigned remaining_time = (_M_has_remaining_engine_time ? _M_remaining_engine_time : (_M_time_control.type != TimeControlType::NONE ? _M_time_control.base : 5 * 60 * 1000));
