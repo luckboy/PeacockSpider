@@ -83,6 +83,9 @@ namespace peacockspider
     int _M_piece_defences[6];
     int _M_piece_piece_pins[6][6];
   public:
+    EvaluationFunction()
+    { set(default_evaluation_parameters); }
+    
     EvaluationFunction(const int *params)
     { set(params); }
     
