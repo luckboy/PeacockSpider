@@ -238,7 +238,7 @@ namespace peacockspider
 
   ostream &operator<<(ostream &os, const PrefixAndBoard &pab)
   {
-    for(Row row = 7; row >= 0; row++) {
+    for(Row row = 7; row >= 0; row--) {
       os << pab.prefix << "  ";
       for(Column col = 0; col < 8; col++) {
         os << "+---";

@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <algorithm>
+#include <csignal>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -305,6 +306,8 @@ namespace peacockspider
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           print_line(ols, "");
           is_prompt = false;
+          signal(SIGINT, SIG_IGN);
+          signal(SIGTERM, SIG_IGN);
           return make_pair(true, true);
         }
       },

@@ -136,6 +136,7 @@ namespace peacockspider
         return false;
       }
     }
+    _M_has_best_move = (_M_best_move.to() != -1);
     _M_must_continue = true;
     _M_has_pondering = false;
     return true;
