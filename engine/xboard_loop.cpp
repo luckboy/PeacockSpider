@@ -51,6 +51,7 @@ namespace peacockspider
     };
 
     bool is_prompt_newline;
+    bool must_write_prompt;
 
     void print_illegal_move(ostream *ols, const string &move_str)
     {
@@ -274,6 +275,7 @@ namespace peacockspider
         {
           unique_lock<mutex> output_lock(output_mutex);
           is_prompt_newline = false;
+          must_write_prompt = false;
         }
         if(ols != nullptr) {
           unique_lock<mutex> output_lock(output_mutex);
@@ -738,24 +740,29 @@ namespace peacockspider
         }
         cout << endl;
         if(ols != nullptr) *ols << endl;
+        if(is_prompt_newline) must_write_prompt = true;
         is_prompt_newline = false;
       },
       [ols](const Board &board, Move move, const Move *pondering_move) {
         unique_lock<mutex> output_lock(output_mutex);
         if(is_prompt_newline) cout << endl;
         unsafely_print_line(ols, string("move ") + move.to_can_string());
-        if(is_prompt_newline) {
+        if(is_prompt_newline || must_write_prompt) {
           cout << prompt;
           cout.flush();
+          is_prompt_newline = true;
+          must_write_prompt = false;
         }
       },
       [ols](Result result, const string &comment) {
         unique_lock<mutex> output_lock(output_mutex);
         if(is_prompt_newline) cout << endl;
         unsafely_print_line(ols, result_to_string(result) + " {" + comment + "}");
-        if(is_prompt_newline) {
+        if(is_prompt_newline || must_write_prompt) {
           cout << prompt;
           cout.flush();
+          is_prompt_newline = true;
+          must_write_prompt = false;
         }
       },
       [ols](const Board &board) {
@@ -768,6 +775,7 @@ namespace peacockspider
     {
       unique_lock<mutex> output_lock(output_mutex);
       is_prompt_newline = false;
+      must_write_prompt = false;
     }
     while(true) {
       string cmd_line;
@@ -785,6 +793,7 @@ namespace peacockspider
       {
         unique_lock<mutex> output_lock(output_mutex);
         is_prompt_newline = false;
+        must_write_prompt = false;
       }
       if(ols != nullptr) {
         unique_lock<mutex> output_lock(output_mutex);
