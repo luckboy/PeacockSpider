@@ -43,6 +43,7 @@ namespace peacockspider
     _M_searcher->clear_pondering_stop_flag();
     _M_searcher->clear_searching_stop_flag();
     _M_must_continue = false;
+    _M_has_best_move = false;
     _M_has_pondering = false;
     _M_has_pondering_move = false;
   }
