@@ -92,10 +92,10 @@ namespace peacockspider
     if(depth <= 0) {
       return quiescence_search(alpha, beta, _M_max_quiescence_depth, ply);
     } else {
-      if(_M_stack[ply].board.halfmove_clock() >= 100) return 0;
       _M_stack[ply].pv_line.clear();
       _M_nodes++;
       check_stop_for_nodes();
+      if(_M_stack[ply].board.halfmove_clock() >= 100) return 0;
       int tt_best_value;
       Move tt_best_move;
       if(before(alpha, beta, depth, ply, tt_best_value, tt_best_move)) {
