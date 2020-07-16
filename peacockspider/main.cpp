@@ -48,7 +48,7 @@ int main(int argc, char **argv)
           log_file_name = optarg;
           break;
         default:
-          cerr << "incorrect option" << endl;
+          cerr << "Incorrect option" << endl;
           return 1;
       }
     }
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     if(log_file_name != nullptr) {
       ols = unique_ptr<ofstream>(new ofstream(log_file_name, ofstream::app));
       if(!ols->good()) {
-        cerr << "can't open log file" << endl;
+        cerr << "Can't open log file" << endl;
         return 1;
       }
     }
