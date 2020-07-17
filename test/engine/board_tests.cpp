@@ -1665,5 +1665,21 @@ namespace peacockspider
       Board board2;
       CPPUNIT_ASSERT_EQUAL(false, board.make_move(Move(Piece::KING, E1, C1, PromotionPiece::NONE), board2));
     }
+    
+    void BoardTests::test_board_make_move_method_makes_short_castling_for_bug_of_castling_making()
+    {
+      Board board("4k3/8/8/8/8/8/8/R3K2R w KQ - 2 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E1, G1, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("4k3/8/8/8/8/8/8/R4RK1 b - - 3 1") == board2);
+    }
+    
+    void BoardTests::test_board_make_move_method_makes_long_castling_for_bug_of_castling_making()
+    {
+      Board board("r3k2r/8/8/8/8/8/8/4K3 b kq - 3 1");
+      Board board2;
+      CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E8, C8, PromotionPiece::NONE), board2));
+      CPPUNIT_ASSERT(Board("2kr3r/8/8/8/8/8/8/4K3 w - - 4 2") == board2);
+    }
   }
 }

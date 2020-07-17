@@ -325,7 +325,7 @@ namespace peacockspider
       board.set_side_castlings(_M_side, SideCastlings::NONE);
       board.set_side_castlings(opp_side, side_castlings(opp_side));
       board._M_en_passant_column = -1;
-      board._M_halfmove_clock = board._M_halfmove_clock + 1;
+      board._M_halfmove_clock = _M_halfmove_clock + 1;
       board._M_fullmove_number = _M_fullmove_number + (_M_side == Side::BLACK ? 1 : 0); 
     } else if(move.piece() == Piece::KING && move.from() == (_M_side == Side::WHITE ? E1 : E8) && move.to() == long_castling_dst) {
       if(in_check()) return false;
@@ -354,7 +354,7 @@ namespace peacockspider
       board.set_side_castlings(_M_side, SideCastlings::NONE);
       board.set_side_castlings(opp_side, side_castlings(opp_side));
       board._M_en_passant_column = -1;
-      board._M_halfmove_clock = board._M_halfmove_clock + 1;
+      board._M_halfmove_clock = _M_halfmove_clock + 1;
       board._M_fullmove_number = _M_fullmove_number + (_M_side == Side::BLACK ? 1 : 0); 
     } else {
       Bitboard src_mask = ~(static_cast<Bitboard>(1) << move.from());

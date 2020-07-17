@@ -154,6 +154,8 @@ namespace peacockspider
       CPPUNIT_TEST(test_board_make_move_method_does_not_make_long_castling_for_check_before_castling);
       CPPUNIT_TEST(test_board_make_move_method_does_not_make_long_castling_for_attack_to_rook_destination_square);
       CPPUNIT_TEST(test_board_make_move_method_does_not_make_long_castling_for_check_after_castling);
+      CPPUNIT_TEST(test_board_make_move_method_makes_short_castling_for_bug_of_castling_making);
+      CPPUNIT_TEST(test_board_make_move_method_makes_long_castling_for_bug_of_castling_making);
       CPPUNIT_TEST_SUITE_END();
     public:
       void setUp();
@@ -285,6 +287,8 @@ namespace peacockspider
       void test_board_make_move_method_does_not_make_long_castling_for_check_before_castling();
       void test_board_make_move_method_does_not_make_long_castling_for_attack_to_rook_destination_square();
       void test_board_make_move_method_does_not_make_long_castling_for_check_after_castling();
+      void test_board_make_move_method_makes_short_castling_for_bug_of_castling_making();
+      void test_board_make_move_method_makes_long_castling_for_bug_of_castling_making();
     };
   }
 }
