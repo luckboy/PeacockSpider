@@ -115,6 +115,9 @@ namespace peacockspider
   inline SideCastlings operator^=(SideCastlings &castlings1, SideCastlings castlings2)
   { castlings1 = castlings1 ^ castlings2; return castlings1; }
 
+  inline std::size_t side_castlings_to_index(SideCastlings side_castlings)
+  { return static_cast<std::size_t>(side_castlings); }
+  
   enum class Result
   {
     NONE,
@@ -435,6 +438,7 @@ namespace peacockspider
     Column _M_en_passant_column;
     int _M_halfmove_clock;
     int _M_fullmove_number;
+    HashKey _M_hash_key;
   public:
     Board();
 
@@ -521,6 +525,11 @@ namespace peacockspider
     void set_fullmove_number(int fullmove_number)
     { _M_fullmove_number = fullmove_number; }
 
+    HashKey hash_key() const
+    { return _M_hash_key; }
+
+    void update_hash_key();
+    
     bool has_color(Side side, Square squ) const
     { return (_M_color_bitboards[side_to_index(side)] & (static_cast<Bitboard>(1) << squ)) != 0; }
     

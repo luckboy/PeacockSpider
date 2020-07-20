@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -25,6 +26,7 @@
 #include "protocols.hpp"
 #include "search.hpp"
 #include "tables.hpp"
+#include "zobrist.hpp"
 
 using namespace std;
 using namespace peacockspider;
@@ -60,7 +62,9 @@ int main(int argc, char **argv)
         return 1;
       }
     }
+    uint64_t zobrist_seed = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
     initialize_tables();
+    initialize_zobrist(zobrist_seed);
     unique_ptr<EvaluationFunction> eval_fun(new EvaluationFunction);
     unique_ptr<Searcher> searcher(new SingleSearcher(eval_fun.get()));
     unique_ptr<Thinker> thinker(new Thinker(searcher.get()));

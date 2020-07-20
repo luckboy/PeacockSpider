@@ -184,6 +184,7 @@ namespace peacockspider
         if((new_board.color_bitboard(new_board.side()) & new_board.piece_bitboard(Piece::PAWN) & tab_pawn_capture_bitboards[side_to_index(~new_board.side())][en_passant_squ]) == 0)
           new_board.set_en_passant_column(-1);
       }
+      new_board.update_hash_key();
       return make_pair(true, true);
     }
 
@@ -390,6 +391,7 @@ namespace peacockspider
             new_board = old_board;
             new_board.set_side(Side::WHITE);
             if(old_board.side() != new_board.side()) new_board.set_en_passant_column(-1);
+            new_board.update_hash_key();
             return true;
           });
           return make_pair(true, true);
@@ -402,6 +404,7 @@ namespace peacockspider
             new_board = old_board;
             new_board.set_side(Side::BLACK);
             if(old_board.side() != new_board.side()) new_board.set_en_passant_column(-1);
+            new_board.update_hash_key();
             return true;
           });
           return make_pair(true, true);

@@ -15,21 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _TYPES_HPP
-#define _TYPES_HPP
+#ifndef _ZOBRIST_HPP
+#define _ZOBRIST_HPP
 
-#include <cstdint>
+#include "types.hpp"
 
 namespace peacockspider
 {
-  typedef std::uint64_t Bitboard;
-  typedef int Square;
-  typedef int Column;
-  typedef int Row;
-  typedef std::int8_t Square8;
-  typedef std::int8_t Column8;
-  typedef std::int8_t Row8;
-  typedef std::uint64_t HashKey; 
+  extern HashKey zobrist[2][8][64];
+  extern HashKey zobrist_white_side;
+  extern HashKey zobrist_castlings[2][4];
+  extern HashKey zobrist_en_passant_column[9];
+
+  void initialize_zobrist(std::uint64_t seed);
 }
 
 #endif
