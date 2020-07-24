@@ -378,6 +378,7 @@ namespace peacockspider
 
   void Engine::set_result(Result result, const string &comment)
   {
+    _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     _M_result = result;
     _M_result_comment = comment;
