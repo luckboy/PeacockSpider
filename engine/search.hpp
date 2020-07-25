@@ -252,6 +252,24 @@ namespace peacockspider
 
     int search(int alpha, int beta, int depth, int ply);
   };
+  
+  class SinglePVSSearcher : public SingleSearcherBase
+  {
+  public:
+    SinglePVSSearcher(const EvaluationFunction *eval_fun, int max_depth = MAX_DEPTH, int max_quiescence_depth = MAX_QUIESCENCE_DEPTH);
+
+    virtual ~SinglePVSSearcher();
+
+    virtual int search_from_root(int alpha, int beta, int depth, const std::vector<Move> *search_moves, Move &best_move, const std::vector<Board> &boards, const Board *last_board);
+  protected:
+    virtual bool before(int &alpha, int &beta, int depth, int ply, int &best_value, Move &best_move);
+
+    virtual void after(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
+
+    virtual void cutoff(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
+
+    int search(int alpha, int beta, int depth, int ply);
+  };
 
   class Thinker
   {
