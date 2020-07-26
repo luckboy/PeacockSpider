@@ -85,15 +85,47 @@ namespace peacockspider
     for(; _M_depth <= max_depth; _M_depth++) {
       Move tmp_best_move;
       if(checkmate_move_count > 0 ? _M_value >= MAX_VALUE - MAX_DEPTH && MAX_VALUE - _M_value <= checkmate_move_count * 2 : false) break;
+      bool is_tmp_hint_move = false;
+      Move tmp_hint_move;
       if(!_M_has_second_search) {
         _M_has_second_search = false;
+        if(!_M_has_pondering) {
+          is_tmp_hint_move = _M_has_hint_move;
+          tmp_hint_move = _M_hint_move;
+        } else {
+          is_tmp_hint_move = _M_has_next_hint_move;
+          tmp_hint_move = _M_next_hint_move;
+        }
         if(!search(_M_alpha, _M_beta, search_moves, tmp_best_move, boards, last_board, fun)) break;
+        if(!_M_has_pondering) {
+          bool is_tmp_hint_move2 = _M_has_hint_move;
+          Move tmp_hint_move2 = _M_hint_move;
+          _M_has_hint_move = is_tmp_hint_move;
+          _M_hint_move = tmp_hint_move;
+          is_tmp_hint_move = is_tmp_hint_move2;
+          tmp_hint_move = tmp_hint_move2;
+        } else {
+          bool is_tmp_hint_move2 = _M_has_next_hint_move;
+          Move tmp_hint_move2 = _M_next_hint_move;
+          _M_has_next_hint_move = is_tmp_hint_move;
+          _M_next_hint_move = tmp_hint_move;
+          is_tmp_hint_move = is_tmp_hint_move2;
+          tmp_hint_move = tmp_hint_move2;
+        }
       }
       if(_M_value <= _M_alpha || _M_value >= _M_beta) {
         _M_has_second_search = true;
         if(!search(MIN_VALUE, MAX_VALUE, search_moves, best_move, boards, last_board, fun)) break;
-      } else
+      } else {
         best_move = tmp_best_move;
+        if(!_M_has_pondering) {
+          _M_has_hint_move = is_tmp_hint_move;
+          _M_hint_move = tmp_hint_move;
+        } else {
+          _M_has_next_hint_move = is_tmp_hint_move;
+          _M_next_hint_move = tmp_hint_move;
+        }
+      }
       _M_has_second_search = false;
       _M_alpha = max(_M_value - VALUE_WINDOW, MIN_VALUE);
       _M_beta = min(_M_value + VALUE_WINDOW, MAX_VALUE);
