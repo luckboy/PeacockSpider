@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <cctype>
+#include <iomanip>
 #include "chess.hpp"
 
 using namespace std;
@@ -274,7 +275,7 @@ namespace peacockspider
       os << "  " << column_to_char(col) << " ";
     }
     os << endl;
-    os << pab.prefix << pab.board.to_string() << endl;
+    os << pab.prefix << pab.board.to_string();
     return os;
   }
 }
