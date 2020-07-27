@@ -275,7 +275,14 @@ namespace peacockspider
       os << "  " << column_to_char(col) << " ";
     }
     os << endl;
-    os << pab.prefix << pab.board.to_string();
+    os << pab.prefix << pab.board.to_string() << endl;
+    ios_base::fmtflags saved_flags = os.flags();
+    streamsize saved_width = os.width();
+    char saved_fill = os.fill();
+    os << pab.prefix << "hash key: 0x" << hex << setw(16) << setfill('0') << pab.board.hash_key();
+    os.fill(saved_fill);
+    os.width(saved_width);
+    os.flags(saved_flags);
     return os;
   }
 }
