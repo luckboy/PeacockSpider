@@ -511,6 +511,9 @@ namespace peacockspider
     return make_move(move, tmp_board);
   }
   
+  bool Board::has_legal_move_for_tt(Move move) const
+  { return piece(move.from()) == move.piece() && (has_color(~_M_side, move.to()) || has_empty(move.to())); }
+  
   bool Board::in_checkmate(MovePairList &move_pairs) const
   {
     if(in_check()) {

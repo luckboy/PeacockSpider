@@ -100,8 +100,11 @@ namespace peacockspider
       Move tt_best_move;
       if(before(alpha, beta, depth, ply, tt_best_value, tt_best_move)) {
         if(tt_best_move.to() != -1) {
-          _M_stack[ply + 1].pv_line.clear();
-          _M_stack[ply].pv_line.update(tt_best_move, _M_stack[ply + 1].pv_line);
+          if(_M_stack[ply].board.has_legal_move_for_tt(tt_best_move)) {
+            _M_stack[ply + 1].pv_line.clear();
+            _M_stack[ply].pv_line.update(tt_best_move, _M_stack[ply + 1].pv_line);
+          } else
+            _M_stack[ply].pv_line.clear();
         }
         return tt_best_value;
       }
