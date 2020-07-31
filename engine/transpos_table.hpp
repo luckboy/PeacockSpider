@@ -71,7 +71,7 @@ namespace peacockspider
     { _M_best_move = move; }
     
     ValueType value_type() const
-    { return static_cast<ValueType>(_M_value); }
+    { return static_cast<ValueType>(_M_value_type); }
 
     void set_value_type(ValueType value_type)
     { _M_value_type = static_cast<std::int8_t>(value_type); }
