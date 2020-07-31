@@ -18,6 +18,7 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <memory>
 #include <new>
 #include <unistd.h>
@@ -27,34 +28,53 @@
 #include "protocols.hpp"
 #include "search.hpp"
 #include "tables.hpp"
+#include "transpos_table.hpp"
 #include "zobrist.hpp"
 
 using namespace std;
 using namespace peacockspider;
 
-unordered_map<string, function<Searcher *(const EvaluationFunction *)>> searcher_functions {
-  {
-    "single",
-    [](const EvaluationFunction *eval_fun) {
-      return new SingleSearcher(eval_fun);
+namespace
+{
+  unordered_map<string, function<Searcher *(const EvaluationFunction *, unique_ptr<TranspositionTable> &, size_t)>> searcher_functions {
+    {
+      "single",
+      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count) {
+        return new SingleSearcher(eval_fun);
+      }
+    },
+    {
+      "singlewithtt",
+      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count) {
+        transpos_table = unique_ptr<TranspositionTable>(new TranspositionTable(tt_entry_count));
+        return new SingleSearcherWithTT(eval_fun, transpos_table.get());
+      }
+    },
+    {
+      "singlepvs",
+      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table, size_t tt_entry_count) {
+        return new SinglePVSSearcher(eval_fun);
+      }
+    },
+    {
+      "singlepvswithtt",
+      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count) {
+        transpos_table = unique_ptr<TranspositionTable>(new TranspositionTable(tt_entry_count));
+        return new SinglePVSSearcherWithTT(eval_fun, transpos_table.get());
+      }
     }
-  },
-  {
-    "singlepvs",
-    [](const EvaluationFunction *eval_fun) {
-      return new SinglePVSSearcher(eval_fun);
-    }
-  }
-};
+  };
+}
 
 int main(int argc, char **argv)
 {
   try {
     const char *log_file_name = nullptr;
     const char *searcher_name = "single";
+    size_t tt_entry_count = (32 * 1024 * 1024) / sizeof(TranspositionTableEntry);
     int c;
     opterr = 0;
-    while((c = getopt(argc, argv, "hl:s:")) != -1) {
+    while((c = getopt(argc, argv, "hl:s:t:")) != -1) {
       switch(c) {
         case 'h':
           cout << "Usage: " << argv[0] << " [<option> ...]" << endl;
@@ -63,6 +83,7 @@ int main(int argc, char **argv)
           cout << "  -h                    display this text" << endl;
           cout << "  -l <log file name>    write to log file" << endl;
           cout << "  -s <searcher name>    set searcher" << endl;
+          cout << "  -t <size>             set transposition table size in megabytes" << endl;
           return 0;
         case 'l':
           log_file_name = optarg;
@@ -70,6 +91,23 @@ int main(int argc, char **argv)
         case 's':
           searcher_name = optarg;
           break;
+        case 't':
+        {
+          string str(optarg);
+          istringstream iss(str);
+          size_t tt_size;
+          iss >> tt_size;
+          if(iss.fail() || !iss.eof()) {
+            cerr << "Incorrect number" << endl;
+            return  1;
+          }
+          if(tt_size <= 0) {
+            cerr << "Too small number" << endl;
+            return 1;
+          }
+          tt_entry_count = (tt_size * 1024 * 1024) / sizeof(TranspositionTableEntry);
+          break;
+        }
         default:
           cerr << "Incorrect option" << endl;
           return 1;
@@ -83,7 +121,7 @@ int main(int argc, char **argv)
         return 1;
       }
     }
-    function<Searcher *(const EvaluationFunction *)> searcher_fun;
+    function<Searcher *(const EvaluationFunction *, unique_ptr<TranspositionTable> &, size_t)> searcher_fun;
     auto iter = searcher_functions.find(string(searcher_name));
     if(iter != searcher_functions.end()) {
       searcher_fun = iter->second;
@@ -95,7 +133,8 @@ int main(int argc, char **argv)
     initialize_tables();
     initialize_zobrist(zobrist_seed);
     unique_ptr<EvaluationFunction> eval_fun(new EvaluationFunction);
-    unique_ptr<Searcher> searcher(searcher_fun(eval_fun.get()));
+    unique_ptr<TranspositionTable> transpos_table;
+    unique_ptr<Searcher> searcher(searcher_fun(eval_fun.get(), transpos_table, tt_entry_count));
     unique_ptr<Thinker> thinker(new Thinker(searcher.get()));
     unique_ptr<Engine> engine(new Engine(thinker.get()));
     return xboard_loop(engine.get(), ols.get(), uci_loop) ? 0 : 1;

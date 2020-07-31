@@ -26,6 +26,7 @@
 #include <memory>
 #include "chess.hpp"
 #include "eval.hpp"
+#include "transpos_table.hpp"
 
 namespace peacockspider
 {
@@ -252,7 +253,27 @@ namespace peacockspider
 
     int search(int alpha, int beta, int depth, int ply);
   };
-  
+
+  class SingleSearcherWithTT : public SingleSearcher
+  {
+  protected:
+    TranspositionTable *_M_transposition_table;
+  public:
+    SingleSearcherWithTT(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, int max_depth = MAX_DEPTH, int max_quiescence_depth = MAX_QUIESCENCE_DEPTH);
+
+    virtual ~SingleSearcherWithTT();
+
+    virtual void clear();
+    
+    virtual void clear_for_new_game();
+  protected:
+    virtual bool before(int &alpha, int &beta, int depth, int ply, int &best_value, Move &best_move);
+
+    virtual void after(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
+
+    virtual void cutoff(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
+  };
+
   class SinglePVSSearcher : public SingleSearcherBase
   {
   public:
@@ -269,6 +290,26 @@ namespace peacockspider
     virtual void cutoff(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
 
     int search(int alpha, int beta, int depth, int ply);
+  };
+
+  class SinglePVSSearcherWithTT : public SinglePVSSearcher
+  {
+  protected:
+    TranspositionTable *_M_transposition_table;
+  public:
+    SinglePVSSearcherWithTT(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, int max_depth = MAX_DEPTH, int max_quiescence_depth = MAX_QUIESCENCE_DEPTH);
+
+    virtual ~SinglePVSSearcherWithTT();
+
+    virtual void clear();
+    
+    virtual void clear_for_new_game();
+  protected:
+    virtual bool before(int &alpha, int &beta, int depth, int ply, int &best_value, Move &best_move);
+
+    virtual void after(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
+
+    virtual void cutoff(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
   };
 
   class Thinker
