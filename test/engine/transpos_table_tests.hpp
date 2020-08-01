@@ -37,8 +37,8 @@ namespace peacockspider
       CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_unequal_index);
       CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_greater_depth);
       CPPUNIT_TEST(test_transposition_table_retrieves_entry_for_less_depth);
-      CPPUNIT_TEST(test_transposition_table_clear_entries);
-      CPPUNIT_TEST(test_transposition_table_increase_age);
+      CPPUNIT_TEST(test_transposition_table_clears_entries);
+      CPPUNIT_TEST(test_transposition_table_increases_age);
       CPPUNIT_TEST(test_transposition_table_retrieves_entry_for_upper_bound_value);
       CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_upper_bound_value);
       CPPUNIT_TEST(test_transposition_table_retrieves_entry_for_lower_bound_value);
@@ -58,8 +58,8 @@ namespace peacockspider
       void test_transposition_table_does_not_retrieve_entry_for_unequal_index();
       void test_transposition_table_does_not_retrieve_entry_for_greater_depth();
       void test_transposition_table_retrieves_entry_for_less_depth();
-      void test_transposition_table_clear_entries();
-      void test_transposition_table_increase_age();
+      void test_transposition_table_clears_entries();
+      void test_transposition_table_increases_age();
       void test_transposition_table_retrieves_entry_for_upper_bound_value();
       void test_transposition_table_does_not_retrieve_entry_for_upper_bound_value();
       void test_transposition_table_retrieves_entry_for_lower_bound_value();

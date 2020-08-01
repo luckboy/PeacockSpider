@@ -147,7 +147,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(Move(Piece::PAWN, E2, E3, PromotionPiece::NONE) == best_move);
     }
 
-    void TranspositionTableTests::test_transposition_table_clear_entries()
+    void TranspositionTableTests::test_transposition_table_clears_entries()
     {
       CPPUNIT_ASSERT_EQUAL(true, _M_tt->store(static_cast<HashKey>(0x1234), -10, 10, 2, 5, Move(Piece::PAWN, D2, D3, PromotionPiece::NONE)));
       _M_tt->clear();
@@ -163,7 +163,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(Move(Piece::PAWN, -1, -1, PromotionPiece::NONE) == best_move);
     }
 
-    void TranspositionTableTests::test_transposition_table_increase_age()
+    void TranspositionTableTests::test_transposition_table_increases_age()
     {
       CPPUNIT_ASSERT_EQUAL(true, _M_tt->store(static_cast<HashKey>(0x5678), -100, 100, 2, 50, Move(Piece::PAWN, D2, D3, PromotionPiece::NONE)));
       _M_tt->increase_age_or_clear();
