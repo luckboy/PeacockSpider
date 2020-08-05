@@ -658,6 +658,8 @@ namespace peacockspider
 
     bool make_move(Move move, Board &board) const;
 
+    void make_null_move(Board &board) const;
+
     bool has_legal_move(Move move) const;
     
     bool has_legal_move_for_tt(Move move) const;

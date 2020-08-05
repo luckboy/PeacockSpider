@@ -504,6 +504,30 @@ namespace peacockspider
     }
     return !board.in_check(_M_side);
   }
+
+  void Board::make_null_move(Board &board) const
+  {
+    board.set_color_bitboard(Side::WHITE, color_bitboard(Side::WHITE));
+    board.set_color_bitboard(Side::BLACK, color_bitboard(Side::BLACK));
+    board.set_piece_bitboard(Piece::PAWN, piece_bitboard(Piece::PAWN));
+    board.set_piece_bitboard(Piece::KNIGHT, piece_bitboard(Piece::KNIGHT));
+    board.set_piece_bitboard(Piece::BISHOP, piece_bitboard(Piece::BISHOP));
+    board.set_piece_bitboard(Piece::ROOK, piece_bitboard(Piece::ROOK));
+    board.set_piece_bitboard(Piece::QUEEN, piece_bitboard(Piece::QUEEN));
+    board.set_piece_bitboard(Piece::KING, piece_bitboard(Piece::KING));
+    board.set_king_square(Side::WHITE, king_square(Side::WHITE));
+    board.set_king_square(Side::BLACK, king_square(Side::BLACK));
+    board._M_side = ~_M_side;
+    board.set_side_castlings(Side::WHITE, side_castlings(Side::WHITE));
+    board.set_side_castlings(Side::BLACK, side_castlings(Side::BLACK));
+    board._M_en_passant_column = -1;
+    board._M_halfmove_clock = _M_halfmove_clock;
+    board._M_fullmove_number = _M_fullmove_number + (_M_side == Side::BLACK ? 1 : 0);
+    board._M_hash_key = _M_hash_key;
+    board._M_hash_key ^= zobrist_white_side;
+    board._M_hash_key ^= zobrist_en_passant_column[_M_en_passant_column + 1];
+    board._M_hash_key ^= zobrist_en_passant_column[board._M_en_passant_column + 1];
+  }
   
   bool Board::has_legal_move(Move move) const
   {
