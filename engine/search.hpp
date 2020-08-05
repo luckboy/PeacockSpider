@@ -289,7 +289,7 @@ namespace peacockspider
 
     virtual void cutoff(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
 
-    int search(int alpha, int beta, int depth, int ply);
+    int search(int alpha, int beta, int depth, int ply, bool can_make_null_move);
   };
 
   class SinglePVSSearcherWithTT : public SinglePVSSearcher
