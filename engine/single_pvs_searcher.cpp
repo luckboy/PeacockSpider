@@ -24,7 +24,7 @@ namespace peacockspider
 {
   namespace
   {
-    int R = 3;
+    const int R = 3;
   }
   
   SinglePVSSearcher::SinglePVSSearcher(const EvaluationFunction *eval_fun, int max_depth, int max_quiescence_depth) :
