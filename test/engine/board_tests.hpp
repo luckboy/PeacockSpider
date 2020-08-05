@@ -156,6 +156,10 @@ namespace peacockspider
       CPPUNIT_TEST(test_board_make_move_method_does_not_make_long_castling_for_check_after_castling);
       CPPUNIT_TEST(test_board_make_move_method_makes_short_castling_for_bug_of_castling_making);
       CPPUNIT_TEST(test_board_make_move_method_makes_long_castling_for_bug_of_castling_making);
+      CPPUNIT_TEST(test_board_make_null_move_method_makes_null_move_for_white_side);
+      CPPUNIT_TEST(test_board_make_null_move_method_makes_null_move_for_black_side);
+      CPPUNIT_TEST(test_board_make_null_move_method_does_not_set_en_passant_column_for_white_side_and_en_passant);
+      CPPUNIT_TEST(test_board_make_null_move_method_does_not_set_en_passant_column_for_black_side_and_en_passant);
       CPPUNIT_TEST_SUITE_END();
     public:
       void setUp();
@@ -289,6 +293,10 @@ namespace peacockspider
       void test_board_make_move_method_does_not_make_long_castling_for_check_after_castling();
       void test_board_make_move_method_makes_short_castling_for_bug_of_castling_making();
       void test_board_make_move_method_makes_long_castling_for_bug_of_castling_making();
+      void test_board_make_null_move_method_makes_null_move_for_white_side();
+      void test_board_make_null_move_method_makes_null_move_for_black_side();
+      void test_board_make_null_move_method_does_not_set_en_passant_column_for_white_side_and_en_passant();
+      void test_board_make_null_move_method_does_not_set_en_passant_column_for_black_side_and_en_passant();
     };
   }
 }

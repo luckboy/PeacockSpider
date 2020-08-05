@@ -1681,5 +1681,37 @@ namespace peacockspider
       CPPUNIT_ASSERT_EQUAL(true, board.make_move(Move(Piece::KING, E8, C8, PromotionPiece::NONE), board2));
       CPPUNIT_ASSERT(Board("2kr3r/8/8/8/8/8/8/4K3 w - - 4 2") == board2);
     }
+
+    void BoardTests::test_board_make_null_move_method_makes_null_move_for_white_side()
+    {
+      Board board("r3k3/8/2n5/8/8/6N1/8/4K2R w Kq - 0 1");
+      Board board2;
+      board.make_null_move(board2);
+      CPPUNIT_ASSERT(Board("r3k3/8/2n5/8/8/6N1/8/4K2R b Kq - 0 1") == board2);
+    }
+
+    void BoardTests::test_board_make_null_move_method_makes_null_move_for_black_side()
+    {
+      Board board("4k2r/8/3b4/8/8/5B2/8/R3K3 b Qk - 0 1");
+      Board board2;
+      board.make_null_move(board2);
+      CPPUNIT_ASSERT(Board("4k2r/8/3b4/8/8/5B2/8/R3K3 w Qk - 0 2") == board2);
+    }
+
+    void BoardTests::test_board_make_null_move_method_does_not_set_en_passant_column_for_white_side_and_en_passant()
+    {
+      Board board("rnbqkb1r/ppp2ppp/5n2/2Ppp3/4P3/8/PP1P1PPP/RNBQKBNR w KQkq d6 0 4");
+      Board board2;
+      board.make_null_move(board2);
+      CPPUNIT_ASSERT(Board("rnbqkb1r/ppp2ppp/5n2/2Ppp3/4P3/8/PP1P1PPP/RNBQKBNR b KQkq - 0 4") == board2);
+    }
+
+    void BoardTests::test_board_make_null_move_method_does_not_set_en_passant_column_for_black_side_and_en_passant()
+    {
+      Board board("rnbqkbnr/p1pp1ppp/8/4p3/1pP1P3/5N1P/PP1P1PP1/RNBQKB1R b KQkq c3 0 4");
+      Board board2;
+      board.make_null_move(board2);
+      CPPUNIT_ASSERT(Board("rnbqkbnr/p1pp1ppp/8/4p3/1pP1P3/5N1P/PP1P1PP1/RNBQKB1R w KQkq - 0 5") == board2);
+    }
   }
 }
