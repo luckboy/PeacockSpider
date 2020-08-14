@@ -24,6 +24,8 @@ namespace peacockspider
   PVLine::PVLine(size_t max_length) :
     _M_moves(new Move[max_length]), _M_length(0) {}
     
+  PVLine::~PVLine() {}
+
   PVLine &PVLine::operator=(const PVLine &pv_line)
   {
     for(size_t i = 0; i < pv_line._M_length; i++) {

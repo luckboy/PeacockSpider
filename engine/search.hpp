@@ -64,6 +64,8 @@ namespace peacockspider
 
     PVLine(std::size_t max_length);
 
+    ~PVLine();
+
     PVLine &operator=(const PVLine &pv_line);
 
     std::size_t length() const
