@@ -31,7 +31,7 @@ namespace peacockspider
     _M_piece_material[piece_to_index(Piece::BISHOP)] = params[EVALUATION_PARAMETER_BISHOP_MATERIAL];
     _M_piece_material[piece_to_index(Piece::ROOK)] = params[EVALUATION_PARAMETER_ROOK_MATERIAL];
     _M_piece_material[piece_to_index(Piece::QUEEN)] = params[EVALUATION_PARAMETER_QUEEN_MATERIAL];
-    _M_piece_material[piece_to_index(Piece::KING)] = 0;
+    _M_piece_material[piece_to_index(Piece::KING)] = 10000;
     // Sets piece/square.
     for(int side = 0; side < 2; side++) {
       // Pawns.
