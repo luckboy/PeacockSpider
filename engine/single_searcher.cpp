@@ -30,7 +30,7 @@ namespace peacockspider
   int SingleSearcher::search_from_root(int alpha, int beta, int depth, const vector<Move> *search_moves, Move &best_move, const vector<Board> &boards, const Board *last_board)
   {
     _M_stack[0].pv_line.clear();
-    _M_nodes = 0;
+    _M_nodes.store(0);
     try {
       check_stop_for_nodes();
     } catch(SearchingStopException &e) {

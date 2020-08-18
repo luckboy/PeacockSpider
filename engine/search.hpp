@@ -155,6 +155,8 @@ namespace peacockspider
     
     virtual std::uint64_t nodes() const = 0;
 
+    virtual std::uint64_t all_nodes() const;
+
     virtual unsigned thread_count() const = 0;
     
     virtual int max_quiescence_depth() const = 0;
@@ -175,7 +177,7 @@ namespace peacockspider
     std::unique_ptr<SearchStackElement []> _M_stack;
     int _M_max_quiescence_depth;
     MoveOrder _M_move_order;
-    std::uint64_t _M_nodes;
+    std::atomic<std::uint64_t> _M_nodes;
     bool _M_has_stop_time;
     std::chrono::high_resolution_clock::time_point _M_stop_time;
     bool _M_has_stop_nodes;

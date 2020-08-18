@@ -101,7 +101,7 @@ namespace peacockspider
   { return _M_stack[0].pv_line; }
 
   uint64_t SingleSearcherBase::nodes() const
-  { return _M_nodes; }
+  { return _M_nodes.load(); }
 
   unsigned SingleSearcherBase::thread_count() const
   { return 1; }
@@ -119,7 +119,7 @@ namespace peacockspider
         else
           throw PonderingStopException();
       }
-      if(_M_has_stop_nodes && _M_nodes >= _M_stop_nodes) {
+      if(_M_has_stop_nodes && all_nodes() >= _M_stop_nodes) {
         if(!_M_pondering_flag)
           throw ThinkingStopException();
         else

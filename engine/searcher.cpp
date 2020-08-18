@@ -28,4 +28,7 @@ namespace peacockspider
 
   void Searcher::clear_for_new_game()
   { clear(); }
+  
+  uint64_t Searcher::all_nodes() const
+  { return nodes(); }
 }
