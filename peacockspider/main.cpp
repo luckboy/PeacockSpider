@@ -21,6 +21,7 @@
 #include <sstream>
 #include <memory>
 #include <new>
+#include <thread>
 #include <unistd.h>
 #include <unordered_map>
 #include "engine.hpp"
@@ -36,31 +37,45 @@ using namespace peacockspider;
 
 namespace
 {
-  unordered_map<string, function<Searcher *(const EvaluationFunction *, unique_ptr<TranspositionTable> &, size_t)>> searcher_functions {
+  unordered_map<string, function<Searcher *(const EvaluationFunction *, unique_ptr<TranspositionTable> &, size_t, unsigned)>> searcher_functions {
     {
       "single",
-      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count) {
+      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count, unsigned thread_count) {
         return new SingleSearcher(eval_fun);
       }
     },
     {
       "singlewithtt",
-      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count) {
+      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count, unsigned thread_count) {
         transpos_table = unique_ptr<TranspositionTable>(new TranspositionTable(tt_entry_count));
         return new SingleSearcherWithTT(eval_fun, transpos_table.get());
       }
     },
     {
       "singlepvs",
-      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table, size_t tt_entry_count) {
+      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table, size_t tt_entry_count, unsigned thread_count) {
         return new SinglePVSSearcher(eval_fun);
       }
     },
     {
       "singlepvswithtt",
-      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count) {
+      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count, unsigned thread_count) {
         transpos_table = unique_ptr<TranspositionTable>(new TranspositionTable(tt_entry_count));
         return new SinglePVSSearcherWithTT(eval_fun, transpos_table.get());
+      }
+    },
+    {
+      "lazysmp",
+      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count, unsigned thread_count) {
+        transpos_table = unique_ptr<TranspositionTable>(new TranspositionTable(tt_entry_count));
+        return new LazySMPSearcher(eval_fun, transpos_table.get(), thread_count);
+      }
+    },
+    {
+      "lazysmppvs",
+      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count, unsigned thread_count) {
+        transpos_table = unique_ptr<TranspositionTable>(new TranspositionTable(tt_entry_count));
+        return new LazySMPPVSSearcher(eval_fun, transpos_table.get(), thread_count);
       }
     }
   };
@@ -72,9 +87,10 @@ int main(int argc, char **argv)
     const char *log_file_name = nullptr;
     const char *searcher_name = "single";
     size_t tt_entry_count = (32 * 1024 * 1024) / sizeof(TranspositionTableEntry);
+    unsigned thread_count = 1;
     int c;
     opterr = 0;
-    while((c = getopt(argc, argv, "hl:s:t:")) != -1) {
+    while((c = getopt(argc, argv, "hl:np:s:t:")) != -1) {
       switch(c) {
         case 'h':
           cout << "Usage: " << argv[0] << " [<option> ...]" << endl;
@@ -82,12 +98,33 @@ int main(int argc, char **argv)
           cout << "Options:" << endl;
           cout << "  -h                    display this text" << endl;
           cout << "  -l <log file name>    write to log file" << endl;
+          cout << "  -n                    set number of threads as number of all processors" << endl;
+          cout << "  -p <number>           set number of threads" << endl;
           cout << "  -s <searcher name>    set searcher" << endl;
           cout << "  -t <size>             set transposition table size in megabytes" << endl;
           return 0;
         case 'l':
           log_file_name = optarg;
           break;
+        case 'n':
+          thread_count = thread::hardware_concurrency();
+          if(thread_count == 0) thread_count = 1;
+          break;
+        case 'p':
+        {
+          string str(optarg);
+          istringstream iss(str);
+          iss >> thread_count;
+          if(iss.fail() || !iss.eof()) {
+            cerr << "Incorrect number" << endl;
+            return  1;
+          }
+          if(thread_count <= 0) {
+            cerr << "Too small number" << endl;
+            return 1;
+          }
+          break;
+        }
         case 's':
           searcher_name = optarg;
           break;
@@ -121,7 +158,7 @@ int main(int argc, char **argv)
         return 1;
       }
     }
-    function<Searcher *(const EvaluationFunction *, unique_ptr<TranspositionTable> &, size_t)> searcher_fun;
+    function<Searcher *(const EvaluationFunction *, unique_ptr<TranspositionTable> &, size_t, unsigned)> searcher_fun;
     auto iter = searcher_functions.find(string(searcher_name));
     if(iter != searcher_functions.end()) {
       searcher_fun = iter->second;
@@ -134,7 +171,7 @@ int main(int argc, char **argv)
     initialize_zobrist(zobrist_seed);
     unique_ptr<EvaluationFunction> eval_fun(new EvaluationFunction);
     unique_ptr<TranspositionTable> transpos_table;
-    unique_ptr<Searcher> searcher(searcher_fun(eval_fun.get(), transpos_table, tt_entry_count));
+    unique_ptr<Searcher> searcher(searcher_fun(eval_fun.get(), transpos_table, tt_entry_count, thread_count));
     unique_ptr<Thinker> thinker(new Thinker(searcher.get()));
     unique_ptr<Engine> engine(new Engine(thinker.get()));
     return xboard_loop(engine.get(), ols.get(), uci_loop) ? 0 : 1;
