@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <mutex>
 #include "transpos_table.hpp"
 
 using namespace std;
@@ -48,6 +49,7 @@ namespace peacockspider
   bool TranspositionTable::retrieve(HashKey hash_key, int &alpha, int &beta, int depth, int &best_value, Move &best_move)
   {
     size_t i = hash_key % _M_entry_count;
+    lock_guard<Spinlock> guard(_M_entries[i].spinlock());
     best_move = Move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
     if(_M_entries[i].age() == _M_age && _M_entries[i].value_type() != ValueType::NONE && _M_entries[i].hash_key() == hash_key) {
       best_move = _M_entries[i].best_move();
@@ -81,6 +83,7 @@ namespace peacockspider
   bool TranspositionTable::store(HashKey hash_key, int alpha, int beta, int depth, int best_value, Move best_move)
   {
     size_t i = hash_key % _M_entry_count;
+    lock_guard<Spinlock> guard(_M_entries[i].spinlock());
     _M_entries[i].set_hash_key(hash_key);
     _M_entries[i].set_depth(depth);
     _M_entries[i].set_value(best_value);

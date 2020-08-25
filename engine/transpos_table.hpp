@@ -20,6 +20,7 @@
 
 #include <memory>
 #include "chess.hpp"
+#include "spinlock.hpp"
 
 namespace peacockspider
 {
@@ -34,7 +35,7 @@ namespace peacockspider
   class TranspositionTableEntry
   {
     HashKey _M_hash_key;
-    std::uint8_t _M_pad1;
+    Spinlock _M_spinlock;
     std::uint8_t _M_depth;
     std::int16_t _M_value;
     Move _M_best_move;
@@ -51,6 +52,9 @@ namespace peacockspider
 
     void set_hash_key(HashKey hash_key)
     { _M_hash_key = hash_key; }
+
+    Spinlock &spinlock()
+    { return _M_spinlock; }
 
     int depth() const
     { return static_cast<int>(_M_depth); }
