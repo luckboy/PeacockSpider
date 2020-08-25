@@ -90,6 +90,8 @@ namespace peacockspider
               break;
           }
           _M_thread_command = ThreadCommand::NO_COMMAND;
+          _M_has_search_moves = false;
+          _M_search_moves.clear();
           _M_condition_variable.wait(lock);
         }
       } catch(bad_alloc &e) {
