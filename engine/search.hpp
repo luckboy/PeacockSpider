@@ -20,16 +20,22 @@
 
 #include <atomic>
 #include <chrono>
+#include <condition_variable>
 #include <cstddef>
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <mutex>
+#include <thread>
+#include <utility>
 #include "chess.hpp"
 #include "eval.hpp"
 #include "transpos_table.hpp"
 
 namespace peacockspider
 {
+  class LazySMPStop;
+
   const int MAX_VALUE = 30000;
   const int MIN_VALUE = -30000;
 
@@ -314,6 +320,159 @@ namespace peacockspider
     virtual void after(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
 
     virtual void cutoff(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
+  };
+
+  enum class LazySMPCommand
+  {
+    NO_COMMAND,
+    SEARCH,
+    QUIT
+  };
+
+  enum class LazySMPResult
+  {
+    NO_RESULT,
+    STOP
+  };
+
+  struct LazySMPThread
+  {
+    std::thread thread;
+    std::unique_ptr<Searcher> searcher;
+    std::mutex mutex;
+    std::condition_variable start_condition_variable;
+    LazySMPCommand command;
+    std::condition_variable stop_condition_variable;
+    LazySMPResult result;
+    
+    LazySMPThread() {}
+    
+    LazySMPThread(LazySMPThread &&thread) :
+      thread(std::move(thread.thread)), searcher(std::move(thread.searcher)), command(thread.command), result(thread.result) {}
+  };
+
+  class LazySMPSingleSearcher : public SingleSearcherWithTT
+  {
+    const Searcher *_M_main_searcher;
+    const std::vector<LazySMPThread> &_M_threads;
+  public:
+    LazySMPSingleSearcher(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, const Searcher *main_searcher, const std::vector<LazySMPThread> &threads, int max_depth, int max_quiescence_depth);
+
+    virtual ~LazySMPSingleSearcher();
+
+    virtual void clear();
+
+    virtual void clear_for_new_game();
+
+    virtual std::uint64_t all_nodes() const;
+  };
+
+  class LazySMPSinglePVSSearcher : public SinglePVSSearcherWithTT
+  {
+    const Searcher *_M_main_searcher;
+    const std::vector<LazySMPThread> &_M_threads;
+  public:
+    LazySMPSinglePVSSearcher(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, const Searcher *main_searcher, const std::vector<LazySMPThread> &threads, int max_depth, int max_quiescence_depth);
+
+    virtual ~LazySMPSinglePVSSearcher();
+
+    virtual void clear();
+
+    virtual void clear_for_new_game();
+
+    virtual std::uint64_t all_nodes() const;
+  };
+
+  class LazySMPSearcherBase : public Searcher
+  {
+    friend LazySMPStop;
+  protected:
+    TranspositionTable *_M_transposition_table;
+    std::unique_ptr<Searcher> _M_main_searcher;
+    std::vector<LazySMPThread> _M_threads;
+    int _M_alpha;
+    int _M_beta;
+    int _M_depth;
+    const std::vector<Move> *_M_search_moves;
+    const std::vector<Board> *_M_boards;
+    const Board *_M_last_board;
+
+    LazySMPSearcherBase(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, std::function<Searcher *(const EvaluationFunction *, TranspositionTable *, const Searcher *, const std::vector<LazySMPThread> &, int, int)> fun, unsigned thread_count, int max_depth, int max_quiescence_depth);
+  public:
+    virtual ~LazySMPSearcherBase();
+
+    virtual const Board &board() const;
+
+    virtual void set_board(const Board &board);
+    
+    virtual void set_stop_time(const std::chrono::high_resolution_clock::time_point &time);
+
+    virtual void unset_stop_time();
+    
+    virtual void set_stop_nodes(std::uint64_t nodes);
+
+    virtual void unset_stop_nodes();
+
+    virtual void set_previous_pv_line(const PVLine &pv_line);
+
+    virtual void clear();
+
+    virtual void clear_for_new_game();
+
+    virtual int search_from_root(int alpha, int beta, int depth, const std::vector<Move> *search_moves, Move &best_move, const std::vector<Board> &boards, const Board *last_board);
+
+    virtual void set_pondering_flag(bool flag);
+    
+    virtual void clear_thinking_stop_flag();
+    
+    virtual void clear_pondering_stop_flag();
+
+    virtual void clear_searching_stop_flag();
+    
+    virtual void stop_thinking();
+
+    virtual void stop_pondering();
+    
+    virtual void stop_searching();
+
+    virtual void set_non_stop_flag(bool flag);
+    
+    virtual const PVLine &pv_line() const;
+    
+    virtual std::uint64_t nodes() const;
+
+    virtual unsigned thread_count() const;
+    
+    virtual int max_quiescence_depth() const;
+  private:
+    void stop_threads();
+  };
+
+  class LazySMPStop
+  {
+    LazySMPSearcherBase *_M_searcher;
+  public:
+    LazySMPStop(LazySMPSearcherBase *searcher) :
+      _M_searcher(searcher) {}
+
+    ~LazySMPStop()
+    { _M_searcher->stop_threads(); }
+  };
+
+  class LazySMPSearcher : public LazySMPSearcherBase
+  {
+  public:
+    LazySMPSearcher(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, unsigned thread_count, int max_depth = MAX_DEPTH, int max_quiescence_depth = MAX_QUIESCENCE_DEPTH);
+
+    virtual ~LazySMPSearcher();
+  };
+  
+  class LazySMPPVSSearcher : public LazySMPSearcherBase
+  {
+  public:
+    LazySMPPVSSearcher(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, unsigned thread_count, int max_depth = MAX_DEPTH, int max_quiescence_depth = MAX_QUIESCENCE_DEPTH);
+
+    virtual ~LazySMPPVSSearcher();
   };
 
   class Thinker
