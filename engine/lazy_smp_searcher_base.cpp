@@ -30,7 +30,9 @@ namespace peacockspider
       _M_threads.back().searcher = unique_ptr<Searcher>(fun(eval_fun, transpos_table, _M_main_searcher.get(), _M_threads, max_depth + 1, max_quiescence_depth));
       _M_threads.back().command = LazySMPCommand::NO_COMMAND;
       _M_threads.back().result = LazySMPResult::NO_RESULT;
-      _M_threads.back().thread = thread([this, i]() {
+    }
+    for(unsigned i = 0; i < thread_count - 1; i++) {
+      _M_threads[i].thread = thread([this, i]() {
         unique_lock<mutex> lock(_M_threads[i].mutex);
         while(true) {
           while(_M_threads[i].command == LazySMPCommand::NO_COMMAND) {
