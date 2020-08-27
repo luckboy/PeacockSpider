@@ -69,7 +69,7 @@ namespace peacockspider
                     value = -search(-beta, -alpha, depth - 1, 1, true, is_exclusive);
                 }
               }
-              if(value == VALUE_ON_EVALUATION) {
+              if(value == -VALUE_ON_EVALUATION) {
                 is_all_done = false;
               } else if(value > best_value) {
                 _M_stack[0].pv_line.update(move, _M_stack[1].pv_line);
