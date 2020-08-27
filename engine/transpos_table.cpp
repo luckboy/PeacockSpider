@@ -62,6 +62,7 @@ namespace peacockspider
         return true;
       case RetrievingResult::FULL_FAILURE:
         _M_entries[i].set_value_type(ValueType::UNSET);
+        _M_entries[i].set_age(_M_age);
       case RetrievingResult::PARTIAL_FAILURE:
         if(!(is_exclusive && _M_entries[i].thread_count() >= 0)) {
           _M_entries[i].increase_thread_count();
@@ -105,7 +106,7 @@ namespace peacockspider
       }
       return RetrievingResult::PARTIAL_FAILURE;
     }
-    return _M_entries[i].value_type() == ValueType::UNSET ? RetrievingResult::PARTIAL_FAILURE : RetrievingResult::FULL_FAILURE;
+    return (_M_entries[i].age() == _M_age && _M_entries[i].value_type() == ValueType::UNSET) ? RetrievingResult::PARTIAL_FAILURE : RetrievingResult::FULL_FAILURE;
   }
 
   bool TranspositionTable::store(HashKey hash_key, int alpha, int beta, int depth, int best_value, Move best_move)
