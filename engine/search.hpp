@@ -35,6 +35,7 @@
 namespace peacockspider
 {
   class LazySMPStop;
+  class ABDADAThreadCountDecrement;
 
   const int MAX_VALUE = 30000;
   const int MIN_VALUE = -30000;
@@ -473,6 +474,202 @@ namespace peacockspider
     LazySMPPVSSearcher(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, unsigned thread_count, int max_depth = MAX_DEPTH, int max_quiescence_depth = MAX_QUIESCENCE_DEPTH);
 
     virtual ~LazySMPPVSSearcher();
+  };
+
+  enum class ABDADACommand
+  {
+    NO_COMMAND,
+    SEARCH,
+    QUIT
+  };
+  
+  enum class ABDADAResult
+  {
+    NO_RESULT = 0,    
+    THINKING_STOP = 1,
+    PONDERING_STOP = 2,
+    VALUE = 4
+  };
+
+  inline ABDADAResult operator~(ABDADAResult result)
+  { return static_cast<ABDADAResult>(static_cast<int>(result) ^ 7); }
+  
+  inline ABDADAResult operator&(ABDADAResult result1, ABDADAResult result2)
+  { return static_cast<ABDADAResult>(static_cast<int>(result1) & static_cast<int>(result1)); }
+  
+  inline ABDADAResult operator&=(ABDADAResult &result1, ABDADAResult result2)
+  { result1 = result1 & result2; return result1; }
+
+  inline ABDADAResult operator|(ABDADAResult result1, ABDADAResult result2)
+  { return static_cast<ABDADAResult>(static_cast<int>(result1) | static_cast<int>(result1)); }
+  
+  inline ABDADAResult operator|=(ABDADAResult &result1, ABDADAResult result2)
+  { result1 = result1 | result2; return result1; }
+
+  inline ABDADAResult operator^(ABDADAResult result1, ABDADAResult result2)
+  { return static_cast<ABDADAResult>(static_cast<int>(result1) ^ static_cast<int>(result1)); }
+  
+  inline ABDADAResult operator^=(ABDADAResult &result1, ABDADAResult result2)
+  { result1 = result1 ^ result2; return result1; }
+  
+  struct ABDADAThread
+  {
+    std::thread thread;
+    std::unique_ptr<Searcher> searcher;
+    std::mutex mutex;
+    std::condition_variable start_condition_variable;
+    ABDADACommand command;
+    std::condition_variable stop_condition_variable;
+    ABDADAResult result;
+    int value;
+    Move best_move;
+    
+    ABDADAThread() {}
+    
+    ABDADAThread(ABDADAThread &&thread) :
+      thread(std::move(thread.thread)), searcher(std::move(thread.searcher)), command(thread.command), result(thread.result), value(thread.value) {}
+  };
+
+  class ABDADASingleSearcherBase : public SingleSearcherBase
+  {
+    friend ABDADAThreadCountDecrement;
+  protected:
+    TranspositionTable *_M_transposition_table;
+    const std::vector<ABDADAThread> &_M_threads;
+
+    ABDADASingleSearcherBase(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, const std::vector<ABDADAThread> &threads, int max_depth, int max_quiescence_depth);
+  public:
+    virtual ~ABDADASingleSearcherBase();
+
+    virtual std::uint64_t all_nodes() const;
+  protected:
+    virtual void decrease_thread_count(int ply);
+  };
+
+  class ABDADAThreadCountDecrement
+  {
+    ABDADASingleSearcherBase *_M_searcher;
+    int _M_ply;
+  public:
+    ABDADAThreadCountDecrement(ABDADASingleSearcherBase *searcher, int ply) :
+      _M_searcher(searcher), _M_ply(ply) {}
+
+    ~ABDADAThreadCountDecrement()
+    { _M_searcher->decrease_thread_count(_M_ply); }
+  };
+  
+  class ABDADASingleSearcher : public ABDADASingleSearcherBase
+  {
+  public:
+    ABDADASingleSearcher(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, const std::vector<ABDADAThread> &threads, int max_depth, int max_quiescence_depth);
+
+    virtual ~ABDADASingleSearcher();
+
+    virtual int search_from_root(int alpha, int beta, int depth, const std::vector<Move> *search_moves, Move &best_move, const std::vector<Board> &boards, const Board *last_board);
+  protected:
+    virtual bool before(int &alpha, int &beta, int depth, int ply, int &best_value, Move &best_move, bool is_exclusive);
+
+    virtual void after(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
+
+    virtual void cutoff(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
+
+    int search(int alpha, int beta, int depth, int ply, bool is_exclusive_node);
+  };
+
+  class ABDADASinglePVSSearcher : public ABDADASingleSearcherBase
+  {
+  public:
+    ABDADASinglePVSSearcher(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, const std::vector<ABDADAThread> &threads, int max_depth, int max_quiescence_depth);
+
+    virtual ~ABDADASinglePVSSearcher();
+
+    virtual int search_from_root(int alpha, int beta, int depth, const std::vector<Move> *search_moves, Move &best_move, const std::vector<Board> &boards, const Board *last_board);
+  protected:
+    virtual bool before(int &alpha, int &beta, int depth, int ply, int &best_value, Move &best_move, bool is_exclusive);
+
+    virtual void after(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
+
+    virtual void cutoff(int alpha, int beta, int depth, int ply, int best_value, Move best_move);
+
+    int search(int alpha, int beta, int depth, int ply, bool can_make_null_move, bool is_exclusive_node);
+  };
+
+  class ABDADASearcherBase : public Searcher
+  {
+  protected:
+    TranspositionTable *_M_transposition_table;
+    std::vector<ABDADAThread> _M_threads;
+    ABDADAThread *_M_best_thread;
+    int _M_alpha;
+    int _M_beta;
+    int _M_depth;
+    const std::vector<Move> *_M_search_moves;
+    const std::vector<Board> *_M_boards;
+    const Board *_M_last_board;
+
+    ABDADASearcherBase(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, std::function<Searcher *(const EvaluationFunction *, TranspositionTable *, const std::vector<ABDADAThread> &, int, int)> fun, unsigned thread_count, int max_depth, int max_quiescence_depth);
+  public:
+    virtual ~ABDADASearcherBase();
+
+    virtual const Board &board() const;
+
+    virtual void set_board(const Board &board);
+    
+    virtual void set_stop_time(const std::chrono::high_resolution_clock::time_point &time);
+
+    virtual void unset_stop_time();
+    
+    virtual void set_stop_nodes(std::uint64_t nodes);
+
+    virtual void unset_stop_nodes();
+
+    virtual void set_previous_pv_line(const PVLine &pv_line);
+
+    virtual void clear();
+
+    virtual void clear_for_new_game();
+
+    virtual int search_from_root(int alpha, int beta, int depth, const std::vector<Move> *search_moves, Move &best_move, const std::vector<Board> &boards, const Board *last_board);
+
+    virtual void set_pondering_flag(bool flag);
+    
+    virtual void clear_thinking_stop_flag();
+    
+    virtual void clear_pondering_stop_flag();
+
+    virtual void clear_searching_stop_flag();
+    
+    virtual void stop_thinking();
+
+    virtual void stop_pondering();
+    
+    virtual void stop_searching();
+
+    virtual void set_non_stop_flag(bool flag);
+    
+    virtual const PVLine &pv_line() const;
+    
+    virtual std::uint64_t nodes() const;
+
+    virtual unsigned thread_count() const;
+    
+    virtual int max_quiescence_depth() const;
+  };
+
+  class ABDADASearcher : public ABDADASearcherBase
+  {
+  public:
+    ABDADASearcher(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, unsigned thread_count, int max_depth = MAX_DEPTH, int max_quiescence_depth = MAX_QUIESCENCE_DEPTH);
+
+    virtual ~ABDADASearcher();
+  };
+
+  class ABDADAPVSSearcher : public ABDADASearcherBase
+  {
+  public:
+    ABDADAPVSSearcher(const EvaluationFunction *eval_fun, TranspositionTable *transpos_table, unsigned thread_count, int max_depth = MAX_DEPTH, int max_quiescence_depth = MAX_QUIESCENCE_DEPTH);
+
+    virtual ~ABDADAPVSSearcher();
   };
 
   class Thinker

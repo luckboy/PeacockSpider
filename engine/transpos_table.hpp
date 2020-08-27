@@ -29,8 +29,18 @@ namespace peacockspider
     NONE = 0,
     EXACT = 1,
     UPPER_BOUND = 2,
-    LOWER_BOUND = 3
+    LOWER_BOUND = 3,
+    UNSET = 4
   };
+  
+  enum class RetrievingResult
+  {
+    FULL_FAILURE,
+    PARTIAL_FAILURE,
+    SUCCESS
+  };
+
+  const int VALUE_ON_EVALUATION = 32000;
   
   class TranspositionTableEntry
   {
@@ -40,12 +50,12 @@ namespace peacockspider
     std::int16_t _M_value;
     Move _M_best_move;
     std::int8_t _M_value_type;
-    std::uint8_t _M_pad2;
+    std::uint8_t _M_thread_count;
     std::int16_t _M_age;
-    std::uint32_t _M_pad3;
+    std::uint32_t _M_pad;
   public:
     TranspositionTableEntry() :
-      _M_hash_key(0), _M_value_type(0), _M_age(0) {}
+      _M_hash_key(0), _M_value_type(0), _M_thread_count(0), _M_age(0) {}
 
     HashKey hash_key() const
     { return _M_hash_key; }
@@ -80,6 +90,18 @@ namespace peacockspider
     void set_value_type(ValueType value_type)
     { _M_value_type = static_cast<std::int8_t>(value_type); }
 
+    unsigned thread_count() const
+    { return _M_thread_count; }
+
+    void set_thread_count(unsigned thread_count)
+    { _M_thread_count = thread_count; }
+    
+    void increase_thread_count()
+    { _M_thread_count++; }
+
+    void decrease_thread_count()
+    { _M_thread_count--; }
+
     unsigned age() const
     { return _M_age; }
     
@@ -103,7 +125,13 @@ namespace peacockspider
 
     bool retrieve(HashKey hash_key, int &alpha, int &beta, int depth, int &best_value, Move &best_move);
 
+    bool retrieve_for_abdada(HashKey hash_key, int &alpha, int &beta, int depth, int &best_value, Move &best_move, bool is_exclusive);
+  private:
+    RetrievingResult unsafely_retrieve(HashKey hash_key, std::size_t i, int &alpha, int &beta, int depth, int &best_value, Move &best_move);
+  public:    
     bool store(HashKey hash_key, int alpha, int beta, int depth, int best_value, Move best_move);
+
+    void decrease_thread_count(HashKey hash_key);
   };
 }
 
