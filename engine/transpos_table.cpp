@@ -135,5 +135,4 @@ namespace peacockspider
     lock_guard<Spinlock> guard(_M_entries[i].spinlock());
     _M_entries[i].decrease_thread_count();
   }
-
 }
