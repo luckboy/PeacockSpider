@@ -127,7 +127,7 @@ namespace peacockspider
       Move best_move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
       bool is_legal_move = false;
       bool is_all_done = true;
-      for(int iter = 0; iter < 2 && alpha < beta && is_all_done; iter++) {
+      for(int iter = 0; iter < 2 && alpha < beta && !is_all_done; iter++) {
         bool is_first = true;
         for(size_t i = 0; i < _M_stack[ply].move_pairs.length(); i++) {
           if(iter == 0) _M_stack[ply].move_pairs.select_sort_move(i);
