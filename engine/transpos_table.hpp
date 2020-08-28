@@ -33,7 +33,7 @@ namespace peacockspider
     UNSET = 4
   };
   
-  enum class RetrievingResult
+  enum class RetrieveResult
   {
     FULL_FAILURE,
     PARTIAL_FAILURE,
@@ -127,7 +127,7 @@ namespace peacockspider
 
     bool retrieve_for_abdada(HashKey hash_key, int &alpha, int &beta, int depth, int &best_value, Move &best_move, bool is_exclusive);
   private:
-    RetrievingResult unsafely_retrieve(HashKey hash_key, std::size_t i, int &alpha, int &beta, int depth, int &best_value, Move &best_move);
+    RetrieveResult unsafely_retrieve(HashKey hash_key, std::size_t i, int &alpha, int &beta, int depth, int &best_value, Move &best_move);
   public:    
     bool store(HashKey hash_key, int alpha, int beta, int depth, int best_value, Move best_move);
 

@@ -50,7 +50,7 @@ namespace peacockspider
   {
     size_t i = hash_key % _M_entry_count;
     lock_guard<Spinlock> guard(_M_entries[i].spinlock());
-    return unsafely_retrieve(hash_key, i, alpha, beta, depth, best_value, best_move) == RetrievingResult::SUCCESS;
+    return unsafely_retrieve(hash_key, i, alpha, beta, depth, best_value, best_move) == RetrieveResult::SUCCESS;
   }
   
   bool TranspositionTable::retrieve_for_abdada(HashKey hash_key, int &alpha, int &beta, int depth, int &best_value, Move &best_move, bool is_exclusive)
@@ -58,12 +58,12 @@ namespace peacockspider
     size_t i = hash_key % _M_entry_count;
     lock_guard<Spinlock> guard(_M_entries[i].spinlock());
     switch(unsafely_retrieve(hash_key, i, alpha, beta, depth, best_value, best_move)) {
-      case RetrievingResult::SUCCESS:
+      case RetrieveResult::SUCCESS:
         return true;
-      case RetrievingResult::FULL_FAILURE:
+      case RetrieveResult::FULL_FAILURE:
         _M_entries[i].set_value_type(ValueType::UNSET);
         _M_entries[i].set_age(_M_age);
-      case RetrievingResult::PARTIAL_FAILURE:
+      case RetrieveResult::PARTIAL_FAILURE:
         if(!(is_exclusive && _M_entries[i].thread_count() > 0)) {
           _M_entries[i].increase_thread_count();
           return false;
@@ -76,7 +76,7 @@ namespace peacockspider
     return false;
   }
 
-  RetrievingResult TranspositionTable::unsafely_retrieve(HashKey hash_key, size_t i, int &alpha, int &beta, int depth, int &best_value, Move &best_move)
+  RetrieveResult TranspositionTable::unsafely_retrieve(HashKey hash_key, size_t i, int &alpha, int &beta, int depth, int &best_value, Move &best_move)
   {
     best_move = Move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
     if(_M_entries[i].age() == _M_age && _M_entries[i].value_type() != ValueType::NONE && _M_entries[i].value_type() != ValueType::UNSET && _M_entries[i].hash_key() == hash_key) {
@@ -85,18 +85,18 @@ namespace peacockspider
         switch(_M_entries[i].value_type()) {
           case ValueType::EXACT:
             best_value = _M_entries[i].value();
-            return RetrievingResult::SUCCESS;
+            return RetrieveResult::SUCCESS;
           case ValueType::UPPER_BOUND:
             if(_M_entries[i].value() <= alpha) {
               best_value = _M_entries[i].value();
-              return RetrievingResult::SUCCESS;
+              return RetrieveResult::SUCCESS;
             }
             if(_M_entries[i].value() < beta) beta = _M_entries[i].value();
             break;
           case ValueType::LOWER_BOUND:
             if(_M_entries[i].value() >= beta) {
               best_value = _M_entries[i].value();
-              return RetrievingResult::SUCCESS;
+              return RetrieveResult::SUCCESS;
             }
             if(_M_entries[i].value() > alpha) alpha = _M_entries[i].value();
             break;
@@ -104,9 +104,9 @@ namespace peacockspider
             break;
         }
       }
-      return RetrievingResult::PARTIAL_FAILURE;
+      return RetrieveResult::PARTIAL_FAILURE;
     }
-    return (_M_entries[i].age() == _M_age && _M_entries[i].value_type() == ValueType::UNSET) ? RetrievingResult::PARTIAL_FAILURE : RetrievingResult::FULL_FAILURE;
+    return (_M_entries[i].age() == _M_age && _M_entries[i].value_type() == ValueType::UNSET) ? RetrieveResult::PARTIAL_FAILURE : RetrieveResult::FULL_FAILURE;
   }
 
   bool TranspositionTable::store(HashKey hash_key, int alpha, int beta, int depth, int best_value, Move best_move)
