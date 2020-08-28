@@ -64,7 +64,7 @@ namespace peacockspider
         _M_entries[i].set_value_type(ValueType::UNSET);
         _M_entries[i].set_age(_M_age);
       case RetrievingResult::PARTIAL_FAILURE:
-        if(!(is_exclusive && _M_entries[i].thread_count() >= 0)) {
+        if(!(is_exclusive && _M_entries[i].thread_count() > 0)) {
           _M_entries[i].increase_thread_count();
           return false;
         } else {
