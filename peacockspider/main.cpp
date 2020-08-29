@@ -77,6 +77,20 @@ namespace
         transpos_table = unique_ptr<TranspositionTable>(new TranspositionTable(tt_entry_count));
         return new LazySMPPVSSearcher(eval_fun, transpos_table.get(), thread_count);
       }
+    },
+    {
+      "abdada",
+      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count, unsigned thread_count) {
+        transpos_table = unique_ptr<TranspositionTable>(new TranspositionTable(tt_entry_count));
+        return new ABDADASearcher(eval_fun, transpos_table.get(), thread_count);
+      }
+    },
+    {
+      "abdadapvs",
+      [](const EvaluationFunction *eval_fun, unique_ptr<TranspositionTable> &transpos_table,  size_t tt_entry_count, unsigned thread_count) {
+        transpos_table = unique_ptr<TranspositionTable>(new TranspositionTable(tt_entry_count));
+        return new ABDADAPVSSearcher(eval_fun, transpos_table.get(), thread_count);
+      }
     }
   };
 }
