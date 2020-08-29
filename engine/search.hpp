@@ -495,19 +495,19 @@ namespace peacockspider
   { return static_cast<ABDADAResult>(static_cast<int>(result) ^ 7); }
   
   inline ABDADAResult operator&(ABDADAResult result1, ABDADAResult result2)
-  { return static_cast<ABDADAResult>(static_cast<int>(result1) & static_cast<int>(result1)); }
+  { return static_cast<ABDADAResult>(static_cast<int>(result1) & static_cast<int>(result2)); }
   
   inline ABDADAResult operator&=(ABDADAResult &result1, ABDADAResult result2)
   { result1 = result1 & result2; return result1; }
 
   inline ABDADAResult operator|(ABDADAResult result1, ABDADAResult result2)
-  { return static_cast<ABDADAResult>(static_cast<int>(result1) | static_cast<int>(result1)); }
+  { return static_cast<ABDADAResult>(static_cast<int>(result1) | static_cast<int>(result2)); }
   
   inline ABDADAResult operator|=(ABDADAResult &result1, ABDADAResult result2)
   { result1 = result1 | result2; return result1; }
 
   inline ABDADAResult operator^(ABDADAResult result1, ABDADAResult result2)
-  { return static_cast<ABDADAResult>(static_cast<int>(result1) ^ static_cast<int>(result1)); }
+  { return static_cast<ABDADAResult>(static_cast<int>(result1) ^ static_cast<int>(result2)); }
   
   inline ABDADAResult operator^=(ABDADAResult &result1, ABDADAResult result2)
   { result1 = result1 ^ result2; return result1; }
