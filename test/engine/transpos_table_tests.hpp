@@ -43,6 +43,20 @@ namespace peacockspider
       CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_upper_bound_value);
       CPPUNIT_TEST(test_transposition_table_retrieves_entry_for_lower_bound_value);
       CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_lower_bound_value);
+      CPPUNIT_TEST(test_transposition_table_retrieves_entry_for_abdada);
+      CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_abdada_and_unequal_hash_key);
+      CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_abdada_and_unequal_index);
+      CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_abdada_and_greater_depth);
+      CPPUNIT_TEST(test_transposition_table_retrieves_entry_for_abdada_and_less_depth);
+      CPPUNIT_TEST(test_transposition_table_retrieves_entry_for_abdada_and_upper_bound_value);
+      CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_abdada_and_upper_bound_value);
+      CPPUNIT_TEST(test_transposition_table_retrieves_entry_for_abdada_and_lower_bound_value);
+      CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_abdada_and_lower_bound_value);
+      CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_abdada_and_non_exclusive);
+      CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_abdada_and_non_exclusive_after_retrieve);
+      CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_abdada_and_exclusive);
+      CPPUNIT_TEST(test_transposition_table_does_not_retrieve_entry_for_abdada_and_exclusive_after_retrieve);
+      CPPUNIT_TEST(test_transposition_table_decreases_thread_count);
       CPPUNIT_TEST_SUITE_END();
 
       TranspositionTable *_M_tt;
@@ -64,6 +78,20 @@ namespace peacockspider
       void test_transposition_table_does_not_retrieve_entry_for_upper_bound_value();
       void test_transposition_table_retrieves_entry_for_lower_bound_value();
       void test_transposition_table_does_not_retrieve_entry_for_lower_bound_value();
+      void test_transposition_table_retrieves_entry_for_abdada();
+      void test_transposition_table_does_not_retrieve_entry_for_abdada_and_unequal_hash_key();
+      void test_transposition_table_does_not_retrieve_entry_for_abdada_and_unequal_index();
+      void test_transposition_table_does_not_retrieve_entry_for_abdada_and_greater_depth();
+      void test_transposition_table_retrieves_entry_for_abdada_and_less_depth();
+      void test_transposition_table_retrieves_entry_for_abdada_and_upper_bound_value();
+      void test_transposition_table_does_not_retrieve_entry_for_abdada_and_upper_bound_value();
+      void test_transposition_table_retrieves_entry_for_abdada_and_lower_bound_value();
+      void test_transposition_table_does_not_retrieve_entry_for_abdada_and_lower_bound_value();
+      void test_transposition_table_does_not_retrieve_entry_for_abdada_and_non_exclusive();
+      void test_transposition_table_does_not_retrieve_entry_for_abdada_and_non_exclusive_after_retrieve();
+      void test_transposition_table_does_not_retrieve_entry_for_abdada_and_exclusive();
+      void test_transposition_table_does_not_retrieve_entry_for_abdada_and_exclusive_after_retrieve();
+      void test_transposition_table_decreases_thread_count();
     };
   }
 }

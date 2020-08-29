@@ -238,5 +238,235 @@ namespace peacockspider
       CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
       CPPUNIT_ASSERT(Move(Piece::PAWN, E2, E3, PromotionPiece::NONE) == best_move);
     }
+
+    void TranspositionTableTests::test_transposition_table_retrieves_entry_for_abdada()
+    {
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->store(static_cast<HashKey>(0x567890), -50, 50, 2, 10, Move(Piece::PAWN, D2, D4, PromotionPiece::NONE)));
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -50; beta = 50;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x567890), alpha, beta, 2, best_value, best_move, false));
+      CPPUNIT_ASSERT_EQUAL(-50, alpha);
+      CPPUNIT_ASSERT_EQUAL(50, beta);
+      CPPUNIT_ASSERT_EQUAL(10, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, D2, D4, PromotionPiece::NONE) == best_move);
+    }
+
+    void TranspositionTableTests::test_transposition_table_does_not_retrieve_entry_for_abdada_and_unequal_hash_key()
+    {
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->store(static_cast<HashKey>(0x5678), -100, 100, 4, 50, Move(Piece::KNIGHT, G1, F3, PromotionPiece::NONE)));
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -100; beta = 100;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, E2, E4, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(false, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x125678), alpha, beta, 4, best_value, best_move, false));
+      CPPUNIT_ASSERT_EQUAL(-100, alpha);
+      CPPUNIT_ASSERT_EQUAL(100, beta);
+      CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, -1, -1, PromotionPiece::NONE) == best_move);
+    }
+
+    void TranspositionTableTests::test_transposition_table_does_not_retrieve_entry_for_abdada_and_unequal_index()
+    {
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->store(static_cast<HashKey>(0x5678), -10, 10, 4, 5, Move(Piece::KNIGHT, B1, C3, PromotionPiece::NONE)));
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -10; beta = 10;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, E2, E4, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(false, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x5679), alpha, beta, 4, best_value, best_move, false));
+      CPPUNIT_ASSERT_EQUAL(-10, alpha);
+      CPPUNIT_ASSERT_EQUAL(10, beta);
+      CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, -1, -1, PromotionPiece::NONE) == best_move);
+    }
+
+    void TranspositionTableTests::test_transposition_table_does_not_retrieve_entry_for_abdada_and_greater_depth()
+    {
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->store(static_cast<HashKey>(0x1234), -100, 100, 2, 50, Move(Piece::PAWN, E2, E3, PromotionPiece::NONE)));
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -100; beta = 100;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(false, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x1234), alpha, beta, 4, best_value, best_move, false));
+      CPPUNIT_ASSERT_EQUAL(-100, alpha);
+      CPPUNIT_ASSERT_EQUAL(100, beta);
+      CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, E2, E3, PromotionPiece::NONE) == best_move);
+    }
+
+    void TranspositionTableTests::test_transposition_table_retrieves_entry_for_abdada_and_less_depth()
+    {
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->store(static_cast<HashKey>(0x123456), -100, 100, 4, 10, Move(Piece::PAWN, E2, E4, PromotionPiece::NONE)));
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -100; beta = 100;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, false));
+      CPPUNIT_ASSERT_EQUAL(-100, alpha);
+      CPPUNIT_ASSERT_EQUAL(100, beta);
+      CPPUNIT_ASSERT_EQUAL(10, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, E2, E4, PromotionPiece::NONE) == best_move);
+    }
+
+    void TranspositionTableTests::test_transposition_table_retrieves_entry_for_abdada_and_upper_bound_value()
+    {
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->store(static_cast<HashKey>(0x123456), -10, 10, 2, -40, Move(Piece::PAWN, E2, E4, PromotionPiece::NONE)));
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -30; beta = 10;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, false));
+      CPPUNIT_ASSERT_EQUAL(-30, alpha);
+      CPPUNIT_ASSERT(10 >= beta);
+      CPPUNIT_ASSERT_EQUAL(-40, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, E2, E4, PromotionPiece::NONE) == best_move);
+    }
+
+    void TranspositionTableTests::test_transposition_table_does_not_retrieve_entry_for_abdada_and_upper_bound_value()
+    {
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->store(static_cast<HashKey>(0x123456), -10, 10, 2, -20, Move(Piece::PAWN, E2, E4, PromotionPiece::NONE)));
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -30; beta = 10;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(false, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, false));
+      CPPUNIT_ASSERT_EQUAL(-30, alpha);
+      CPPUNIT_ASSERT(10 >= beta);
+      CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, E2, E4, PromotionPiece::NONE) == best_move);
+    }
+
+    void TranspositionTableTests::test_transposition_table_retrieves_entry_for_abdada_and_lower_bound_value()
+    {
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->store(static_cast<HashKey>(0x123456), -10, 10, 2, 40, Move(Piece::PAWN, E2, E4, PromotionPiece::NONE)));
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -10; beta = 20;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, false));
+      CPPUNIT_ASSERT(-10 <= alpha);
+      CPPUNIT_ASSERT_EQUAL(20, beta);
+      CPPUNIT_ASSERT_EQUAL(40, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, E2, E4, PromotionPiece::NONE) == best_move);
+    }
+
+    void TranspositionTableTests::test_transposition_table_does_not_retrieve_entry_for_abdada_and_lower_bound_value()
+    {
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->store(static_cast<HashKey>(0x123456), -10, 10, 2, 20, Move(Piece::PAWN, E2, E4, PromotionPiece::NONE)));
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -10; beta = 30;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(false, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, false));
+      CPPUNIT_ASSERT(-10 <= alpha);
+      CPPUNIT_ASSERT_EQUAL(30, beta);
+      CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, E2, E4, PromotionPiece::NONE) == best_move);
+    }
+
+    void TranspositionTableTests::test_transposition_table_does_not_retrieve_entry_for_abdada_and_non_exclusive()
+    {
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -100; beta = 100;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, E2, E4, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(false, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, false));
+      CPPUNIT_ASSERT_EQUAL(-100, alpha);
+      CPPUNIT_ASSERT_EQUAL(100, beta);
+      CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, -1, -1, PromotionPiece::NONE) == best_move);
+    }
+
+    void TranspositionTableTests::test_transposition_table_does_not_retrieve_entry_for_abdada_and_non_exclusive_after_retrieve()
+    {
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -100; beta = 100;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, E2, E4, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(false, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, false));
+      CPPUNIT_ASSERT_EQUAL(-100, alpha);
+      CPPUNIT_ASSERT_EQUAL(100, beta);
+      CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, -1, -1, PromotionPiece::NONE) == best_move);
+      alpha = -100; beta = 100;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, E2, E4, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(false, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, false));
+      CPPUNIT_ASSERT_EQUAL(-100, alpha);
+      CPPUNIT_ASSERT_EQUAL(100, beta);
+      CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, -1, -1, PromotionPiece::NONE) == best_move);
+    }
+    
+    void TranspositionTableTests::test_transposition_table_does_not_retrieve_entry_for_abdada_and_exclusive()
+    {
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -100; beta = 100;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, E1, E2, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(false, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, true));
+      CPPUNIT_ASSERT_EQUAL(-100, alpha);
+      CPPUNIT_ASSERT_EQUAL(100, beta);
+      CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, -1, -1, PromotionPiece::NONE) == best_move);
+    }
+
+    void TranspositionTableTests::test_transposition_table_does_not_retrieve_entry_for_abdada_and_exclusive_after_retrieve()
+    {
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -100; beta = 100;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(false, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, false));
+      CPPUNIT_ASSERT_EQUAL(-100, alpha);
+      CPPUNIT_ASSERT_EQUAL(100, beta);
+      CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, -1, -1, PromotionPiece::NONE) == best_move);
+      alpha = -100; beta = 100;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, E1, E3, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(true, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, true));
+      CPPUNIT_ASSERT_EQUAL(-100, alpha);
+      CPPUNIT_ASSERT_EQUAL(100, beta);
+      CPPUNIT_ASSERT_EQUAL(VALUE_ON_EVALUATION, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, -1, -1, PromotionPiece::NONE) == best_move);
+    }
+    
+    void TranspositionTableTests::test_transposition_table_decreases_thread_count()
+    {
+      int alpha, beta, best_value;
+      Move best_move;
+      alpha = -100; beta = 100;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(false, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, false));
+      CPPUNIT_ASSERT_EQUAL(-100, alpha);
+      CPPUNIT_ASSERT_EQUAL(100, beta);
+      CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, -1, -1, PromotionPiece::NONE) == best_move);
+      _M_tt->decrease_thread_count(static_cast<HashKey>(0x123456));
+      alpha = -100; beta = 100;
+      best_value = MIN_VALUE;
+      best_move = Move(Piece::PAWN, E1, E3, PromotionPiece::NONE);
+      CPPUNIT_ASSERT_EQUAL(false, _M_tt->retrieve_for_abdada(static_cast<HashKey>(0x123456), alpha, beta, 2, best_value, best_move, true));
+      CPPUNIT_ASSERT_EQUAL(-100, alpha);
+      CPPUNIT_ASSERT_EQUAL(100, beta);
+      CPPUNIT_ASSERT_EQUAL(MIN_VALUE, best_value);
+      CPPUNIT_ASSERT(Move(Piece::PAWN, -1, -1, PromotionPiece::NONE) == best_move);
+    }
   }
 }
