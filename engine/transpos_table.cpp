@@ -32,6 +32,7 @@ namespace peacockspider
     for(size_t i = 0; i < _M_entry_count; i++) {
       _M_entries[i].set_hash_key(0);
       _M_entries[i].set_value_type(ValueType::NONE);
+      _M_entries[i].set_thread_count(0);
       _M_entries[i].set_age(0);
     }
     _M_age = 0;
