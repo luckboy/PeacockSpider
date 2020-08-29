@@ -42,10 +42,11 @@ namespace peacockspider
     _M_move_order.set_move_scores(_M_stack[0].move_pairs, 0, _M_stack[0].board, _M_evaluation_function, nullptr);
     int best_value = MIN_VALUE;
     Move tmp_best_move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
-    bool is_all_done = true;
+    bool is_all_done = false;
     try {
       for(int iter = 0; iter < 2 && alpha < beta && !is_all_done; iter++) {
         bool is_first = true;
+        is_all_done = true;
         for(size_t i = 0; i < _M_stack[0].move_pairs.length(); i++) {
           if(iter == 0) _M_stack[0].move_pairs.select_sort_move(i);
           Move move = _M_stack[0].move_pairs[i].move;
@@ -126,9 +127,10 @@ namespace peacockspider
       int old_alpha = alpha;
       Move best_move(Piece::PAWN, -1, -1, PromotionPiece::NONE);
       bool is_legal_move = false;
-      bool is_all_done = true;
+      bool is_all_done = false;
       for(int iter = 0; iter < 2 && alpha < beta && !is_all_done; iter++) {
         bool is_first = true;
+        is_all_done = true;
         for(size_t i = 0; i < _M_stack[ply].move_pairs.length(); i++) {
           if(iter == 0) _M_stack[ply].move_pairs.select_sort_move(i);
           Move move = _M_stack[ply].move_pairs[i].move;
