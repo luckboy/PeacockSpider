@@ -30,7 +30,7 @@ namespace peacockspider
   namespace
   {
     const char *prompt = "Peacock Spider> ";
-    const char *editing_prompt = "Peacock Spider:edit>";
+    const char *editing_prompt = "Peacock Spider:edit> ";
     
     const char *features[] = {
       "ping=1",
