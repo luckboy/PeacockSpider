@@ -28,6 +28,8 @@ namespace peacockspider
   const int MAX_DEPTH = 128;
   const int MAX_QUIESCENCE_DEPTH = 32;
 
+  const unsigned MAX_THREAD_COUNT = 255;
+
   const Square A1 = 000;
   const Square B1 = 001;
   const Square C1 = 002;

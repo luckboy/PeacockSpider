@@ -24,6 +24,7 @@
 #include <thread>
 #include <unistd.h>
 #include <unordered_map>
+#include "consts.hpp"
 #include "engine.hpp"
 #include "eval.hpp"
 #include "protocols.hpp"
@@ -123,6 +124,7 @@ int main(int argc, char **argv)
         case 'n':
           thread_count = thread::hardware_concurrency();
           if(thread_count == 0) thread_count = 1;
+          if(thread_count > MAX_THREAD_COUNT) thread_count = MAX_THREAD_COUNT;
           break;
         case 'p':
         {
@@ -135,6 +137,10 @@ int main(int argc, char **argv)
           }
           if(thread_count <= 0) {
             cerr << "Too small number" << endl;
+            return 1;
+          }
+          if(thread_count > MAX_THREAD_COUNT) {
+            cerr << "Too large number" << endl;
             return 1;
           }
           break;
