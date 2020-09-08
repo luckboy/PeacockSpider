@@ -49,9 +49,10 @@ namespace peacockspider
         if(search_moves != nullptr ? find(search_moves->begin(), search_moves->end(), move) != search_moves->end() : true) {
           if(_M_stack[0].board.make_move(move, _M_stack[1].board)) {
             int value;
-            if(repetitions(_M_stack[1].board, boards, last_board) >= 1)
+            if(repetitions(_M_stack[1].board, boards, last_board) >= 1) {
+              _M_stack[1].pv_line.clear();
               value = 0;
-            else
+            } else
               value = -search(-beta, -alpha, depth - 1, 1);
             if(value > best_value) {
               _M_stack[0].pv_line.update(move, _M_stack[1].pv_line);

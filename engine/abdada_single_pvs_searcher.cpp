@@ -60,6 +60,7 @@ namespace peacockspider
               bool is_exclusive = (iter == 0 && !is_first);
               int value;
               if(repetitions(_M_stack[1].board, boards, last_board) >= 1) {
+                _M_stack[1].pv_line.clear();
                 value = 0;
               } else {
                 if(is_first) {

@@ -54,9 +54,10 @@ namespace peacockspider
             if(_M_stack[0].board.make_move(move, _M_stack[1].board)) {
               bool is_exclusive = (iter == 0 && !is_first);
               int value;
-              if(repetitions(_M_stack[1].board, boards, last_board) >= 1)
+              if(repetitions(_M_stack[1].board, boards, last_board) >= 1) {
+                _M_stack[1].pv_line.clear();
                 value = 0;
-              else
+              } else
                 value = -search(-beta, -alpha, depth - 1, 1, is_exclusive);
               if(value == -VALUE_ON_EVALUATION) {
                 is_all_done = false;

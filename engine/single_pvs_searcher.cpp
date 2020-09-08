@@ -56,6 +56,7 @@ namespace peacockspider
           if(_M_stack[0].board.make_move(move, _M_stack[1].board)) {
             int value;
             if(repetitions(_M_stack[1].board, boards, last_board) >= 1) {
+              _M_stack[1].pv_line.clear();
               value = 0;
             } else {
               if(is_first) {
