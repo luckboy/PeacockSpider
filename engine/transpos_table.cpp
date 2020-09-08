@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <mutex>
+#include "search.hpp"
 #include "transpos_table.hpp"
 
 using namespace std;
@@ -85,22 +86,28 @@ namespace peacockspider
       if(_M_entries[i].depth() >= depth) {
         switch(_M_entries[i].value_type()) {
           case ValueType::EXACT:
-            best_value = _M_entries[i].value();
+            best_value = unsafe_value_for_checkmate(i, depth);
             return RetrieveResult::SUCCESS;
           case ValueType::UPPER_BOUND:
-            if(_M_entries[i].value() <= alpha) {
-              best_value = _M_entries[i].value();
+          {
+            int value = unsafe_value_for_checkmate(i, depth);
+            if(value <= alpha) {
+              best_value = value;
               return RetrieveResult::SUCCESS;
             }
-            if(_M_entries[i].value() < beta) beta = _M_entries[i].value();
+            if(value < beta) beta = value;
             break;
+          }
           case ValueType::LOWER_BOUND:
-            if(_M_entries[i].value() >= beta) {
-              best_value = _M_entries[i].value();
+          {
+            int value = unsafe_value_for_checkmate(i, depth);
+            if(value >= beta) {
+              best_value = value;
               return RetrieveResult::SUCCESS;
             }
-            if(_M_entries[i].value() > alpha) alpha = _M_entries[i].value();
+            if(value > alpha) alpha = value;
             break;
+          }
           default:
             break;
         }
@@ -135,5 +142,16 @@ namespace peacockspider
     size_t i = hash_key % _M_entry_count;
     lock_guard<Spinlock> guard(_M_entries[i].spinlock());
     _M_entries[i].decrease_thread_count();
+  }
+  
+  int TranspositionTable::unsafe_value_for_checkmate(size_t i, int depth)
+  {
+    int value = _M_entries[i].value();
+    if(value >= MAX_VALUE - MAX_DEPTH)
+      return value - (_M_entries[i].depth() - depth);
+    else if(value <= MIN_VALUE + MAX_DEPTH)
+      return value + (_M_entries[i].depth() - depth);
+    else
+      return value;
   }
 }

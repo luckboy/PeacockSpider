@@ -132,6 +132,8 @@ namespace peacockspider
     bool store(HashKey hash_key, int alpha, int beta, int depth, int best_value, Move best_move);
 
     void decrease_thread_count(HashKey hash_key);
+  private:
+    int unsafe_value_for_checkmate(std::size_t i, int depth);
   };
 }
 
