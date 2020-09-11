@@ -117,6 +117,16 @@ int main(int argc, char **argv)
           cout << "  -p <number>           set number of threads" << endl;
           cout << "  -s <searcher name>    set searcher" << endl;
           cout << "  -t <size>             set transposition table size in megabytes" << endl;
+          cout << endl;
+          cout << "Searchers:" << endl;
+          cout << "  single                single searcher for Alpha-Beta (default)" << endl;
+          cout << "  singlewithtt          single searcher with TT for Alpha-Beta" << endl;
+          cout << "  singlepvs             single searcher for PVS" << endl;
+          cout << "  singlepvswithtt       single searcher with TT for PVS" << endl;
+          cout << "  lazysmp               Lazy SMP searcher for Alpha-Beta" << endl;
+          cout << "  lazysmppvs            Lazy SMP searcher for PVS" << endl;
+          cout << "  abdada                ABDADA searcher for Alpha-Beta" << endl;
+          cout << "  abdadapvs             ABDADA searcher for PVS" << endl;
           return 0;
         case 'l':
           log_file_name = optarg;
