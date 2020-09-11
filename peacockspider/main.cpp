@@ -100,7 +100,7 @@ int main(int argc, char **argv)
 {
   try {
     const char *log_file_name = nullptr;
-    const char *searcher_name = "single";
+    const char *searcher_name = "abdadapvs";
     size_t tt_entry_count = (32 * 1024 * 1024) / sizeof(TranspositionTableEntry);
     unsigned thread_count = 1;
     int c;
@@ -119,14 +119,14 @@ int main(int argc, char **argv)
           cout << "  -t <size>             set transposition table size in megabytes" << endl;
           cout << endl;
           cout << "Searchers:" << endl;
-          cout << "  single                single searcher for Alpha-Beta (default)" << endl;
+          cout << "  single                single searcher for Alpha-Beta" << endl;
           cout << "  singlewithtt          single searcher with TT for Alpha-Beta" << endl;
           cout << "  singlepvs             single searcher for PVS" << endl;
           cout << "  singlepvswithtt       single searcher with TT for PVS" << endl;
           cout << "  lazysmp               Lazy SMP searcher for Alpha-Beta" << endl;
           cout << "  lazysmppvs            Lazy SMP searcher for PVS" << endl;
           cout << "  abdada                ABDADA searcher for Alpha-Beta" << endl;
-          cout << "  abdadapvs             ABDADA searcher for PVS" << endl;
+          cout << "  abdadapvs             ABDADA searcher for PVS (default)" << endl;
           return 0;
         case 'l':
           log_file_name = optarg;
