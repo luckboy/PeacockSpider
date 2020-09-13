@@ -163,6 +163,7 @@ namespace peacockspider
     _M_thinker->stop_pondering();
     unique_lock<mutex> lock(_M_mutex);
     _M_mode = Mode::GAME;
+    _M_thinker->clear();
     unsafely_pre_set_board();
     _M_boards.clear();
     _M_boards.push_back(Board());
