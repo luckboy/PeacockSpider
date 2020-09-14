@@ -15,6 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef _SPINLOCK_HPP
+#define _SPINLOCK_HPP
+
 #include <atomic>
 
 namespace peacockspider
@@ -35,3 +38,5 @@ namespace peacockspider
     { _M_flag.clear(); }
   };
 }
+
+#endif
