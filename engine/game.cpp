@@ -22,8 +22,7 @@ using namespace std;
 namespace peacockspider
 {
   Game::Game() :
-    _M_result(Result::UNFINISHED)
-  {}
+    _M_result(Result::UNFINISHED) {}
 
   Game::Game(const string &event, const string &site, const string &date, const string &round, const string &white, const string &black, Result result, Board *board) :
     _M_event(event), _M_site(site), _M_date(date), _M_round(round), _M_white(white), _M_black(black), _M_result(result), _M_board(board) {}
