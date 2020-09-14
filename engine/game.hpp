@@ -15,6 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef _GAME_HPP
+#define _GAME_HPP
+
 #include <memory>
 #include <ostream>
 #include <string>
@@ -104,3 +107,5 @@ namespace peacockspider
 
   std::ostream &write_pgn(std::ostream &os, const Game &game);
 }
+
+#endif
