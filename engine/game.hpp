@@ -41,7 +41,11 @@ namespace peacockspider
  
     Game(const std::string &event, const std::string &site, const std::string &date, const std::string &round, const std::string &white, const std::string &black, Result result, Board *board, const std::vector<Move> &moves);
 
+    Game(const Game &game);
+
     ~Game();
+
+    Game &operator=(const Game &game);
 
     const std::string &event() const
     { return _M_event; }
