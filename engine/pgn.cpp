@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <ios>
 #include <sstream>
 #include "consts.hpp"
 #include "game.hpp"
@@ -45,8 +46,14 @@ namespace peacockspider
     for(Move move : game.moves()) {
       Board tmp_board;
       board.generate_pseudolegal_moves(move_pairs);
-      if(!move_pairs.contain_move(move)) break;
-      if(!board.make_move(move, tmp_board)) break;
+      if(!move_pairs.contain_move(move)) {
+        os.setstate(ios::failbit);
+        return os;
+      }
+      if(!board.make_move(move, tmp_board)) {
+        os.setstate(ios::failbit);
+        return os;
+      }
       string move_str = move.to_san_string(board, move_pairs);
       string fullmove_number_str;
       if(board.side() == Side::WHITE) {
