@@ -69,7 +69,7 @@ namespace peacockspider
       if(!fullmove_number_str.empty()) {
         if(is_first_line_char || column + fullmove_number_str.length() + 1 <= 80) {
           if(!is_first_line_char) os << " ";
-          column += fullmove_number_str.length();
+          column += fullmove_number_str.length() + (!is_first_line_char ? 1 : 0);
           is_first_line_char = false;
         } else {
           os << endl;
@@ -79,7 +79,7 @@ namespace peacockspider
       }
       if(is_first_line_char || column + move_str.length() + 1 <= 80) {
         if(!is_first_line_char) os << " ";
-        column += move_str.length();
+        column += move_str.length() + (!is_first_line_char ? 1 : 0);
         is_first_line_char = false;
       } else {
         os << endl;
@@ -92,7 +92,7 @@ namespace peacockspider
     string result_str = result_to_string(game.result());
     if(is_first_line_char || column + result_str.length() + 1 <= 80) {
       if(!is_first_line_char) os << " ";
-      column += result_str.length();
+      column += result_str.length() + (!is_first_line_char ? 1 : 0);
       is_first_line_char = false;
     } else {
       os << endl;
