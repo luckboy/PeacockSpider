@@ -99,6 +99,7 @@ namespace peacockspider
       column = result_str.length();
     }
     os << result_str << endl;
+    os << endl;
     return os;
   }
 }

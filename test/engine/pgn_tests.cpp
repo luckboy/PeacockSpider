@@ -57,6 +57,7 @@ namespace peacockspider
 [Result \"*\"]\n\
 \n\
 1. e4 e5 2. Nc3 Nc6 *\n\
+\n\
 "), oss.str());
     }
 
@@ -87,6 +88,7 @@ namespace peacockspider
 [Result \"1-0\"]\n\
 \n\
 1. e4 f6 2. d4 g5 3. Qh5# 1-0\n\
+\n\
 "), oss.str());
     }
 
@@ -116,6 +118,7 @@ namespace peacockspider
 [Result \"0-1\"]\n\
 \n\
 1. f3 e5 2. g4 Qh4# 0-1\n\
+\n\
 "), oss.str());
     }
 
@@ -145,6 +148,7 @@ namespace peacockspider
 [Result \"1/2-1/2\"]\n\
 \n\
 1. e4 d5 2. Nc3 Nf6 1/2-1/2\n\
+\n\
 "), oss.str());
     }
 
@@ -176,6 +180,7 @@ namespace peacockspider
 [FEN \"rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2\"]\n\
 \n\
 2. d4 d5 3. Nc3 Nc6 *\n\
+\n\
 "), oss.str());
     }
 
@@ -206,6 +211,7 @@ namespace peacockspider
 [FEN \"rnbqkbnr/pppp1ppp/8/4p3/4P3/3P4/PPP2PPP/RNBQKBNR b KQkq - 0 2\"]\n\
 \n\
 2... d6 3. Nc3 Nc6 *\n\
+\n\
 "), oss.str());
     }
 
@@ -248,6 +254,7 @@ namespace peacockspider
 \n\
 1. e4 e5 2. d4 d5 3. Nc3 Nc6 4. Nf3 Nf6 5. Bg5 Bg4 6. Bb5 Bb4 7. O-O O-O 8. Qd3\n\
 Qd6 *\n\
+\n\
 "), oss.str());
     }
   }
