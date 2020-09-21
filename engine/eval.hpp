@@ -18,6 +18,7 @@
 #ifndef _EVAL_HPP
 #define _EVAL_HPP
 
+#include <ios>
 #include <istream>
 #include <ostream>
 #include "chess.hpp"
@@ -117,7 +118,7 @@ namespace peacockspider
 
   std::ostream &write_evaluation_parameters(std::ostream &os, const ParentPair &parent_pair, const int *params, std::size_t param_count = MAX_EVALUATION_PARAMETER_COUNT);
 
-  std::istream &skip_evaluation_parameters(std::istream &is, std::size_t count, std::size_t param_count = MAX_EVALUATION_PARAMETER_COUNT);
+  std::istream &skip_evaluation_parameters(std::istream &is, std::streamoff count, std::size_t param_count = MAX_EVALUATION_PARAMETER_COUNT);
   
   std::ostream &write_default_evaluation_parameters(std::ostream &os, const int *params, const char **param_names = evaluation_parameter_names, std::size_t param_count = MAX_EVALUATION_PARAMETER_COUNT);
 }

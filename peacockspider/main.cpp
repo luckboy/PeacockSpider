@@ -17,6 +17,7 @@
  */
 #include <chrono>
 #include <fstream>
+#include <ios>
 #include <iostream>
 #include <sstream>
 #include <memory>
@@ -107,7 +108,7 @@ int main(int argc, char **argv)
     unsigned thread_count = 1;
     int *eval_params = default_evaluation_parameters;
     const char *eval_file_name = nullptr;
-    size_t eval_skipping_count = 0;
+    streamoff eval_skipping_count = 0;
     int c;
     opterr = 0;
     while((c = getopt(argc, argv, "e:f:hl:np:s:t:")) != -1) {
