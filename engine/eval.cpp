@@ -119,7 +119,7 @@ namespace peacockspider
       oss << params[i];
       string str = oss.str() + (i + 1 < param_count ? "," : "");
       os << "    " << str;
-      for(int j = 0; j < 8 - static_cast<int>(str.length()); j++) {
+      for(int j = 0; j < 6 - static_cast<int>(str.length()); j++) {
         os << " ";
       }
       os << "// " << param_names[i] << endl;

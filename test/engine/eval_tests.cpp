@@ -196,11 +196,11 @@ namespace peacockspider
 namespace peacockspider\n\
 {\n\
   int default_evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT] = {\n\
-    10,     // EVALUATION_PARAMETER1\n\
-    20,     // EVALUATION_PARAMETER2\n\
-    30,     // EVALUATION_PARAMETER3\n\
-    -10,    // EVALUATION_PARAMETER4\n\
-    -20     // EVALUATION_PARAMETER5\n\
+    10,   // EVALUATION_PARAMETER1\n\
+    20,   // EVALUATION_PARAMETER2\n\
+    30,   // EVALUATION_PARAMETER3\n\
+    -10,  // EVALUATION_PARAMETER4\n\
+    -20   // EVALUATION_PARAMETER5\n\
   };\n\
 }\n\
 "), oss.str());
