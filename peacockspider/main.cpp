@@ -94,6 +94,8 @@ namespace
       }
     }
   };
+
+  int evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT];
 }
 
 int main(int argc, char **argv)
@@ -103,14 +105,33 @@ int main(int argc, char **argv)
     const char *searcher_name = "abdadapvs";
     size_t tt_entry_count = (32 * 1024 * 1024) / sizeof(TranspositionTableEntry);
     unsigned thread_count = 1;
+    int *eval_params = default_evaluation_parameters;
+    const char *eval_file_name = nullptr;
+    size_t eval_skipping_count = 0;
     int c;
     opterr = 0;
-    while((c = getopt(argc, argv, "hl:np:s:t:")) != -1) {
+    while((c = getopt(argc, argv, "e:f:hl:np:s:t:")) != -1) {
       switch(c) {
+        case 'e':
+          eval_file_name = optarg;
+          break;
+        case 'f':
+        {
+          string str(optarg);
+          istringstream iss(str);
+          iss >> eval_skipping_count;
+          if(iss.fail() || !iss.eof()) {
+            cerr << "Incorrect number" << endl;
+            return  1;
+          }
+          break;
+        }
         case 'h':
           cout << "Usage: " << argv[0] << " [<option> ...]" << endl;
           cout << endl;
           cout << "Options:" << endl;
+          cout << "  -e <eval file name>   read evaluation parameters" << endl;
+          cout << "  -f <number>           skip evaluation parameters" << endl;
           cout << "  -h                    display this text" << endl;
           cout << "  -l <log file name>    write to log file" << endl;
           cout << "  -n                    set number of threads as number of all processors" << endl;
@@ -188,6 +209,16 @@ int main(int argc, char **argv)
         return 1;
       }
     }
+    if(eval_file_name != nullptr) {
+      ifstream ifs(eval_file_name);
+      if(!ifs.good()) {
+        cerr << "Can't open evaluation file" << endl;
+        return 1;
+      }
+      skip_evaluation_parameters(ifs, eval_skipping_count);
+      read_evaluation_parameters(ifs, nullptr, evaluation_parameters);
+      eval_params = evaluation_parameters;
+    }
     function<Searcher *(const EvaluationFunction *, unique_ptr<TranspositionTable> &, size_t, unsigned)> searcher_fun;
     auto iter = searcher_functions.find(string(searcher_name));
     if(iter != searcher_functions.end()) {
@@ -199,7 +230,7 @@ int main(int argc, char **argv)
     uint64_t zobrist_seed = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
     initialize_tables();
     initialize_zobrist(zobrist_seed);
-    unique_ptr<EvaluationFunction> eval_fun(new EvaluationFunction);
+    unique_ptr<EvaluationFunction> eval_fun(new EvaluationFunction(eval_params));
     unique_ptr<TranspositionTable> transpos_table;
     unique_ptr<Searcher> searcher(searcher_fun(eval_fun.get(), transpos_table, tt_entry_count, thread_count));
     unique_ptr<Thinker> thinker(new Thinker(searcher.get()));
