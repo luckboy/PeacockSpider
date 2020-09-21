@@ -18,6 +18,8 @@
 #ifndef _EVAL_HPP
 #define _EVAL_HPP
 
+#include <istream>
+#include <ostream>
 #include "chess.hpp"
 
 namespace peacockspider
@@ -69,6 +71,19 @@ namespace peacockspider
   extern int default_evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT];
   extern int start_evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT];
   
+  extern const char *evaluation_parameter_names[MAX_EVALUATION_PARAMETER_COUNT];
+  
+  struct ParentPair
+  {
+    int first_parent;
+    int second_parent;
+    
+    ParentPair() {}
+    
+    ParentPair(int first_parent, int second_parent) :
+      first_parent(first_parent), second_parent(second_parent) {}
+  };
+
   class EvaluationFunction
   {
     int _M_piece_material[6];
@@ -97,6 +112,14 @@ namespace peacockspider
     
     int promotion_piece_material_value(PromotionPiece piece) const;
   };
+
+  std::istream &read_evaluation_parameters(std::istream &is, ParentPair *parent_pair, int *params, std::size_t param_count = MAX_EVALUATION_PARAMETER_COUNT);
+
+  std::ostream &write_evaluation_parameters(std::ostream &os, const ParentPair &parent_pair, const int *params, std::size_t param_count = MAX_EVALUATION_PARAMETER_COUNT);
+
+  std::istream &skip_evalutation_parameters(std::istream &is, std::size_t count, std::size_t param_count = MAX_EVALUATION_PARAMETER_COUNT);
+  
+  std::ostream &write_default_evaluation_parameters(std::ostream &os, const int *params, const char **param_names = evaluation_parameter_names, std::size_t param_count = MAX_EVALUATION_PARAMETER_COUNT);
 }
 
 #endif
