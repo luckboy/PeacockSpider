@@ -94,7 +94,7 @@ namespace peacockspider
     return os;
   }
 
-  istream &skip_evalutation_parameters(istream &is, size_t count, size_t param_count)
+  istream &skip_evaluation_parameters(istream &is, size_t count, size_t param_count)
   {
     for(size_t i = 0; i < count; i++) {
       read_evaluation_parameters(is, nullptr, nullptr, param_count);
