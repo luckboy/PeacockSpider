@@ -217,7 +217,15 @@ int main(int argc, char **argv)
         return 1;
       }
       skip_evaluation_parameters(ifs, eval_skipping_count);
+      if(ifs.fail()) {
+        cerr << "I/O error" << endl;
+        return 1;
+      }
       read_evaluation_parameters(ifs, nullptr, evaluation_parameters);
+      if(ifs.fail()) {
+        cerr << "I/O error" << endl;
+        return 1;
+      }
       eval_params = evaluation_parameters;
     }
     function<Searcher *(const EvaluationFunction *, unique_ptr<TranspositionTable> &, size_t, unsigned)> searcher_fun;

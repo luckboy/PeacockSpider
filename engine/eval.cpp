@@ -71,7 +71,9 @@ namespace peacockspider
   {
     int first_parent, second_parent;
     is >> first_parent;
+    if(is.fail()) return is;
     is >> second_parent;
+    if(is.fail()) return is;
     if(parent_pair != nullptr) {
       parent_pair->first_parent = first_parent;
       parent_pair->second_parent = second_parent;
@@ -79,6 +81,7 @@ namespace peacockspider
     for(size_t i = 0; i < param_count; i++) {
       int param;
       is >> param;
+      if(is.fail()) return is;
       if(params != nullptr) params[i] = param;
     }
     return is;
@@ -98,6 +101,7 @@ namespace peacockspider
   {
     for(streamoff i = 0; i < count; i++) {
       read_evaluation_parameters(is, nullptr, nullptr, param_count);
+      if(is.fail()) return is;
     }
     return is;
   }
