@@ -58,7 +58,6 @@ namespace peacockspider
     if(ols != nullptr) {
       *ols << output_prefix;
       *ols << str << endl;
-      ols->flush();
     }
   }
     
@@ -69,7 +68,6 @@ namespace peacockspider
     if(ols != nullptr) {
       *ols << output_prefix;
       *ols << str << endl;
-      ols->flush();
     }
   }
 }

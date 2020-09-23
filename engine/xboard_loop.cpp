@@ -60,7 +60,6 @@ namespace peacockspider
       if(ols != nullptr) {
         *ols << output_prefix;
         *ols << "Illegal move: " << move_str << endl;
-        ols->flush();
       }
     }
     
@@ -71,7 +70,6 @@ namespace peacockspider
       if(ols != nullptr) {
         *ols << output_prefix;
         *ols << "Error (" << error_type << "): " << cmd_line << endl;
-        ols->flush();
       }
     }
     
@@ -95,7 +93,6 @@ namespace peacockspider
           unique_lock<mutex> output_lock(output_mutex);
           *ols << input_prefix;
           *ols << cmd_line << endl;
-          ols->flush();
         }
         if(cmd_line.empty()) continue;
         if(cmd_line == ".") break;
@@ -287,7 +284,6 @@ namespace peacockspider
           unique_lock<mutex> output_lock(output_mutex);
           *ols << input_prefix;
           *ols << cmd_line << endl;
-          ols->flush();
         }
         string cmd_name, arg_str;
         split_command_line(cmd_line, cmd_name, arg_str);
@@ -557,7 +553,6 @@ namespace peacockspider
           if(ols != nullptr) {
             *ols << output_prefix;
             *ols << "pong " << n << endl;
-            ols->flush();
           }
           return make_pair(true, true);
         }
@@ -710,10 +705,7 @@ namespace peacockspider
           engine->get_board(board);
           unique_lock<mutex> output_lock(output_mutex);
           cout << board << endl;
-          if(ols != nullptr) {
-            *ols << prefix_and_board(output_prefix, board) << endl;
-            ols->flush();
-          }
+          if(ols != nullptr) *ols << prefix_and_board(output_prefix, board) << endl;
           return make_pair(true, true);
         }
       }
@@ -756,10 +748,7 @@ namespace peacockspider
           board = new_board;
         }
         cout << endl;
-        if(ols != nullptr) {
-          *ols << endl;
-          ols->flush();
-        }
+        if(ols != nullptr) *ols << endl;
         if(is_prompt_newline) must_write_prompt = true;
         is_prompt_newline = false;
       },
@@ -789,7 +778,6 @@ namespace peacockspider
         if(ols != nullptr) {
           unique_lock<mutex> output_lock(output_mutex);
           *ols << prefix_and_board(board_prefix, board) << endl;
-          ols->flush();
         }
       });
     bool is_prompt = true;
@@ -820,7 +808,6 @@ namespace peacockspider
         unique_lock<mutex> output_lock(output_mutex);
         *ols << input_prefix;
         *ols << cmd_line << endl;
-        ols->flush();
       }
       string cmd_name, arg_str;
       split_command_line(cmd_line, cmd_name, arg_str);
