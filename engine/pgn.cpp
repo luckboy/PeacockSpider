@@ -26,16 +26,16 @@ namespace peacockspider
 {
   ostream &write_pgn(ostream &os, const Game &game)
   {
-    os << "[Event \"" << game.event() << "\"]" << endl;
-    os << "[Site \"" << game.site() << "\"]" << endl;
-    os << "[Date \"" << game.date() << "\"]" << endl;
-    os << "[Round \"" << game.round() << "\"]" << endl;
-    os << "[White \"" << game.white() << "\"]" << endl;
-    os << "[Black \"" << game.black() << "\"]" << endl;
-    os << "[Result \"" <<  result_to_string(game.result()) << "\"]" << endl;
+    os << "[Event \"" << game.event() << "\"]\n";
+    os << "[Site \"" << game.site() << "\"]\n";
+    os << "[Date \"" << game.date() << "\"]\n";
+    os << "[Round \"" << game.round() << "\"]\n";
+    os << "[White \"" << game.white() << "\"]\n";
+    os << "[Black \"" << game.black() << "\"]\n";
+    os << "[Result \"" <<  result_to_string(game.result()) << "\"]\n";
     if(game.board() != nullptr)
-      os << "[FEN \"" << game.board()->to_string() << "\"]" << endl;
-    os << endl;
+      os << "[FEN \"" << game.board()->to_string() << "\"]\n";
+    os << "\n";
     unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
     MovePairList move_pairs(tmp_move_pairs.get(), 0);
     Board board;
@@ -72,7 +72,7 @@ namespace peacockspider
           column += fullmove_number_str.length() + (!is_first_line_char ? 1 : 0);
           is_first_line_char = false;
         } else {
-          os << endl;
+          os << '\n';
           column = fullmove_number_str.length();
         }
         os << fullmove_number_str;
@@ -82,7 +82,7 @@ namespace peacockspider
         column += move_str.length() + (!is_first_line_char ? 1 : 0);
         is_first_line_char = false;
       } else {
-        os << endl;
+        os << '\n';
         column = move_str.length();
       }
       os << move_str;
@@ -95,11 +95,11 @@ namespace peacockspider
       column += result_str.length() + (!is_first_line_char ? 1 : 0);
       is_first_line_char = false;
     } else {
-      os << endl;
+      os << '\n';
       column = result_str.length();
     }
-    os << result_str << endl;
-    os << endl;
+    os << result_str << '\n';
+    os << '\n';
     return os;
   }
 }

@@ -89,11 +89,11 @@ namespace peacockspider
 
   ostream &write_evaluation_parameters(ostream &os, const ParentPair &parent_pair, const int *params, size_t param_count)
   {
-    os << parent_pair.first_parent << " " << parent_pair.second_parent << endl;
+    os << parent_pair.first_parent << " " << parent_pair.second_parent << '\n';
     for(size_t i = 0; i < param_count; i++) {
-      os << params[i] << endl;
+      os << params[i] << '\n';
     }
-    os << endl;
+    os << '\n';
     return os;
   }
 
@@ -108,12 +108,12 @@ namespace peacockspider
 
   ostream &write_default_evaluation_parameters(ostream &os, const int *params, const char **param_names, size_t param_count)
   {
-    os << "// THIS FILE IS GENERATED." << endl;
-    os << "#include \"eval.hpp\"" << endl;
-    os << endl;
-    os << "namespace peacockspider" << endl;
-    os << "{" << endl;
-    os << "  int default_evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT] = {" << endl;
+    os << "// THIS FILE IS GENERATED.\n";
+    os << "#include \"eval.hpp\"\n";
+    os << "\n";
+    os << "namespace peacockspider\n";
+    os << "{\n";
+    os << "  int default_evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT] = {\n";
     for(size_t i = 0; i < param_count; i++) {
       ostringstream oss;
       oss << params[i];
@@ -122,10 +122,10 @@ namespace peacockspider
       for(int j = 0; j < 6 - static_cast<int>(str.length()); j++) {
         os << " ";
       }
-      os << "// " << param_names[i] << endl;
+      os << "// " << param_names[i] << '\n';
     }
-    os << "  };" << endl;
-    os << "}" << endl;
+    os << "  };\n";
+    os << "}\n";
     return os;
   }
 }
