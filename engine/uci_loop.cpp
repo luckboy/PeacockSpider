@@ -246,7 +246,10 @@ namespace peacockspider
           if(ols != nullptr) *ols << " " << move_str;
         }
         cout << endl;
-        if(ols != nullptr) *ols << endl;
+        if(ols != nullptr) {
+          *ols << endl;
+          ols->flush();
+        }
       },
       [ols](const Board &board, Move move, const Move *pondering_move) {
         unique_lock<mutex> output_lock(output_mutex);
@@ -262,13 +265,17 @@ namespace peacockspider
           if(ols != nullptr) *ols << " ponder " << pondering_move_str;
         }
         cout << endl;
-        if(ols != nullptr) *ols << endl;
+        if(ols != nullptr) {
+          *ols << endl;
+          ols->flush();
+        }
       },
       [](Result result, const string &comment) {},
       [ols](const Board &board) {
         if(ols != nullptr) {
           unique_lock<mutex> output_lock(output_mutex);
           *ols << prefix_and_board(board_prefix, board) << endl;
+          ols->flush();
         }
       });
     while(true) {
@@ -282,6 +289,7 @@ namespace peacockspider
         unique_lock<mutex> output_lock(output_mutex);
         *ols << input_prefix;
         *ols << cmd_line << endl;
+        ols->flush();
       }
       string cmd_name, arg_str;
       split_command_line(cmd_line, cmd_name, arg_str);
