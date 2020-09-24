@@ -137,18 +137,30 @@ namespace peacockspider
         Move move;
         result = Result::UNFINISHED;
         _M_white_thinker->think(_M_max_depth, _M_time, nullptr, numeric_limits<uint64_t>::max(), 0, move, boards, [](int depth, int value, unsigned ms, const Searcher *searcher) {});
-        if(boards.back().make_move(move, tmp_board)) break;
+        if(!boards.back().make_move(move, tmp_board)) {
+          game.set_result(result);
+          break;
+        }
         boards.push_back(tmp_board);
         game.moves().push_back(move);
         result = result_for_boards(boards, move_pairs);
-        if(result != Result::NONE) break;
+        if(result != Result::NONE) {
+          game.set_result(result);
+          break;
+        }
         result = Result::UNFINISHED;
         _M_black_thinker->think(_M_max_depth, _M_time, nullptr, numeric_limits<uint64_t>::max(), 0, move, boards, [](int depth, int value, unsigned ms, const Searcher *searcher) {});
-        if(boards.back().make_move(move, tmp_board)) break;
+        if(!boards.back().make_move(move, tmp_board)) {
+          game.set_result(result);
+          break;
+        }
         boards.push_back(tmp_board);
         game.moves().push_back(move);
         result = result_for_boards(boards, move_pairs);
-        if(result != Result::NONE) break;
+        if(result != Result::NONE) {
+          game.set_result(result);
+          break;
+        }
       }
       if(_M_has_game_saving) {
         lock_guard<mutex> guard(system_mutex);
