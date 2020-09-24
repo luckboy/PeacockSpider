@@ -36,7 +36,8 @@ namespace peacockspider
       for(size_t player1 = 0; player1 < _M_result.player_count(); player1++) {
         for(size_t player2 = player1 + 1; player2 < _M_result.player_count(); player2++) {
           for(size_t match_game_index = 0; match_game_index < 2; match_game_index++) { 
-            play_match_game(_M_table.get(), iter, round, player1, param_list[player1].get(), player2, param_list[player2].get(), match_game_index);
+            Result result = play_match_game(_M_table.get(), iter, round, player1, param_list[player1].get(), player2, param_list[player2].get(), match_game_index);
+            _M_tournament_output_function(iter, player1, player2, match_game_index, result);
             round++;
           }
         }

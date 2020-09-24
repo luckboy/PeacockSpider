@@ -24,18 +24,26 @@ namespace peacockspider
   namespace genalg
   {
     Tournament::Tournament(size_t player_count) :
-      _M_result(player_count) {}
+      _M_result(player_count), _M_tournament_output_function([](int iter, size_t player1, size_t player2, size_t match_game_index, Result result) {}) {}
   
     Tournament::~Tournament() {}
+  
+    function<void (int, size_t, size_t, size_t, Result)> Tournament::tournament_output_function() const
+    { return _M_tournament_output_function; }
 
-    void Tournament::play_match_game(Table *table, int iter, int round, size_t player1, int *params1, size_t player2, int *params2, std::size_t match_game_index)
+    void Tournament::set_tournament_output_function(function<void (int, size_t, size_t, size_t, Result)> fun)
+    { _M_tournament_output_function = fun; }
+
+    Result Tournament::play_match_game(Table *table, int iter, int round, size_t player1, int *params1, size_t player2, int *params2, std::size_t match_game_index)
     {
       if(match_game_index == 0) {
         Result result = table->play(iter, round, player1, params1, player2, params2);
         _M_result.set_game_result(player1, player2, match_game_index, result);
+        return result; 
       } else {
         Result result = table->play(iter, round, player2, params2, player1, params1);
         _M_result.set_game_result(player1, player2, match_game_index, result);
+        return result; 
       }
     }
   }

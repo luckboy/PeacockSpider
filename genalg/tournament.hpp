@@ -102,17 +102,22 @@ namespace peacockspider
     {
     protected:
       TournamentResult _M_result;
+      std::function<void (int, std::size_t, std::size_t, std::size_t, Result)> _M_tournament_output_function;
 
       Tournament(std::size_t player_count);
     public:
       virtual ~Tournament();
+
+      std::function<void (int, std::size_t, std::size_t, std::size_t, Result)> tournament_output_function() const;
+
+      void set_tournament_output_function(std::function<void (int, std::size_t, std::size_t, std::size_t, Result)> fun);
 
       const TournamentResult &result() const
       { return _M_result; }
 
       virtual const TournamentResult &play(int iter, const std::vector<std::unique_ptr<int []>> &param_list) = 0;
     protected:
-      void play_match_game(Table *table, int iter, int round, std::size_t player1, int *params1, std::size_t player2, int *params2, std::size_t match_game_index);
+      Result play_match_game(Table *table, int iter, int round, std::size_t player1, int *params1, std::size_t player2, int *params2, std::size_t match_game_index);
     };
 
     class SingleTournament : public Tournament
