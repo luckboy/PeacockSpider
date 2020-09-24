@@ -16,6 +16,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 endif(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
 add_subdirectory(engine)
+add_subdirectory(genalg)
 add_subdirectory(peacockspider)
 
 if(BUILD_TESTING)
