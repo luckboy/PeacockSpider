@@ -18,6 +18,7 @@
 #include <ctime>
 #include <fstream>
 #include <iomanip>
+#include <iostream>
 #include <limits>
 #include <mutex>
 #include <sstream>
@@ -67,6 +68,9 @@ namespace peacockspider
       if(_M_has_game_saving) {
         lock_guard<mutex> guard(system_mutex);
         ofstream ofs(tournament_file_name(iter));
+        if(!ofs.good()) {
+          cerr << "Can't open PGN file" << endl;
+        }
       }
     }
 
@@ -149,6 +153,10 @@ namespace peacockspider
       if(_M_has_game_saving) {
         lock_guard<mutex> guard(system_mutex);
         ofstream ofs(tournament_file_name(iter), ofstream::app);
+        if(!ofs.good()) {
+          cerr << "Can't open PGN file" << endl;
+          return result;
+        }
         write_pgn(ofs, game);
       }
       return result;
