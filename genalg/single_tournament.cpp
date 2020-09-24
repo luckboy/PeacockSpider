@@ -28,22 +28,23 @@ namespace peacockspider
 
     SingleTournament::~SingleTournament() {}
 
-    const TournamentResult &SingleTournament::play(int iter, const vector<unique_ptr<int []>> &param_list)
+    bool SingleTournament::play(int iter, const vector<unique_ptr<int []>> &param_list)
     {
-      _M_table->start_tournament(iter);
+      if(!_M_table->start_tournament(iter)) return false;
       int round = 1;
       _M_result.clear();
       for(size_t player1 = 0; player1 < _M_result.player_count(); player1++) {
         for(size_t player2 = player1 + 1; player2 < _M_result.player_count(); player2++) {
           for(size_t match_game_index = 0; match_game_index < 2; match_game_index++) { 
-            Result result = play_match_game(_M_table.get(), iter, round, player1, param_list[player1].get(), player2, param_list[player2].get(), match_game_index);
-            _M_tournament_output_function(iter, player1, player2, match_game_index, result);
+            pair<Result, bool> result_pair = play_match_game(_M_table.get(), iter, round, player1, param_list[player1].get(), player2, param_list[player2].get(), match_game_index);
+            if(!result_pair.second) return false;
+            _M_tournament_output_function(iter, player1, player2, match_game_index, result_pair.first);
             round++;
           }
         }
       }
       _M_result.sort_player_indices();
-      return _M_result;
+      return true;
     }
   }
 }

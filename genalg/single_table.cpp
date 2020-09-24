@@ -63,18 +63,20 @@ namespace peacockspider
 
     SingleTable::~SingleTable() {}
 
-    void SingleTable::start_tournament(int iter)
+    bool SingleTable::start_tournament(int iter)
     {
       if(_M_has_game_saving) {
         lock_guard<mutex> guard(system_mutex);
         ofstream ofs(tournament_file_name(iter));
         if(!ofs.good()) {
           cerr << "Can't open PGN file" << endl;
+          return false;
         }
       }
+      return true;
     }
 
-    Result SingleTable::play(int iter, int round, size_t player1, int *params1, size_t player2, int *params2)
+    pair<Result, bool> SingleTable::play(int iter, int round, size_t player1, int *params1, size_t player2, int *params2)
     {
       vector<Board> boards;
       unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
@@ -167,11 +169,11 @@ namespace peacockspider
         ofstream ofs(tournament_file_name(iter), ofstream::app);
         if(!ofs.good()) {
           cerr << "Can't open PGN file" << endl;
-          return result;
+          return make_pair(result, false);
         }
         write_pgn(ofs, game);
       }
-      return result;
+      return make_pair(result, true);
     }
   }
 }

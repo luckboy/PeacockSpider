@@ -34,16 +34,18 @@ namespace peacockspider
     void Tournament::set_tournament_output_function(function<void (int, size_t, size_t, size_t, Result)> fun)
     { _M_tournament_output_function = fun; }
 
-    Result Tournament::play_match_game(Table *table, int iter, int round, size_t player1, int *params1, size_t player2, int *params2, std::size_t match_game_index)
+    pair<Result, bool> Tournament::play_match_game(Table *table, int iter, int round, size_t player1, int *params1, size_t player2, int *params2, std::size_t match_game_index)
     {
       if(match_game_index == 0) {
-        Result result = table->play(iter, round, player1, params1, player2, params2);
-        _M_result.set_game_result(player1, player2, match_game_index, result);
-        return result; 
+        pair<Result, bool> result_pair = table->play(iter, round, player1, params1, player2, params2);
+        if(!result_pair.second) return result_pair;
+        _M_result.set_game_result(player1, player2, match_game_index, result_pair.first);
+        return result_pair; 
       } else {
-        Result result = table->play(iter, round, player2, params2, player1, params1);
-        _M_result.set_game_result(player1, player2, match_game_index, result);
-        return result; 
+        pair<Result, bool> result_pair = table->play(iter, round, player2, params2, player1, params1);
+        if(!result_pair.second) return result_pair;
+        _M_result.set_game_result(player1, player2, match_game_index, result_pair.first);
+        return result_pair;
       }
     }
   }

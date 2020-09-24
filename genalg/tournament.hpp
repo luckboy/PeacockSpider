@@ -22,6 +22,7 @@
 #include <functional>
 #include <memory>
 #include <vector>
+#include <utility>
 #include "chess.hpp"
 #include "game.hpp"
 #include "search.hpp"
@@ -37,9 +38,9 @@ namespace peacockspider
     public:
       virtual ~Table();
 
-      virtual void start_tournament(int iter) = 0;
+      virtual bool start_tournament(int iter) = 0;
 
-      virtual Result play(int iter, int round, std::size_t player1, int *params1, std::size_t player2, int *params2) = 0;
+      virtual std::pair<Result, bool> play(int iter, int round, std::size_t player1, int *params1, std::size_t player2, int *params2) = 0;
     };
     
     class SingleTable : public Table
@@ -58,9 +59,9 @@ namespace peacockspider
 
       virtual ~SingleTable();
 
-      virtual void start_tournament(int iter);
+      virtual bool start_tournament(int iter);
 
-      virtual Result play(int iter, int round, std::size_t player1, int *params1, std::size_t player2, int *params2);
+      virtual std::pair<Result, bool> play(int iter, int round, std::size_t player1, int *params1, std::size_t player2, int *params2);
     };
 
     struct MatchResult
@@ -115,9 +116,9 @@ namespace peacockspider
       const TournamentResult &result() const
       { return _M_result; }
 
-      virtual const TournamentResult &play(int iter, const std::vector<std::unique_ptr<int []>> &param_list) = 0;
+      virtual bool play(int iter, const std::vector<std::unique_ptr<int []>> &param_list) = 0;
     protected:
-      Result play_match_game(Table *table, int iter, int round, std::size_t player1, int *params1, std::size_t player2, int *params2, std::size_t match_game_index);
+      std::pair<Result, bool> play_match_game(Table *table, int iter, int round, std::size_t player1, int *params1, std::size_t player2, int *params2, std::size_t match_game_index);
     };
 
     class SingleTournament : public Tournament
@@ -128,7 +129,7 @@ namespace peacockspider
 
       virtual ~SingleTournament();
 
-      virtual const TournamentResult &play(int iter, const std::vector<std::unique_ptr<int []>> &param_list);
+      virtual bool play(int iter, const std::vector<std::unique_ptr<int []>> &param_list);
     };
   }
 }
