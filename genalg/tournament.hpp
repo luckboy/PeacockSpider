@@ -117,8 +117,6 @@ namespace peacockspider
       { return _M_result; }
 
       virtual bool play(int iter, const std::vector<std::unique_ptr<int []>> &param_list) = 0;
-    protected:
-      std::pair<Result, bool> play_match_game(Table *table, int iter, int round, std::size_t player1, int *params1, std::size_t player2, int *params2, std::size_t match_game_index);
     };
 
     class SingleTournament : public Tournament
