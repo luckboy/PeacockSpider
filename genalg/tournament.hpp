@@ -116,7 +116,7 @@ namespace peacockspider
       const TournamentResult &result() const
       { return _M_result; }
 
-      virtual bool play(int iter, const std::vector<std::unique_ptr<int []>> &param_list) = 0;
+      virtual bool play(int iter, const std::vector<std::shared_ptr<int []>> &param_list) = 0;
     };
 
     class SingleTournament : public Tournament
@@ -127,7 +127,7 @@ namespace peacockspider
 
       virtual ~SingleTournament();
 
-      virtual bool play(int iter, const std::vector<std::unique_ptr<int []>> &param_list);
+      virtual bool play(int iter, const std::vector<std::shared_ptr<int []>> &param_list);
     };
   }
 }

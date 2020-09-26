@@ -28,7 +28,7 @@ namespace peacockspider
 
     SingleTournament::~SingleTournament() {}
 
-    bool SingleTournament::play(int iter, const vector<unique_ptr<int []>> &param_list)
+    bool SingleTournament::play(int iter, const vector<shared_ptr<int []>> &param_list)
     {
       if(!_M_table->start_tournament(iter)) return false;
       int round = 1;
