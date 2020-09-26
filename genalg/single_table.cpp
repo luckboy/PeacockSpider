@@ -23,13 +23,6 @@
 #include <mutex>
 #include <sstream>
 #include <string>
-#if defined(__unix__)
-#include <unistd.h>
-#elif defined(_WIN32) || defined(_WIN64)
-#include <winsock2.h>
-#else
-#error "Unsupported operating system."
-#endif
 #include "tournament.hpp"
 
 using namespace std;
@@ -89,16 +82,7 @@ namespace peacockspider
         game.set_event(oss.str());
       }
       {
-#if defined(__unix__)
-        size_t host_name_len = sysconf(_SC_HOST_NAME_MAX) + 1;
-#elif defined(_WIN32) || defined(_WIN64)
-        int host_name_len = 256;
-#else
-#error "Unsupported operating system."
-#endif
-        unique_ptr<char []> host_name(new char[host_name_len]);
-        gethostname(host_name.get(), host_name_len);
-        game.set_site(string(host_name.get()));
+        game.set_site("computer");
       }
       {
         lock_guard<mutex> guard(system_mutex);
