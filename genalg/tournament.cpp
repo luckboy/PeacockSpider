@@ -23,15 +23,15 @@ namespace peacockspider
 {
   namespace genalg
   {
-    Tournament::Tournament(size_t player_count) :
-      _M_result(player_count), _M_tournament_output_function([](int iter, size_t player1, size_t player2, size_t match_game_index, Result result) {}) {}
+    Tournament::Tournament(int player_count) :
+      _M_result(player_count), _M_tournament_output_function([](int iter, int player1, int player2, int match_game_index, Result result) {}) {}
   
     Tournament::~Tournament() {}
   
-    function<void (int, size_t, size_t, size_t, Result)> Tournament::tournament_output_function() const
+    function<void (int, int, int, int, Result)> Tournament::tournament_output_function() const
     { return _M_tournament_output_function; }
 
-    void Tournament::set_tournament_output_function(function<void (int, size_t, size_t, size_t, Result)> fun)
+    void Tournament::set_tournament_output_function(function<void (int, int, int, int, Result)> fun)
     { _M_tournament_output_function = fun; }
   }
 }

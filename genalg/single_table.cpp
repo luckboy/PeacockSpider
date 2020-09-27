@@ -69,7 +69,7 @@ namespace peacockspider
       return true;
     }
 
-    pair<Result, bool> SingleTable::play(int iter, int round, size_t player1, int *params1, size_t player2, int *params2)
+    pair<Result, bool> SingleTable::play(int iter, int round, int player1, int *params1, int player2, int *params2)
     {
       vector<Board> boards;
       unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);

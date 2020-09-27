@@ -30,7 +30,7 @@ namespace peacockspider
       _M_scores.resize(_M_player_count);
       _M_sorted_player_indices.resize(_M_player_count);
       _M_crosstable.resize(_M_player_count);
-      for(size_t i = 0; i < _M_player_count; i++) {
+      for(int i = 0; i < _M_player_count; i++) {
         _M_crosstable[i].resize(_M_player_count);
       }
       clear();
@@ -40,21 +40,21 @@ namespace peacockspider
     
     void TournamentResult::clear()
     {
-      for(size_t i = 0; i < _M_player_count; i++) {
+      for(int i = 0; i < _M_player_count; i++) {
         _M_scores[i] = 0;
       }
-      for(size_t i = 0; i < _M_player_count; i++) {
+      for(int i = 0; i < _M_player_count; i++) {
         _M_sorted_player_indices[i] = i;
       }
-      for(size_t i = 0; i < _M_player_count; i++) {
-        for(size_t j = 0; j < _M_player_count; j++) {
+      for(int i = 0; i < _M_player_count; i++) {
+        for(int j = 0; j < _M_player_count; j++) {
           _M_crosstable[i][j].scores[0] = 0;
           _M_crosstable[i][j].scores[1] = 0;
         }
       }
     }
     
-    void TournamentResult::set_game_result(size_t player1, size_t player2, size_t match_game_index, Result result)
+    void TournamentResult::set_game_result(int player1, int player2, int match_game_index, Result result)
     {
       int score, opp_score;
       if(match_game_index == 0) {
@@ -96,7 +96,7 @@ namespace peacockspider
     
     void TournamentResult::sort_player_indices()
     {
-      sort(_M_sorted_player_indices.begin(), _M_sorted_player_indices.end(), [this](size_t index1, size_t index2) {
+      sort(_M_sorted_player_indices.begin(), _M_sorted_player_indices.end(), [this](int index1, int index2) {
         return _M_scores[index1] > _M_scores[index2];
       });
     }

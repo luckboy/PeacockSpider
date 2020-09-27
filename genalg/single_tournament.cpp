@@ -23,7 +23,7 @@ namespace peacockspider
 {
   namespace genalg
   {
-    SingleTournament::SingleTournament(size_t player_count, function<Table *()> fun) :
+    SingleTournament::SingleTournament(int player_count, function<Table *()> fun) :
       Tournament(player_count), _M_table(fun()) {}
 
     SingleTournament::~SingleTournament() {}
@@ -33,9 +33,9 @@ namespace peacockspider
       if(!_M_table->start_tournament(iter)) return false;
       int round = 1;
       _M_result.clear();
-      for(size_t player1 = 0; player1 < _M_result.player_count(); player1++) {
-        for(size_t player2 = player1 + 1; player2 < _M_result.player_count(); player2++) {
-          for(size_t match_game_index = 0; match_game_index < 2; match_game_index++) { 
+      for(int player1 = 0; player1 < _M_result.player_count(); player1++) {
+        for(int player2 = player1 + 1; player2 < _M_result.player_count(); player2++) {
+          for(int match_game_index = 0; match_game_index < 2; match_game_index++) { 
             pair<Result, bool> result_pair;
             if(match_game_index == 0) 
               result_pair = _M_table->play(iter, round, player1, param_list[player1].get(), player2, param_list[player2].get());

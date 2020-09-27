@@ -18,7 +18,6 @@
 #ifndef _TOURNAMENT_HPP
 #define _TOURNAMENT_HPP
 
-#include <cstddef>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -40,7 +39,7 @@ namespace peacockspider
 
       virtual bool start_tournament(int iter) = 0;
 
-      virtual std::pair<Result, bool> play(int iter, int round, std::size_t player1, int *params1, std::size_t player2, int *params2) = 0;
+      virtual std::pair<Result, bool> play(int iter, int round, int player1, int *params1, int player2, int *params2) = 0;
     };
     
     class SingleTable : public Table
@@ -61,7 +60,7 @@ namespace peacockspider
 
       virtual bool start_tournament(int iter);
 
-      virtual std::pair<Result, bool> play(int iter, int round, std::size_t player1, int *params1, std::size_t player2, int *params2);
+      virtual std::pair<Result, bool> play(int iter, int round, int player1, int *params1, int player2, int *params2);
     };
 
     struct MatchResult
@@ -71,30 +70,30 @@ namespace peacockspider
 
     class TournamentResult
     {
-      std::size_t _M_player_count;
+      int _M_player_count;
       std::vector<int> _M_scores;
-      std::vector<std::size_t> _M_sorted_player_indices;
+      std::vector<int> _M_sorted_player_indices;
       std::vector<std::vector<MatchResult>> _M_crosstable;
     public:
       TournamentResult(std::size_t player_count);
 
       ~TournamentResult();
       
-      std::size_t player_count() const
+      int player_count() const
       { return _M_player_count; }
 
-      int score(std::size_t i) const
+      int score(int i) const
       { return _M_scores[i]; }
       
-      std::size_t sorted_player_index(std::size_t i) const
+      std::size_t sorted_player_index(int i) const
       { return _M_sorted_player_indices[i]; }
 
-      MatchResult crosstable_match_result(std::size_t i, std::size_t j) const
+      MatchResult crosstable_match_result(int i, int j) const
       { return _M_crosstable[i][j]; }
       
       void clear();
 
-      void set_game_result(std::size_t player1, std::size_t player2, std::size_t match_game_index, Result result);
+      void set_game_result(int player1, int player2, int match_game_index, Result result);
       
       void sort_player_indices();
     };
@@ -103,15 +102,15 @@ namespace peacockspider
     {
     protected:
       TournamentResult _M_result;
-      std::function<void (int, std::size_t, std::size_t, std::size_t, Result)> _M_tournament_output_function;
+      std::function<void (int, int, int, int, Result)> _M_tournament_output_function;
 
-      Tournament(std::size_t player_count);
+      Tournament(int player_count);
     public:
       virtual ~Tournament();
 
-      std::function<void (int, std::size_t, std::size_t, std::size_t, Result)> tournament_output_function() const;
+      std::function<void (int, int, int, int, Result)> tournament_output_function() const;
 
-      void set_tournament_output_function(std::function<void (int, std::size_t, std::size_t, std::size_t, Result)> fun);
+      void set_tournament_output_function(std::function<void (int, int, int, int, Result)> fun);
 
       const TournamentResult &result() const
       { return _M_result; }
@@ -123,7 +122,7 @@ namespace peacockspider
     {
       std::unique_ptr<Table> _M_table;
     public:
-      SingleTournament(std::size_t player_count, std::function<Table *()> fun);
+      SingleTournament(int player_count, std::function<Table *()> fun);
 
       virtual ~SingleTournament();
 
