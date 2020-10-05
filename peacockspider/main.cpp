@@ -111,12 +111,12 @@ int main(int argc, char **argv)
     streamoff eval_skipping_count = 0;
     int c;
     opterr = 0;
-    while((c = getopt(argc, argv, "e:f:hl:np:s:t:")) != -1) {
+    while((c = getopt(argc, argv, "e:g:hl:np:s:t:")) != -1) {
       switch(c) {
         case 'e':
           eval_file_name = optarg;
           break;
-        case 'f':
+        case 'g':
         {
           string str(optarg);
           istringstream iss(str);
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
           cout << endl;
           cout << "Options:" << endl;
           cout << "  -e <eval file name>   read evaluation parameters" << endl;
-          cout << "  -f <number>           skip evaluation parameters" << endl;
+          cout << "  -g <number>           skip evaluation parameters" << endl;
           cout << "  -h                    display this text" << endl;
           cout << "  -l <log file name>    write to log file" << endl;
           cout << "  -n                    set number of threads as number of all processors" << endl;
