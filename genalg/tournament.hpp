@@ -85,7 +85,7 @@ namespace peacockspider
       int score(int i) const
       { return _M_scores[i]; }
       
-      std::size_t sorted_player_index(int i) const
+      int sorted_player_index(int i) const
       { return _M_sorted_player_indices[i]; }
 
       MatchResult crosstable_match_result(int i, int j) const
