@@ -24,7 +24,7 @@ namespace peacockspider
 {
   namespace genalg
   {
-    TournamentResult::TournamentResult(size_t player_count)
+    TournamentResult::TournamentResult(int player_count)
       : _M_player_count(player_count)
     {
       _M_scores.resize(_M_player_count);

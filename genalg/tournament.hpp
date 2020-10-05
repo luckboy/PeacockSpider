@@ -75,7 +75,7 @@ namespace peacockspider
       std::vector<int> _M_sorted_player_indices;
       std::vector<std::vector<MatchResult>> _M_crosstable;
     public:
-      TournamentResult(std::size_t player_count);
+      TournamentResult(int player_count);
 
       ~TournamentResult();
       
