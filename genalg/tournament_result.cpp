@@ -88,10 +88,26 @@ namespace peacockspider
             break;
         }
       }
-      _M_scores[player1] += score;
-      _M_scores[player2] += opp_score;
+      //_M_scores[player1] += score;
+      //_M_scores[player2] += opp_score;
       _M_crosstable[player1][player2].scores[match_game_index] = score;
       _M_crosstable[player2][player1].scores[match_game_index] = opp_score;
+      _M_scores[player1] = 0;
+      for(int player = 0; player < _M_player_count; player++) {
+        if(player != player1) { 
+          for(int match_game_index2 = 0; match_game_index2 < 2; match_game_index2++) {
+            _M_scores[player1] += _M_crosstable[player1][player].scores[match_game_index2];
+          }
+        }
+      }
+      _M_scores[player2] = 0;
+      for(int player = 0; player < _M_player_count; player++) {
+        if(player != player2) { 
+          for(int match_game_index2 = 0; match_game_index2 < 2; match_game_index2++) {
+            _M_scores[player2] += _M_crosstable[player2][player].scores[match_game_index2];
+          }
+        }
+      }
     }
     
     void TournamentResult::sort_player_indices()
