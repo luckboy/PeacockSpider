@@ -89,9 +89,9 @@ namespace peacockspider
 
   ostream &write_evaluation_parameters(ostream &os, const ParentPair &parent_pair, const int *params, size_t param_count)
   {
-    os << parent_pair.first_parent << " " << parent_pair.second_parent << '\n';
+    os << parent_pair.first_parent << " " << parent_pair.second_parent << "\n";
     for(size_t i = 0; i < param_count; i++) {
-      os << params[i] << '\n';
+      os << params[i] << "\n";
     }
     os << '\n';
     return os;
@@ -122,7 +122,7 @@ namespace peacockspider
       for(int j = 0; j < 6 - static_cast<int>(str.length()); j++) {
         os << " ";
       }
-      os << "// " << param_names[i] << '\n';
+      os << "// " << param_names[i] << "\n";
     }
     os << "  };\n";
     os << "}\n";

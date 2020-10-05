@@ -72,7 +72,7 @@ namespace peacockspider
           column += fullmove_number_str.length() + (!is_first_line_char ? 1 : 0);
           is_first_line_char = false;
         } else {
-          os << '\n';
+          os << "\n";
           column = fullmove_number_str.length();
         }
         os << fullmove_number_str;
@@ -82,7 +82,7 @@ namespace peacockspider
         column += move_str.length() + (!is_first_line_char ? 1 : 0);
         is_first_line_char = false;
       } else {
-        os << '\n';
+        os << "\n";
         column = move_str.length();
       }
       os << move_str;
@@ -95,11 +95,11 @@ namespace peacockspider
       column += result_str.length() + (!is_first_line_char ? 1 : 0);
       is_first_line_char = false;
     } else {
-      os << '\n';
+      os << "\n";
       column = result_str.length();
     }
-    os << result_str << '\n';
-    os << '\n';
+    os << result_str << "\n";
+    os << "\n";
     return os;
   }
 }
