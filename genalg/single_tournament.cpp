@@ -28,7 +28,7 @@ namespace peacockspider
 
     SingleTournament::~SingleTournament() {}
 
-    bool SingleTournament::play(int iter, const vector<shared_ptr<int []>> &param_list)
+    bool SingleTournament::play(int iter, const vector<shared_ptr<int []>> &param_arrays)
     {
       if(!_M_table->start_tournament(iter)) return false;
       int round = 1;
@@ -38,9 +38,9 @@ namespace peacockspider
           for(int match_game_index = 0; match_game_index < 2; match_game_index++) { 
             pair<Result, bool> result_pair;
             if(match_game_index == 0) 
-              result_pair = _M_table->play(iter, round, player1, param_list[player1].get(), player2, param_list[player2].get());
+              result_pair = _M_table->play(iter, round, player1, param_arrays[player1].get(), player2, param_arrays[player2].get());
             else
-              result_pair = _M_table->play(iter, round, player2, param_list[player2].get(), player1, param_list[player1].get());
+              result_pair = _M_table->play(iter, round, player2, param_arrays[player2].get(), player1, param_arrays[player1].get());
             if(!result_pair.second) return false;
             _M_result.set_game_result(player1, player2, match_game_index, result_pair.first);
             _M_tournament_output_function(iter, player1, player2, match_game_index, result_pair.first);

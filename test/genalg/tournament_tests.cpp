@@ -28,17 +28,17 @@ namespace peacockspider
     {
       void TournamentTests::test_tournament_plays_tournament()
       {
-        static int param_tab[5][5] = {
+        static int param_tabs[5][5] = {
           { 1, 2, 3, 4, 5 },
           { 6, 7, 8, 9, 10 },
           { 11, 12, 13, 14, 15 },
           { 16, 17, 18, 19, 20 },
           { 21, 22, 23, 24, 25 }
         };
-        vector<shared_ptr<int []>> param_list;
+        vector<shared_ptr<int []>> param_arrays;
         for(size_t i = 0; i < 5; i++) {
-          param_list.push_back(shared_ptr<int []>(new int[5]));
-          copy(param_tab[i], param_tab[i] + 5, param_list.back().get());
+          param_arrays.push_back(shared_ptr<int []>(new int[5]));
+          copy(param_tabs[i], param_tabs[i] + 5, param_arrays.back().get());
         }
         _M_results->start = string(" ");
                                                 //  4 3 7 1 6
@@ -47,7 +47,7 @@ namespace peacockspider
         _M_results->game_results.push_back(string(" 1 1xx 1 1")); // 8 + 7 = 15 
         _M_results->game_results.push_back(string(" 1 = 0xx 0")); // 3 + 1 = 4
         _M_results->game_results.push_back(string(" 0 1 0 1xx")); // 4 + 6 = 10
-        CPPUNIT_ASSERT_EQUAL(true, _M_tournament->play(0, param_list));
+        CPPUNIT_ASSERT_EQUAL(true, _M_tournament->play(0, param_arrays));
         CPPUNIT_ASSERT_EQUAL(5, _M_tournament->result().player_count());
         CPPUNIT_ASSERT_EQUAL(6, _M_tournament->result().score(0));
         CPPUNIT_ASSERT_EQUAL(5, _M_tournament->result().score(1));
@@ -113,17 +113,17 @@ namespace peacockspider
 
       void TournamentTests::test_tournament_does_not_play_tournament_for_start_error()
       {
-        static int param_tab[5][5] = {
+        static int param_tabs[5][5] = {
           { 1, 2, 3, 4, 5 },
           { 6, 7, 8, 9, 10 },
           { 11, 12, 13, 14, 15 },
           { 16, 17, 18, 19, 20 },
           { 21, 22, 23, 24, 25 }
         };
-        vector<shared_ptr<int []>> param_list;
+        vector<shared_ptr<int []>> param_arrays;
         for(size_t i = 0; i < 5; i++) {
-          param_list.push_back(shared_ptr<int []>(new int[5]));
-          copy(param_tab[i], param_tab[i] + 5, param_list.back().get());
+          param_arrays.push_back(shared_ptr<int []>(new int[5]));
+          copy(param_tabs[i], param_tabs[i] + 5, param_arrays.back().get());
         }
         _M_results->start = string("e");
                                                 //  4 6 5 4 3
@@ -132,22 +132,22 @@ namespace peacockspider
         _M_results->game_results.push_back(string(" 0 0xx 0 1")); // 2 + 5 = 7
         _M_results->game_results.push_back(string(" 1 0 =xx =")); // 4 + 4 = 8
         _M_results->game_results.push_back(string(" 0 0 0 1xx")); // 2 + 3 = 5
-        CPPUNIT_ASSERT_EQUAL(false, _M_tournament->play(0, param_list));
+        CPPUNIT_ASSERT_EQUAL(false, _M_tournament->play(0, param_arrays));
       }
 
       void TournamentTests::test_tournament_does_not_play_tournament_for_game_error()
       {
-        static int param_tab[5][5] = {
+        static int param_tabs[5][5] = {
           { 1, 2, 3, 4, 5 },
           { 6, 7, 8, 9, 10 },
           { 11, 12, 13, 14, 15 },
           { 16, 17, 18, 19, 20 },
           { 21, 22, 23, 24, 25 }
         };
-        vector<shared_ptr<int []>> param_list;
+        vector<shared_ptr<int []>> param_arrays;
         for(size_t i = 0; i < 5; i++) {
-          param_list.push_back(shared_ptr<int []>(new int[5]));
-          copy(param_tab[i], param_tab[i] + 5, param_list.back().get());
+          param_arrays.push_back(shared_ptr<int []>(new int[5]));
+          copy(param_tabs[i], param_tabs[i] + 5, param_arrays.back().get());
         }
         _M_results->start = string(" ");
                                                 //  4 6 4 6 5
@@ -156,7 +156,7 @@ namespace peacockspider
         _M_results->game_results.push_back(string(" 0 0xx e 1")); // 3 + 5 = 8
         _M_results->game_results.push_back(string(" 1 1 1xx =")); // 7 + 6 = 13
         _M_results->game_results.push_back(string(" 0 0 0 0xx")); // 0 + 5 = 5
-        CPPUNIT_ASSERT_EQUAL(false, _M_tournament->play(0, param_list));
+        CPPUNIT_ASSERT_EQUAL(false, _M_tournament->play(0, param_arrays));
       }
     }
   }
