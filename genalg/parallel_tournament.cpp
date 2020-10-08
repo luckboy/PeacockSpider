@@ -95,7 +95,7 @@ namespace peacockspider
     
     bool ParallelTournament::play(int iter, const vector<shared_ptr<int []>> &param_arrays)
     {
-      if(_M_threads[0].table->start_tournament(iter)) return false;
+      if(!_M_threads[0].table->start_tournament(iter)) return false;
       _M_iter = iter;
       _M_param_arrays = &param_arrays;
       _M_result.clear();
