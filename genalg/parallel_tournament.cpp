@@ -105,7 +105,7 @@ namespace peacockspider
           _M_queue.pop();
         }
         _M_has_error = false;
-        int round = 0;
+        int round = 1;
         for(int player1 = 0; player1 < _M_result.player_count(); player1++) {
           for(int player2 = player1 + 1; player2 < _M_result.player_count(); player2++) {
             for(int match_game_index = 0; match_game_index < 2; match_game_index++) {
