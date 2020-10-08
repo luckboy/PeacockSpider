@@ -18,8 +18,12 @@
 #ifndef _TOURNAMENT_HPP
 #define _TOURNAMENT_HPP
 
+#include <condition_variable>
 #include <functional>
 #include <memory>
+#include <mutex>
+#include <queue>
+#include <thread>
 #include <vector>
 #include <utility>
 #include "chess.hpp"
@@ -125,6 +129,64 @@ namespace peacockspider
       SingleTournament(int player_count, std::function<Table *()> fun);
 
       virtual ~SingleTournament();
+
+      virtual bool play(int iter, const std::vector<std::shared_ptr<int []>> &param_arrays);
+    };
+    
+    struct QueueElement
+    {
+      int round;
+      int player1;
+      int player2;
+      int match_game_index;
+      
+      QueueElement() {}
+      
+      QueueElement(int round, int player1, int player2, int match_game_index) :
+        round(round), player1(player1), player2(player2), match_game_index(match_game_index) {}
+    };
+
+    enum class ParallelCommand
+    {
+      NO_COMMAND,
+      PLAY,
+      QUIT
+    };
+    
+    enum class ParallelResult
+    {
+      NO_RESULT,
+      STOP
+    };
+
+    struct ParallelThread
+    {
+      std::thread thread;
+      std::unique_ptr<Table> table;
+      std::mutex mutex;
+      std::condition_variable start_condition_variable;
+      ParallelCommand command;
+      std::condition_variable stop_condition_variable;
+      ParallelResult result;
+
+      ParallelThread() {}
+
+      ParallelThread(ParallelThread &&thread) :
+        thread(move(thread.thread)), table(move(thread.table)), command(thread.command), result(thread.result) {}
+    };
+    
+    class ParallelTournament : public Tournament
+    {
+      std::vector<ParallelThread> _M_threads;
+      std::mutex _M_mutex;
+      std::queue<QueueElement> _M_queue;
+      bool _M_has_error;
+      int _M_iter;
+      const std::vector<std::shared_ptr<int []>> *_M_param_arrays;
+    public:
+      ParallelTournament(int player_count, std::function<Table *()> fun, unsigned thread_count);
+
+      virtual ~ParallelTournament();
 
       virtual bool play(int iter, const std::vector<std::shared_ptr<int []>> &param_arrays);
     };
