@@ -24,8 +24,8 @@
 #include <mutex>
 #include <queue>
 #include <thread>
-#include <vector>
 #include <utility>
+#include <vector>
 #include "chess.hpp"
 #include "game.hpp"
 #include "search.hpp"

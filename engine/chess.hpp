@@ -21,8 +21,8 @@
 #include <cstddef>
 #include <ostream>
 #include <string>
-#include <vector>
 #include <utility>
+#include <vector>
 #include "consts.hpp"
 #include "exception.hpp"
 #include "tables.hpp"
