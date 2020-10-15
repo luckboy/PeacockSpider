@@ -23,7 +23,7 @@ namespace peacockspider
 {
   namespace genalg
   {
-    std::mt19937 generator;
+    mt19937 generator;
 
     void initialize_generator(uint32_t seed)
     { generator.seed(seed); }
