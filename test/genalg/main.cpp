@@ -20,28 +20,40 @@
 #include <chrono>
 #include <iostream>
 #include <sstream>
+#include "generator.hpp"
 #include "tables.hpp"
 #include "zobrist.hpp"
 
 using namespace std;
 using namespace peacockspider;
+using namespace peacockspider::genalg;
 
 int main(int argc, char **argv)
 {
+  uint32_t generator_seed;
   uint64_t zobrist_seed;
   if(argc >= 2) {
     string str(argv[1]);
     istringstream iss(str);
+    iss >> generator_seed;
+  } else
+    generator_seed = chrono::duration_cast<chrono::seconds>(chrono::system_clock::now().time_since_epoch()).count();
+  if(argc >= 3) {
+    string str(argv[2]);
+    istringstream iss(str);
     iss >> zobrist_seed;
   } else
     zobrist_seed = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
+  cout << "generator seed: " << generator_seed << endl;
   cout << "zobrist seed: " << zobrist_seed << endl;
   cout << "Testing genalg ..." << endl;
   initialize_tables();
   initialize_zobrist(zobrist_seed);
+  initialize_generator(generator_seed);
   CppUnit::TextUi::TestRunner runner;  
   runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
   bool result = runner.run();
+  cout << "generator seed: " << generator_seed << endl;
   cout << "zobrist seed: " << zobrist_seed << endl;
   return result ? 0 : 1;
 }
