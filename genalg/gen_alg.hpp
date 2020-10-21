@@ -41,7 +41,8 @@ namespace peacockspider
       ParentPair parent_pair;
       std::shared_ptr<int []> genes;
       
-      Individual() {}
+      Individual() :
+        parent_pair(-1, -1) {}
       
       Individual(const ParentPair &parent_pair, const std::shared_ptr<int []> &genes) :
         parent_pair(parent_pair), genes(genes) {}
@@ -108,6 +109,10 @@ namespace peacockspider
     private:
       int create_individual_pairs(const std::set<int> &excluded_indices, std::vector<IndividualPair> &pairs) const;
     };
+
+    void cross_parent_pair(const ParentPair &parent_pair, const std::vector<Individual> &individuals, Individual *child1, Individual *child2);
+
+    void cross_parents(int child_count, const std::vector<ParentPair> &parent_pairs, const std::vector<Individual> &individuals, std::vector<Individual> &children);
   }
 }
 
