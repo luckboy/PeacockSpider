@@ -63,12 +63,15 @@ namespace peacockspider
       children.clear();
       for(int i = 0; i < (child_count + 1) / 2; i++) {
         if(i + 1 >= (child_count + 1) / 2 && (child_count % 2) != 0) {
-          children.push_back(Individual());
-          cross_parent_pair(parent_pairs[i], individuals, &(children[children.size() - 1]), nullptr);
+          Individual child;
+          cross_parent_pair(parent_pairs[i], individuals, &child, nullptr);
+          children.push_back(child);
         } else {
-          children.push_back(Individual());
-          children.push_back(Individual());
-          cross_parent_pair(parent_pairs[i], individuals, &(children[children.size() - 2]), &(children[children.size() - 1]));
+          Individual first_child;
+          Individual second_child;
+          cross_parent_pair(parent_pairs[i], individuals, &first_child, &second_child);
+          children.push_back(first_child);
+          children.push_back(second_child);
         }
       }
     }
