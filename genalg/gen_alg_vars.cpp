@@ -25,8 +25,12 @@ namespace peacockspider
   namespace genalg
   {
     size_t max_gene_count;
+    Range *gene_ranges;
 
     void initialize_genetic_algorithm_variables()
-    { max_gene_count = MAX_EVALUATION_PARAMETER_COUNT; }
+    {
+      max_gene_count = MAX_EVALUATION_PARAMETER_COUNT;
+      gene_ranges = default_gene_ranges;
+    }
   }
 }

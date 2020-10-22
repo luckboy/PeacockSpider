@@ -19,12 +19,17 @@
 #define _GEN_ALG_VARS_HPP
 
 #include <cstddef>
+#include "eval.hpp"
+#include "range.hpp"
 
 namespace peacockspider
 {
   namespace genalg
   {
+    extern Range default_gene_ranges[MAX_EVALUATION_PARAMETER_COUNT];
+    
     extern std::size_t max_gene_count;
+    extern Range *gene_ranges;
 
     void initialize_genetic_algorithm_variables();
   }
