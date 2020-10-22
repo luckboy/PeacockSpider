@@ -110,7 +110,7 @@ namespace peacockspider
       int create_individual_pairs(const std::set<int> &excluded_indices, std::vector<IndividualPair> &pairs) const;
     };
 
-    void cross_parent_pair(const ParentPair &parent_pair, const std::vector<Individual> &individuals, Individual *child1, Individual *child2);
+    void cross_parent_pair(const ParentPair &parent_pair, const std::vector<Individual> &individuals, Individual *first_child, Individual *second_child);
 
     void cross_parents(int child_count, const std::vector<ParentPair> &parent_pairs, const std::vector<Individual> &individuals, std::vector<Individual> &children);
   }

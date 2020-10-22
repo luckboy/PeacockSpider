@@ -25,35 +25,35 @@ namespace peacockspider
 {
   namespace genalg
   {
-    void cross_parent_pair(const ParentPair &parent_pair, const vector<Individual> &individuals, Individual *child1, Individual *child2)
+    void cross_parent_pair(const ParentPair &parent_pair, const vector<Individual> &individuals, Individual *first_child, Individual *second_child)
     {
       const Individual &first_parent = individuals[parent_pair.first_parent];
       const Individual &second_parent = individuals[parent_pair.second_parent];
       uniform_int_distribution<int> dist(0, 1);
-      bool are_genes1 = false;
-      bool are_genes2 = false;
-      if(child1 != nullptr) {
-        child1->parent_pair = parent_pair;
-        child1->genes = shared_ptr<int []>(new int[max_gene_count]);
+      bool are_first_parent_genes = false;
+      bool are_second_parent_genes = false;
+      if(first_child != nullptr) {
+        first_child->parent_pair = parent_pair;
+        first_child->genes = shared_ptr<int []>(new int[max_gene_count]);
       }
-      if(child2 != nullptr) {
-        child2->parent_pair = parent_pair;
-        child2->genes = shared_ptr<int []>(new int[max_gene_count]);
+      if(second_child != nullptr) {
+        second_child->parent_pair = parent_pair;
+        second_child->genes = shared_ptr<int []>(new int[max_gene_count]);
       }
       for(size_t i = 0; i < max_gene_count; i++) {
         bool is_first_parent_gene;
-        if(i + 1 >= max_gene_count && ((are_genes1 && !are_genes2) || (!are_genes1 && are_genes2)))
-          is_first_parent_gene = !are_genes1;
+        if(i + 1 >= max_gene_count && ((are_first_parent_genes && !are_second_parent_genes) || (!are_first_parent_genes && are_second_parent_genes)))
+          is_first_parent_gene = !are_first_parent_genes;
         else
           is_first_parent_gene = (dist(generator) == 0);
         if(is_first_parent_gene) {
-          if(child1 != nullptr) child1->genes[i] = first_parent.genes[i];
-          if(child2 != nullptr) child2->genes[i] = second_parent.genes[i];
-          are_genes1 = true;
+          if(first_child != nullptr) first_child->genes[i] = first_parent.genes[i];
+          if(second_child != nullptr) second_child->genes[i] = second_parent.genes[i];
+          are_first_parent_genes = true;
         } else {
-          if(child1 != nullptr) child1->genes[i] = second_parent.genes[i];
-          if(child2 != nullptr) child2->genes[i] = first_parent.genes[i];
-          are_genes2 = true;
+          if(first_child != nullptr) first_child->genes[i] = second_parent.genes[i];
+          if(second_child != nullptr) second_child->genes[i] = first_parent.genes[i];
+          are_second_parent_genes = true;
         }
       }
     }
