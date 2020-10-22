@@ -21,21 +21,12 @@
 #include <set>
 #include "eval.hpp"
 #include "fitness.hpp"
+#include "range.hpp"
 
 namespace peacockspider
 {
   namespace genalg
   {
-    struct Range
-    {
-      int min, max;
-      
-      Range() {}
-
-      Range(int min, int max) :
-        min(min), max(max) {}
-    };
-    
     struct Individual
     {
       ParentPair parent_pair;
