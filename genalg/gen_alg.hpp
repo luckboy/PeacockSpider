@@ -100,6 +100,10 @@ namespace peacockspider
       int create_individual_pairs(const std::set<int> &excluded_indices, std::vector<IndividualPair> &pairs) const;
     };
 
+    void generate_individual(Individual &new_individual);
+
+    void generate_individuals(int count, std::vector<Individual> &new_individuals);
+    
     void copy_individual(int i, const std::vector<Individual> &individuals, Individual &new_individual);
 
     void copy_individuals(const std::vector<int> &indices, const std::vector<Individual> &individuals, std::vector<Individual> &new_individuals);
