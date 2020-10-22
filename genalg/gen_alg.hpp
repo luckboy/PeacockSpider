@@ -41,8 +41,7 @@ namespace peacockspider
       ParentPair parent_pair;
       std::shared_ptr<int []> genes;
       
-      Individual() :
-        parent_pair(-1, -1) {}
+      Individual() {}
       
       Individual(const ParentPair &parent_pair, const std::shared_ptr<int []> &genes) :
         parent_pair(parent_pair), genes(genes) {}
