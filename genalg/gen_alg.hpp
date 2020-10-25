@@ -104,9 +104,9 @@ namespace peacockspider
 
     void generate_individuals(int count, std::vector<Individual> &new_individuals);
     
-    void copy_individual(int i, const std::vector<Individual> &individuals, Individual &new_individual);
+    void duplicate_individual(int i, const std::vector<Individual> &individuals, Individual &new_individual);
 
-    void copy_individuals(const std::vector<int> &indices, const std::vector<Individual> &individuals, std::vector<Individual> &new_individuals);
+    void duplicate_individuals(const std::vector<int> &indices, const std::vector<Individual> &individuals, std::vector<Individual> &new_individuals);
 
     void cross_parent_pair(const ParentPair &parent_pair, const std::vector<Individual> &individuals, Individual *first_child, Individual *second_child);
 

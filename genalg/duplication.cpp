@@ -25,7 +25,7 @@ namespace peacockspider
 {
   namespace genalg
   {
-    void copy_individual(int i, const vector<Individual> &individuals, Individual &new_individual)
+    void duplicate_individual(int i, const vector<Individual> &individuals, Individual &new_individual)
     {
       const Individual &individual = individuals[i];
       new_individual.parent_pair.first_parent = i;
@@ -34,12 +34,12 @@ namespace peacockspider
       copy(individual.genes.get(), individual.genes.get() + max_gene_count, new_individual.genes.get());
     }
 
-    void copy_individuals(const vector<int> &indices, const vector<Individual> &individuals, vector<Individual> &new_individuals)
+    void duplicate_individuals(const vector<int> &indices, const vector<Individual> &individuals, vector<Individual> &new_individuals)
     {
       new_individuals.clear();
       for(int i : indices) {
         Individual new_individual;
-        copy_individual(i, individuals, new_individual);
+        duplicate_individual(i, individuals, new_individual);
         new_individuals.push_back(new_individual);
       }
     }
