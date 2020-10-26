@@ -15,23 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "default_gene_ranges.hpp"
-#include "eval.hpp"
-#include "gen_alg_vars.hpp"
+#ifndef _DEFAULT_GENE_RANGES_HPP
+#define _DEFAULT_GENE_RANGES_HPP
 
-using namespace std;
+#include "eval.hpp"
+#include "range.hpp"
 
 namespace peacockspider
 {
   namespace genalg
   {
-    size_t max_gene_count;
-    Range *gene_ranges;
-
-    void initialize_genetic_algorithm_variables()
-    {
-      max_gene_count = MAX_EVALUATION_PARAMETER_COUNT;
-      gene_ranges = default_gene_ranges;
-    }
+    extern Range default_gene_ranges[MAX_EVALUATION_PARAMETER_COUNT];
   }
 }
+
+#endif
