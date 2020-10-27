@@ -34,10 +34,10 @@ namespace peacockspider
     void Selector::set_tournament_output_function(function<void (int, int, int, int, Result)> fun)
     { _M_fitness_function->set_tournament_output_function(fun); }
 
-    function<void (const TournamentResult &)> Selector::fitness_output_function() const
+    function<bool (const TournamentResult &)> Selector::fitness_output_function() const
     { return _M_fitness_function->fitness_output_function(); }
 
-    void Selector::set_fitness_output_function(function<void (const TournamentResult &)> fun)
+    void Selector::set_fitness_output_function(function<bool (const TournamentResult &)> fun)
     { _M_fitness_function->set_fitness_output_function(fun); }
 
     int Selector::select_best_individual() const

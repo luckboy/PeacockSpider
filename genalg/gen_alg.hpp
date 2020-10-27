@@ -51,9 +51,9 @@ namespace peacockspider
 
       void set_tournament_output_function(std::function<void (int, int, int, int, Result)> fun);
 
-      std::function<void (const TournamentResult &)> fitness_output_function() const;
+      std::function<bool (const TournamentResult &)> fitness_output_function() const;
 
-      void set_fitness_output_function(std::function<void (const TournamentResult &)> fun);
+      void set_fitness_output_function(std::function<bool (const TournamentResult &)> fun);
 
       virtual bool update(int iter, const std::vector<Individual> &individuals) = 0;
 
