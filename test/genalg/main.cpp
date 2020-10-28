@@ -20,6 +20,7 @@
 #include <chrono>
 #include <iostream>
 #include <sstream>
+#include "gen_alg_vars.hpp"
 #include "generator.hpp"
 #include "tables.hpp"
 #include "zobrist.hpp"
@@ -50,6 +51,7 @@ int main(int argc, char **argv)
   initialize_tables();
   initialize_zobrist(zobrist_seed);
   initialize_generator(generator_seed);
+  initialize_genetic_algorithm_variables();
   CppUnit::TextUi::TestRunner runner;  
   runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
   bool result = runner.run();
