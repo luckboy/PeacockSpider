@@ -238,7 +238,7 @@ namespace peacockspider
         else
           are_second_parent_genes = true;
         CPPUNIT_ASSERT((gene_tabs[0][4] == children[0].genes[4] && gene_tabs[2][4] == children[1].genes[4]) || (gene_tabs[2][4] == children[0].genes[4] && gene_tabs[0][4] == children[1].genes[4]));
-        if(gene_tabs[0][4] == children[0].genes[4] && gene_tabs[2][4] == children[0].genes[4])
+        if(gene_tabs[0][4] == children[0].genes[4] && gene_tabs[2][4] == children[1].genes[4])
           are_first_parent_genes = true;
         else
           are_second_parent_genes = true;
@@ -324,7 +324,7 @@ namespace peacockspider
         else
           are_second_parent_genes = true;
         CPPUNIT_ASSERT((gene_tabs[0][4] == children[0].genes[4] && gene_tabs[1][4] == children[1].genes[4]) || (gene_tabs[1][4] == children[0].genes[4] && gene_tabs[0][4] == children[1].genes[4]));
-        if(gene_tabs[0][4] == children[0].genes[4] && gene_tabs[1][4] == children[0].genes[4])
+        if(gene_tabs[0][4] == children[0].genes[4] && gene_tabs[1][4] == children[1].genes[4])
           are_first_parent_genes = true;
         else
           are_second_parent_genes = true;
