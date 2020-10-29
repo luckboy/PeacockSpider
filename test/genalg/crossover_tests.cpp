@@ -30,10 +30,19 @@ namespace peacockspider
     {
       CPPUNIT_TEST_SUITE_REGISTRATION(CrossoverTests);
 
+      namespace
+      {
+        size_t saved_max_gene_count;
+      }
+      
       void CrossoverTests::setUp()
-      { max_gene_count = 5; }
+      {
+        saved_max_gene_count = max_gene_count;
+        max_gene_count = 5;
+      }
 
-      void CrossoverTests::tearDown() {}
+      void CrossoverTests::tearDown()
+      { max_gene_count = saved_max_gene_count; }
 
       void CrossoverTests::test_cross_parant_pair_function_crosses_parent_pair_for_two_children()
       {
