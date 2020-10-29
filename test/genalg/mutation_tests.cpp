@@ -51,7 +51,7 @@ namespace peacockspider
         gene_ranges = saved_gene_ranges;
       }
 
-      void MutationTests::test_mutate_individuals_function_mutate_individuals()
+      void MutationTests::test_mutate_individuals_function_mutates_individuals()
       {
         static int gene_tabs[5][5] = {
           { 1, 2, 3, 4, 5 },

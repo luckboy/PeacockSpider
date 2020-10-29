@@ -31,14 +31,14 @@ namespace peacockspider
       class MutationTests : public CppUnit::TestFixture
       {
         CPPUNIT_TEST_SUITE(MutationTests);
-        CPPUNIT_TEST(test_mutate_individuals_function_mutate_individuals);
+        CPPUNIT_TEST(test_mutate_individuals_function_mutates_individuals);
         CPPUNIT_TEST_SUITE_END();
       public:
         void setUp();
 
         void tearDown();
 
-        void test_mutate_individuals_function_mutate_individuals();
+        void test_mutate_individuals_function_mutates_individuals();
       };
     }
   }
