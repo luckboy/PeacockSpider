@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef _CROSSOVER_TESTS_HPP
-#define _CROSSOVER__TESTS_HPP
+#define _CROSSOVER_TESTS_HPP
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
