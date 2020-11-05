@@ -17,6 +17,7 @@
  */
 #include <atomic>
 #include <cerrno>
+#include <csignal>
 #include <cstring>
 #ifdef __unix__
 #include <signal.h>
