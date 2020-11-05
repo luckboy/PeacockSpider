@@ -77,7 +77,7 @@ namespace peacockspider
       action.sa_flags = 0;
       sigaction(SIGINT, &action, nullptr);
 #else
-      signal(signal_handler);
+      signal(SIGINT, signal_handler);
 #endif
     }
   }
