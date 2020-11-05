@@ -55,6 +55,9 @@ namespace peacockspider
 
       void set_fitness_output_function(std::function<bool (const TournamentResult &)> fun);
 
+      int individual_count() const
+      { return _M_fitness_function->individual_count(); }
+      
       virtual bool update(int iter, const std::vector<Individual> &individuals) = 0;
 
       int select_best_individual() const;
