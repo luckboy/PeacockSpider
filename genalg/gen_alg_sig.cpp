@@ -54,7 +54,7 @@ namespace peacockspider
         unsigned len = strlen(str);
         int i = 0;
         while(i < static_cast<int>(len)) {
-          int result = _write(STDERR_FILENO, str + i, len - i);
+          int result = _write(2, str + i, len - i);
           if(result == -1 && errno == EINTR) continue;
           i += result;
         }
