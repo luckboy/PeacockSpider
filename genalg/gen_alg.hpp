@@ -116,6 +116,8 @@ namespace peacockspider
     void cross_parents(int child_count, const std::vector<ParentPair> &parent_pairs, const std::vector<Individual> &individuals, std::vector<Individual> &children);
 
     void mutate_individuals(int count, std::vector<Individual> &individuals);
+
+    bool genetic_algorithm_iterate(Selector *selector, int iter, const std::vector<Individual> &individuals, std::vector<Individual> &new_individuals, int best_individual_count, int child_count, int mutation_count);
   }
 }
 
