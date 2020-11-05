@@ -20,6 +20,9 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#ifdef __unix__
+#include <signal.h>
+#endif
 #include <unordered_map>
 #include "protocols.hpp"
 
@@ -311,8 +314,17 @@ namespace peacockspider
         [](Engine *engine, bool &is_prompt, const string &arg_str, ostream *ols, const string &cmd_line, MovePairList &move_pairs) {
           print_line(ols, "");
           is_prompt = false;
+#ifdef __unix__
+          struct sigaction ign_action;
+          ign_action.sa_handler = SIG_IGN;
+          sigemptyset(&(ign_action.sa_mask));
+          ign_action.sa_flags = 0;
+          sigaction(SIGINT, &ign_action, nullptr);
+          sigaction(SIGTERM, &ign_action, nullptr);
+#else
           signal(SIGINT, SIG_IGN);
           signal(SIGTERM, SIG_IGN);
+#endif
           return make_pair(true, true);
         }
       },
