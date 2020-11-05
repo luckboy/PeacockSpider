@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <atomic>
 #include <ctime>
 #include <fstream>
 #include <iomanip>
@@ -23,6 +24,7 @@
 #include <mutex>
 #include <sstream>
 #include <string>
+#include "gen_alg_sig.hpp"
 #include "tournament.hpp"
 
 using namespace std;
@@ -122,6 +124,12 @@ namespace peacockspider
         Board tmp_board;
         Move move;
         result = Result::UNFINISHED;
+        atomic_thread_fence(memory_order_seq_cst);
+        if(is_genetic_algorithm_stop != 0) {
+          lock_guard<mutex> guard(system_mutex);
+          cerr << "Stopped" << endl;
+          return make_pair(result, false);
+        }
         _M_white_thinker->think(_M_max_depth, _M_time, nullptr, numeric_limits<uint64_t>::max(), 0, move, boards, [](int depth, int value, unsigned ms, const Searcher *searcher) {});
         if(!boards.back().make_move(move, tmp_board)) {
           game.set_result(result);
@@ -135,6 +143,12 @@ namespace peacockspider
           break;
         }
         result = Result::UNFINISHED;
+        atomic_thread_fence(memory_order_seq_cst);
+        if(is_genetic_algorithm_stop != 0) {
+          lock_guard<mutex> guard(system_mutex);
+          cerr << "Stopped" << endl;
+          return make_pair(result, false);
+        }
         _M_black_thinker->think(_M_max_depth, _M_time, nullptr, numeric_limits<uint64_t>::max(), 0, move, boards, [](int depth, int value, unsigned ms, const Searcher *searcher) {});
         if(!boards.back().make_move(move, tmp_board)) {
           game.set_result(result);
