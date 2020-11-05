@@ -48,6 +48,7 @@ namespace peacockspider
         while(i < static_cast<ssize_t>(len)) {
           ssize_t result = write(STDERR_FILENO, str + i, len - i);
           if(result == -1 && errno == EINTR) continue;
+          if(result == -1) break;
           i += result;
         }
 #else
@@ -56,6 +57,7 @@ namespace peacockspider
         while(i < static_cast<int>(len)) {
           int result = _write(2, str + i, len - i);
           if(result == -1 && errno == EINTR) continue;
+          if(result == -1) break;
           i += result;
         }
 #endif
