@@ -18,6 +18,9 @@
 #ifndef _GEN_ALG_HPP
 #define _GEN_ALG_HPP
 
+#include <ios>
+#include <istream>
+#include <ostream>
 #include <set>
 #include "eval.hpp"
 #include "fitness.hpp"
@@ -118,6 +121,16 @@ namespace peacockspider
     void mutate_individuals(int count, std::vector<Individual> &individuals);
 
     bool genetic_algorithm_iterate(Selector *selector, int iter, const std::vector<Individual> &individuals, std::vector<Individual> &new_individuals, int best_individual_count, int child_count, int mutation_count);
+
+    std::istream &read_individual(std::istream &is, Individual &individual);
+
+    std::istream &read_individuals(std::istream &is, int count, std::vector<Individual> &individuals);
+    
+    std::ostream &write_individual(std::ostream &os, const Individual &individual);
+
+    std::ostream &write_individuals(std::ostream &os, const std::vector<Individual> &individuals);
+
+    std::istream &skip_individuals(std::istream &is, std::streamoff count);
   }
 }
 
