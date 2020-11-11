@@ -22,6 +22,7 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <ostream>
 #include <queue>
 #include <thread>
 #include <utility>
@@ -190,6 +191,8 @@ namespace peacockspider
 
       virtual bool play(int iter, const std::vector<std::shared_ptr<int []>> &param_arrays);
     };
+
+    std::ostream &operator<<(std::ostream &os, const TournamentResult &result);
   }
 }
 
