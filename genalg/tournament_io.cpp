@@ -86,7 +86,7 @@ namespace peacockspider
       for(int i = 0; i < result.player_count(); i++) {
         os << "---";
       }
-      os << "-+" << endl;
+      os << "-+";
       return os;
     }
   }
