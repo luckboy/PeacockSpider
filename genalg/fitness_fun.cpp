@@ -24,7 +24,7 @@ namespace peacockspider
   namespace genalg
   {
     FitnessFunction::FitnessFunction(Tournament *tournament) :
-      _M_tournament(tournament), _M_fitness_output_function([](const TournamentResult &result) {
+      _M_tournament(tournament), _M_fitness_output_function([](int iter, const TournamentResult &result) {
         return true;
       }) {}
 
@@ -36,16 +36,16 @@ namespace peacockspider
     void FitnessFunction::set_tournament_output_function(std::function<void (int, int, int, int, Result)> fun)
     { _M_tournament->set_tournament_output_function(fun); }
 
-    function<bool (const TournamentResult &)> FitnessFunction::fitness_output_function() const
+    function<bool (int, const TournamentResult &)> FitnessFunction::fitness_output_function() const
     { return _M_fitness_output_function; }
 
-    void FitnessFunction::set_fitness_output_function(function<bool (const TournamentResult &)> fun)
+    void FitnessFunction::set_fitness_output_function(function<bool (int, const TournamentResult &)> fun)
     { _M_fitness_output_function = fun; }
 
     bool FitnessFunction::update(int iter, const vector<shared_ptr<int []>> &gene_arrays)
     {
       if(!_M_tournament->play(iter, gene_arrays)) return false;
-      if(!_M_fitness_output_function(_M_tournament->result())) return false;
+      if(!_M_fitness_output_function(iter, _M_tournament->result())) return false;
       return true;
     }
 

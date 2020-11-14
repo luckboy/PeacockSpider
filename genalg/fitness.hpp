@@ -27,7 +27,7 @@ namespace peacockspider
     class FitnessFunction
     {
       Tournament *_M_tournament;
-      std::function<bool (const TournamentResult &)> _M_fitness_output_function;
+      std::function<bool (int, const TournamentResult &)> _M_fitness_output_function;
     public:
       FitnessFunction(Tournament *tournament);
 
@@ -37,9 +37,9 @@ namespace peacockspider
 
       void set_tournament_output_function(std::function<void (int, int, int, int, Result)> fun);
 
-      std::function<bool (const TournamentResult &)> fitness_output_function() const;
+      std::function<bool (int, const TournamentResult &)> fitness_output_function() const;
 
-      void set_fitness_output_function(std::function<bool (const TournamentResult &)> fun);
+      void set_fitness_output_function(std::function<bool (int, const TournamentResult &)> fun);
 
       int individual_count() const
       { return _M_tournament->result().player_count(); }
