@@ -155,6 +155,8 @@ namespace peacockspider
     std::ostream &write_individuals(std::ostream &os, const std::vector<Individual> &individuals);
 
     std::istream &skip_individuals(std::istream &is, std::streamoff count);
+
+    bool genetic_algorithm(Selector *selector, int iter_count, int best_individual_count, int child_count, int mutation_count, bool can_save_tournament_result = true, bool can_save_eval_params = true);
   }
 }
 
