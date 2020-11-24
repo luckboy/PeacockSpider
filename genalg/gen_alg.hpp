@@ -106,6 +106,30 @@ namespace peacockspider
       int create_individual_pairs(const std::set<int> &excluded_indices, std::vector<IndividualPair> &pairs) const;
     };
 
+    class OutputFunctionSettings
+    {
+      Selector *_M_selector;
+      std::function<void (int, int, int, int, Result)> _M_saved_tournament_output_function;
+      std::function<bool (int, const TournamentResult &)> _M_saved_fitness_output_function;
+    public:
+      OutputFunctionSettings(
+        Selector *selector,
+        std::function<void (int, int, int, int, Result)> tournament_output_fun,
+        std::function<bool (int, const TournamentResult &)> fitness_output_fun) : _M_selector(selector)
+      {
+        _M_saved_tournament_output_function = _M_selector->tournament_output_function();
+        _M_saved_fitness_output_function = _M_selector->fitness_output_function();
+        _M_selector->set_tournament_output_function(tournament_output_fun);
+        _M_selector->set_fitness_output_function(fitness_output_fun);
+      }
+
+      ~OutputFunctionSettings()
+      {
+        _M_selector->set_fitness_output_function(_M_saved_fitness_output_function);
+        _M_selector->set_tournament_output_function(_M_saved_tournament_output_function);
+      }
+    };
+    
     void generate_individual(Individual &new_individual);
 
     void generate_individuals(int count, std::vector<Individual> &new_individuals);
