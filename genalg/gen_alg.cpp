@@ -109,12 +109,14 @@ namespace peacockspider
           vector<Individual> generated_individuals;
           generate_individuals(selector->individual_count() - 1, generated_individuals);
           individuals.insert(individuals.end(), generated_individuals.begin(), generated_individuals.end());
-          ofstream ofs(evaluation_parameter_file_name(iter));
-          if(!ofs.good()) {
-            cerr << "Can't open evaluation file" << endl;
-            return false;
+          if(can_save_eval_params) {
+            ofstream ofs(evaluation_parameter_file_name(iter));
+            if(!ofs.good()) {
+              cerr << "Can't open evaluation file" << endl;
+              return false;
+            }
+            write_individuals(ofs, individuals);
           }
-          write_individuals(ofs, individuals);
         } else {
           cerr << "Can't open evaluation file" << endl;
           return false;
