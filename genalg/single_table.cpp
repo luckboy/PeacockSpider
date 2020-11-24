@@ -76,8 +76,10 @@ namespace peacockspider
       vector<Board> boards;
       unique_ptr<MovePair []> tmp_move_pairs(new MovePair[MAX_MOVE_COUNT]);
       MovePairList move_pairs(tmp_move_pairs.get(), 0);
+      boards.reserve(256);
       boards.push_back(Board());
       Game game;
+      game.moves().reserve(255);
       {
         ostringstream oss;
         oss << "Peacock Spider genetic algorithm tournament i" << iter;
