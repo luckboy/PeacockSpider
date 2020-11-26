@@ -45,7 +45,7 @@ namespace peacockspider
       }
     }
     
-    SingleTable::SingleTable(int max_depth, unsigned time, function<Searcher *(EvaluationFunction *, int)> fun, bool is_game_saving)
+    SingleTable::SingleTable(int max_depth, unsigned time, function<Searcher *(const EvaluationFunction *, int)> fun, bool is_game_saving)
       : _M_has_game_saving(is_game_saving), _M_max_depth(max_depth), _M_time(time)
     {
       _M_white_evaluation_function = unique_ptr<EvaluationFunction>(new EvaluationFunction(start_evaluation_parameters));

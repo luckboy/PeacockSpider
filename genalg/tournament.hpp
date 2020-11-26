@@ -59,7 +59,7 @@ namespace peacockspider
       int _M_max_depth;
       unsigned _M_time;
     public:
-      SingleTable(int max_depth, unsigned time, std::function<Searcher *(EvaluationFunction *, int)> fun, bool is_game_saving = true);
+      SingleTable(int max_depth, unsigned time, std::function<Searcher *(const EvaluationFunction *, int)> fun, bool is_game_saving = true);
 
       virtual ~SingleTable();
 

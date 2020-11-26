@@ -1,4 +1,9 @@
 /build
+/genetic
+/genetic.tar.gz
+/genetic.tar.bz2
+/genetic.tar.xz
+/genetic.zip
 /.kdev4
 *.log
 *.pgn

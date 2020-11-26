@@ -127,7 +127,7 @@ namespace peacockspider
         cout << endl;
         cout << "Playing tournament ..." << endl;
         vector<Individual> new_individuals;
-        genetic_algorithm_iterate(selector, iter, individuals, new_individuals, best_individual_count, child_count, mutation_count);
+        if(!genetic_algorithm_iterate(selector, iter, individuals, new_individuals, best_individual_count, child_count, mutation_count)) return false;
         individuals = new_individuals;
         if(can_save_eval_params || iter + 1 >= iter_count) {
           ofstream ofs(evaluation_parameter_file_name(iter + 1));
