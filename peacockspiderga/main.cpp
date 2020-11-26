@@ -221,7 +221,7 @@ namespace
   {
     GENETIC_ALGORITHM,
     DISPLAY_INDIVIDUAL,
-    GENERATE_CPP_FILE
+    GENERATE_DEFAULT_EVAL_PARAMS_CPP_FILE
   };
 
   int evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT];
@@ -405,7 +405,7 @@ int main(int argc, char **argv)
           if(thread_count == 0) thread_count = 1;
           break;
         case 'o':
-          cmd = Command::GENERATE_CPP_FILE;
+          cmd = Command::GENERATE_DEFAULT_EVAL_PARAMS_CPP_FILE;
           break;
         case 'p':
         {
@@ -533,7 +533,7 @@ int main(int argc, char **argv)
         }
         return 0;
       }
-      case Command::GENERATE_CPP_FILE:
+      case Command::GENERATE_DEFAULT_EVAL_PARAMS_CPP_FILE:
       {
         {
           ostringstream oss;
