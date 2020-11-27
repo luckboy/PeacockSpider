@@ -343,7 +343,7 @@ int main(int argc, char **argv)
           cout << "  -h                    display this text" << endl;
           cout << "  -i <iterations>       set number of iterations (by default 100)" << endl;
           cout << "  -j                    display individual" << endl;
-          cout << "  -m <number>           set number of mutations" << endl;
+          cout << "  -m <number>           set number of mutations (by default 4)" << endl;
           cout << "  -n                    set number of threads as number of all processors" << endl;
           cout << "  -o                    generate default_eval_params.cpp file" << endl;
           cout << "  -p <number>           set number of threads" << endl;
@@ -357,9 +357,11 @@ int main(int argc, char **argv)
           cout << "Searchers:" << endl;
           cout << "  single                single searcher for Alpha-Beta" << endl;
           cout << "  singlepvs             single searcher for PVS (default)" << endl;
+          cout << endl;
           cout << "Tournaments:" << endl;
           cout << "  single                single tournament" << endl;
           cout << "  parallel              parallel tournament (default)" << endl;
+          cout << endl;
           cout << "Files:" << endl;
           cout << "  conifg.txt            auto generated configuration file" << endl;
           cout << "  iter.txt              file with number of iteration" << endl;
