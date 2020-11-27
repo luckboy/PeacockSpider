@@ -71,7 +71,7 @@ namespace
       [](int player_count, function<Table *()> fun, unsigned thread_count) {
         return new ParallelTournament(player_count, fun, thread_count); 
       }
-    },
+    }
   };
   
   struct Configuration
