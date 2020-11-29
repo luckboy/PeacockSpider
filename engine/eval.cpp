@@ -93,7 +93,7 @@ namespace peacockspider
     for(size_t i = 0; i < param_count; i++) {
       os << params[i] << "\n";
     }
-    os << '\n';
+    os << "\n";
     return os;
   }
 
