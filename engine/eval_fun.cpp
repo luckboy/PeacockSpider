@@ -94,7 +94,7 @@ namespace peacockspider
         }
         i++;
       }
-      // Rook.
+      // Rooks.
       i = 0;
       for(Row row = 0; row < 4; row++) {
         for(Column col = 0; col < 8; col++) {
@@ -118,7 +118,7 @@ namespace peacockspider
         _M_piece_square[side][piece_to_index(Piece::ROOK)][F8] += params[EVALUATION_PARAMETER_ROOK_CASTLING];
         _M_piece_square[side][piece_to_index(Piece::ROOK)][D8] += params[EVALUATION_PARAMETER_ROOK_CASTLING];
       }
-      // Queen.
+      // Queens.
       i = 0;
       for(Row row = 0; row < 4; row++) {
         for(Column col = 0; col < 8; col++) {
