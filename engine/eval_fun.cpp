@@ -210,25 +210,6 @@ namespace peacockspider
     _M_piece_defences[piece_to_index(Piece::ROOK)] = params[EVALUATION_PARAMETER_ROOK_DEFENCE];
     _M_piece_defences[piece_to_index(Piece::QUEEN)] = params[EVALUATION_PARAMETER_QUEEN_DEFENCE];
     _M_piece_defences[piece_to_index(Piece::KING)] = 0;
-    // Sets piece/piece pins.
-    for(int piece1 = 0; piece1 < 6; piece1++) {
-      for(int piece2 = 0; piece2 < 6; piece2++)
-        _M_piece_piece_pins[piece1][piece2] = 0;
-    }
-    _M_piece_piece_pins[piece_to_index(Piece::QUEEN)][piece_to_index(Piece::KING)] = params[EVALUATION_PARAMETER_QUEEN_KING_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::ROOK)][piece_to_index(Piece::KING)] = params[EVALUATION_PARAMETER_ROOK_KING_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::BISHOP)][piece_to_index(Piece::KING)] = params[EVALUATION_PARAMETER_BISHOP_KING_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::KNIGHT)][piece_to_index(Piece::KING)] = params[EVALUATION_PARAMETER_KNIGHT_KING_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::PAWN)][piece_to_index(Piece::KING)] = params[EVALUATION_PARAMETER_PAWN_KING_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::ROOK)][piece_to_index(Piece::QUEEN)] = params[EVALUATION_PARAMETER_ROOK_QUEEN_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::BISHOP)][piece_to_index(Piece::QUEEN)] = params[EVALUATION_PARAMETER_BISHOP_QUEEN_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::KNIGHT)][piece_to_index(Piece::QUEEN)] = params[EVALUATION_PARAMETER_KNIGHT_QUEEN_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::PAWN)][piece_to_index(Piece::QUEEN)] = params[EVALUATION_PARAMETER_PAWN_QUEEN_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::BISHOP)][piece_to_index(Piece::ROOK)] = params[EVALUATION_PARAMETER_BISHOP_ROOK_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::KNIGHT)][piece_to_index(Piece::ROOK)] = params[EVALUATION_PARAMETER_KNIGHT_ROOK_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::PAWN)][piece_to_index(Piece::ROOK)] = params[EVALUATION_PARAMETER_PAWN_ROOK_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::PAWN)][piece_to_index(Piece::BISHOP)] = params[EVALUATION_PARAMETER_PAWN_BISHOP_PIN];
-    _M_piece_piece_pins[piece_to_index(Piece::PAWN)][piece_to_index(Piece::KNIGHT)] = params[EVALUATION_PARAMETER_PAWN_KNIGHT_PIN];
   }
   
   int EvaluationFunction::operator()(const Board &board) const
@@ -383,56 +364,6 @@ namespace peacockspider
         });
       } else
         tmp_value = 0;
-      return sum + (side == Side::WHITE ? tmp_value : -tmp_value);
-    });
-    value += fold_squares(board.color_bitboard(Side::WHITE) | board.color_bitboard(Side::BLACK), 0, [&](int sum, Square to) {
-      Side side = board.has_color(Side::WHITE, to) ? Side::WHITE : Side::BLACK;
-      Piece piece1 = Piece::PAWN;
-      Piece piece2 = board.piece(to);
-      int tmp_value;
-      if(piece2 == Piece::PAWN) return sum;
-      tmp_value = fold_bishop_slides(to, make_pair(0, false), [&](pair<int, bool> tmp_pair) {
-        return make_pair(tmp_pair.first, false);
-      }, [&](pair<int, bool> tmp_pair, Square from) {
-        if(board.has_empty(from)) {
-          return make_pair(tmp_pair, true); 
-        } else {
-          if(!tmp_pair.second) {
-            if(board.has_color(side, from)) {
-              piece1 = board.piece(from);
-              return make_pair(make_pair(tmp_pair.first, true), true);
-            } else
-              return make_pair(tmp_pair, false);
-          } else {
-            if(board.has_color_piece(~side, Piece::BISHOP, Piece::QUEEN, from)) {
-              int pin_value = _M_piece_piece_pins[piece_to_index(piece1)][piece_to_index(piece2)];
-              return make_pair(make_pair(tmp_pair.first + pin_value, tmp_pair.second), false);
-            } else
-              return make_pair(tmp_pair, false);
-          }
-        }
-      }).first;
-      tmp_value += fold_rook_slides(to, make_pair(0, false), [&](pair<int, bool> tmp_pair) {
-        return make_pair(tmp_pair.first, false);
-      }, [&](pair<int, bool> tmp_pair, Square from) {
-        if(board.has_empty(from)) {
-          return make_pair(tmp_pair, true); 
-        } else {
-          if(!tmp_pair.second) {
-            if(board.has_color(side, from)) {
-              piece1 = board.piece(from);
-              return make_pair(make_pair(tmp_pair.first, true), true);
-            } else
-              return make_pair(tmp_pair, false);
-          } else {
-            if(board.has_color_piece(~side, Piece::ROOK, Piece::QUEEN, from)) {
-              int pin_value = _M_piece_piece_pins[piece_to_index(piece1)][piece_to_index(piece2)];
-              return make_pair(make_pair(tmp_pair.first + pin_value, tmp_pair.second), false);
-            } else
-              return make_pair(tmp_pair, false);
-          }
-        }
-      }).first;
       return sum + (side == Side::WHITE ? tmp_value : -tmp_value);
     });
     return (board.side() == Side::WHITE ? value : -value);

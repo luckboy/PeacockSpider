@@ -1,6 +1,6 @@
 /*
  * Peacock Spider - Chess engine.
- * Copyright (C) 2020 Łukasz Szpakowski
+ * Copyright (C) 2020-2021 Łukasz Szpakowski
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,21 +49,7 @@ namespace peacockspider
       Range(0, 40),       // EVALUATION_PARAMETER_KNIGHT_DEFENCE
       Range(0, 40),       // EVALUATION_PARAMETER_BISHOP_DEFENCE
       Range(0, 40),       // EVALUATION_PARAMETER_ROOK_DEFENCE
-      Range(0, 40),       // EVALUATION_PARAMETER_QUEEN_DEFENCE
-      Range(-210, 0),     // EVALUATION_PARAMETER_QUEEN_KING_PIN
-      Range(-160, 0),     // EVALUATION_PARAMETER_ROOK_KING_PIN
-      Range(-130, 0),     // EVALUATION_PARAMETER_BISHOP_KING_PIN
-      Range(-130, 0),     // EVALUATION_PARAMETER_KNIGHT_KING_PIN
-      Range(-100, 0),     // EVALUATION_PARAMETER_PAWN_KING_PIN
-      Range(-150, 0),     // EVALUATION_PARAMETER_ROOK_QUEEN_PIN
-      Range(-120, 0),     // EVALUATION_PARAMETER_BISHOP_QUEEN_PIN
-      Range(-120, 0),     // EVALUATION_PARAMETER_KNIGHT_QUEEN_PIN
-      Range(-90, 0),      // EVALUATION_PARAMETER_PAWN_QUEEN_PIN
-      Range(-80, 0),      // EVALUATION_PARAMETER_BISHOP_ROOK_PIN
-      Range(-80, 0),      // EVALUATION_PARAMETER_KNIGHT_ROOK_PIN
-      Range(-50, 0),      // EVALUATION_PARAMETER_PAWN_ROOK_PIN
-      Range(-30, 0),      // EVALUATION_PARAMETER_PAWN_BISHOP_PIN
-      Range(-30, 0)       // EVALUATION_PARAMETER_PAWN_KNIGHT_PIN
+      Range(0, 40)        // EVALUATION_PARAMETER_QUEEN_DEFENCE
     };
   }
 }

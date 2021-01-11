@@ -1,6 +1,6 @@
 /*
  * Peacock Spider - Chess engine.
- * Copyright (C) 2020 Łukasz Szpakowski
+ * Copyright (C) 2020-2021 Łukasz Szpakowski
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,21 +50,7 @@ namespace peacockspider
     "EVALUATION_PARAMETER_KNIGHT_DEFENCE",
     "EVALUATION_PARAMETER_BISHOP_DEFENCE",
     "EVALUATION_PARAMETER_ROOK_DEFENCE",
-    "EVALUATION_PARAMETER_QUEEN_DEFENCE",
-    "EVALUATION_PARAMETER_QUEEN_KING_PIN",
-    "EVALUATION_PARAMETER_ROOK_KING_PIN",
-    "EVALUATION_PARAMETER_BISHOP_KING_PIN",
-    "EVALUATION_PARAMETER_KNIGHT_KING_PIN",
-    "EVALUATION_PARAMETER_PAWN_KING_PIN",
-    "EVALUATION_PARAMETER_ROOK_QUEEN_PIN",
-    "EVALUATION_PARAMETER_BISHOP_QUEEN_PIN",
-    "EVALUATION_PARAMETER_KNIGHT_QUEEN_PIN",
-    "EVALUATION_PARAMETER_PAWN_QUEEN_PIN",
-    "EVALUATION_PARAMETER_BISHOP_ROOK_PIN",
-    "EVALUATION_PARAMETER_KNIGHT_ROOK_PIN",
-    "EVALUATION_PARAMETER_PAWN_ROOK_PIN",
-    "EVALUATION_PARAMETER_PAWN_BISHOP_PIN",
-    "EVALUATION_PARAMETER_PAWN_KNIGHT_PIN"
+    "EVALUATION_PARAMETER_QUEEN_DEFENCE"
   };
   
   istream &read_evaluation_parameters(istream &is, ParentPair *parent_pair, int *params, size_t param_count)

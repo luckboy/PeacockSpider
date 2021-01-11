@@ -1,6 +1,6 @@
 /*
  * Peacock Spider - Chess engine.
- * Copyright (C) 2020 Łukasz Szpakowski
+ * Copyright (C) 2020-2021 Łukasz Szpakowski
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,21 +53,7 @@ namespace peacockspider
   const std::size_t EVALUATION_PARAMETER_BISHOP_DEFENCE =     25;
   const std::size_t EVALUATION_PARAMETER_ROOK_DEFENCE =       26;
   const std::size_t EVALUATION_PARAMETER_QUEEN_DEFENCE =      27;
-  const std::size_t EVALUATION_PARAMETER_QUEEN_KING_PIN =     28;
-  const std::size_t EVALUATION_PARAMETER_ROOK_KING_PIN =      29;
-  const std::size_t EVALUATION_PARAMETER_BISHOP_KING_PIN =    30;
-  const std::size_t EVALUATION_PARAMETER_KNIGHT_KING_PIN =    31;
-  const std::size_t EVALUATION_PARAMETER_PAWN_KING_PIN =      32;
-  const std::size_t EVALUATION_PARAMETER_ROOK_QUEEN_PIN =     33;
-  const std::size_t EVALUATION_PARAMETER_BISHOP_QUEEN_PIN =   34;
-  const std::size_t EVALUATION_PARAMETER_KNIGHT_QUEEN_PIN =   35;
-  const std::size_t EVALUATION_PARAMETER_PAWN_QUEEN_PIN =     36;
-  const std::size_t EVALUATION_PARAMETER_BISHOP_ROOK_PIN =    37;
-  const std::size_t EVALUATION_PARAMETER_KNIGHT_ROOK_PIN =    38;
-  const std::size_t EVALUATION_PARAMETER_PAWN_ROOK_PIN =      39;
-  const std::size_t EVALUATION_PARAMETER_PAWN_BISHOP_PIN =    40;
-  const std::size_t EVALUATION_PARAMETER_PAWN_KNIGHT_PIN =    41;
-  const std::size_t MAX_EVALUATION_PARAMETER_COUNT =          42;
+  const std::size_t MAX_EVALUATION_PARAMETER_COUNT =          28;
 
   extern int default_evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT];
   extern int start_evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT];
@@ -97,7 +83,6 @@ namespace peacockspider
     int _M_piece_square_bits[2][6][16][16];
     int _M_piece_mobilities[6];
     int _M_piece_defences[6];
-    int _M_piece_piece_pins[6][6];
   public:
     EvaluationFunction()
     { set(default_evaluation_parameters); }
