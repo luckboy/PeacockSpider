@@ -1,6 +1,6 @@
 /*
  * Peacock Spider - Chess engine.
- * Copyright (C) 2020 Łukasz Szpakowski
+ * Copyright (C) 2020-2021 Łukasz Szpakowski
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -313,7 +313,7 @@ namespace peacockspider
       if(pawn_count >= 2) value += _M_doubled_pawn;
       pawn_count = 0;
       for(Row row = 7; row >= 0; row--) {
-        if(board.has_color_piece(Side::WHITE, Piece::PAWN, col + (row << 3))) pawn_count++;
+        if(board.has_color_piece(Side::BLACK, Piece::PAWN, col + (row << 3))) pawn_count++;
       }
       if(pawn_count >= 2) value -= _M_doubled_pawn;
     }
