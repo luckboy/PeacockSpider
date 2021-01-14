@@ -1,6 +1,6 @@
 /*
  * Peacock Spider - Chess engine.
- * Copyright (C) 2020 Łukasz Szpakowski
+ * Copyright (C) 2020-2021 Łukasz Szpakowski
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -223,8 +223,6 @@ namespace
     DISPLAY_INDIVIDUAL,
     GENERATE_DEFAULT_EVAL_PARAMS_CPP_FILE
   };
-
-  int evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT];
 }
 
 int main(int argc, char **argv)
@@ -240,6 +238,7 @@ int main(int argc, char **argv)
     bool can_save_eval_params = true;
     unsigned thread_count = 1;
     streamoff eval_skipping_count = 0;
+    size_t old_eval_param_format_version = 0;
     config.searcher_name = string("singlepvs");
     config.max_depth = 6;
     config.time = numeric_limits<unsigned>::max();
@@ -250,7 +249,7 @@ int main(int argc, char **argv)
     if(!load_configuration(config)) return 1;
     int c;
     opterr = 0;
-    while((c = getopt(argc, argv, "a:b:c:d:eg:hi:jm:nop:s:t:T:uvw")) != -1) {
+    while((c = getopt(argc, argv, "a:b:c:d:eg:hi:jm:noO:p:s:t:T:uvw")) != -1) {
       switch(c) {
         case 'a':
         {
@@ -346,6 +345,7 @@ int main(int argc, char **argv)
           cout << "  -m <number>           set number of mutations (by default 4)" << endl;
           cout << "  -n                    set number of threads as number of all processors" << endl;
           cout << "  -o                    generate default_eval_params.cpp file" << endl;
+          cout << "  -O <version>          set old evaluation parameter format (for read only)" << endl;
           cout << "  -p <number>           set number of threads" << endl;
           cout << "  -s <searcher name>    set searcher" << endl;
           cout << "  -t <time>             set time in milliseconds" << endl;
@@ -409,6 +409,25 @@ int main(int argc, char **argv)
         case 'o':
           cmd = Command::GENERATE_DEFAULT_EVAL_PARAMS_CPP_FILE;
           break;
+        case 'O':
+        {
+          string str(optarg);
+          istringstream iss(str);
+          iss >> old_eval_param_format_version;
+          if(iss.fail() && !iss.eof()) {
+            cerr << "Incorrect number" << endl;
+            return 1;
+          }
+          if(old_eval_param_format_version < 1) {
+            cerr << "Too small number" << endl;
+            return 1;
+          }
+          if(old_eval_param_format_version > MAX_OLD_EVALUATION_PARAMETER_FORMAT_COUNT) {
+            cerr << "Too large number" << endl;
+            return 1;
+          }
+          break;
+        }
         case 'p':
         {
           string str(optarg);
@@ -495,6 +514,14 @@ int main(int argc, char **argv)
       }
       case Command::DISPLAY_INDIVIDUAL:
       {
+        EvaluationParameterFormat format;
+        if(old_eval_param_format_version > 0) {
+          format = old_evaluation_parameter_formats[old_eval_param_format_version - 1];
+        } else {
+          format.max_count = MAX_EVALUATION_PARAMETER_COUNT;
+          format.names = evaluation_parameter_names;
+        }
+        unique_ptr<int []> eval_params = unique_ptr<int []>(new int[format.max_count]);
         ParentPair parent_pair;
         {
           ostringstream oss;
@@ -504,12 +531,12 @@ int main(int argc, char **argv)
             cerr << "Can't open evaluation file" << endl;
             return 1;
           }
-          skip_evaluation_parameters(ifs, eval_skipping_count);
+          skip_evaluation_parameters(ifs, eval_skipping_count, format.max_count);
           if(ifs.fail()) {
             cerr << "I/O error" << endl;
             return 1;
           }
-          read_evaluation_parameters(ifs, &parent_pair, evaluation_parameters);
+          read_evaluation_parameters(ifs, &parent_pair, eval_params.get(), format.max_count);
           if(ifs.fail()) {
             cerr << "I/O error" << endl;
             return 1;
@@ -522,21 +549,29 @@ int main(int argc, char **argv)
         if(can_display_eval_params) {
           cout << endl;
           cout << "Evaluation parameters:" << endl;
-          for(size_t i = 0; i < MAX_EVALUATION_PARAMETER_COUNT; i++) {
+          for(size_t i = 0; i < format.max_count; i++) {
             ostringstream oss2;
-            oss2 << evaluation_parameters[i];
+            oss2 << eval_params[i];
             string str = oss2.str();
             cout << "  " << str;
             for(int j = 0; j < 6 - static_cast<int>(str.length()); j++) {
               cout << " ";
             }
-            cout << "# " << evaluation_parameter_names[i] << endl;
+            cout << "# " << format.names[i] << endl;
           }
         }
         return 0;
       }
       case Command::GENERATE_DEFAULT_EVAL_PARAMS_CPP_FILE:
       {
+        EvaluationParameterFormat format;
+        if(old_eval_param_format_version > 0) {
+          format = old_evaluation_parameter_formats[old_eval_param_format_version - 1];
+        } else {
+          format.max_count = MAX_EVALUATION_PARAMETER_COUNT;
+          format.names = evaluation_parameter_names;
+        }
+        unique_ptr<int []> eval_params = unique_ptr<int []>(new int[format.max_count]);
         {
           ostringstream oss;
           oss << iter_count << ".eps";
@@ -545,12 +580,12 @@ int main(int argc, char **argv)
             cerr << "Can't open evaluation file" << endl;
             return 1;
           }
-          skip_evaluation_parameters(ifs, eval_skipping_count);
+          skip_evaluation_parameters(ifs, eval_skipping_count, format.max_count);
           if(ifs.fail()) {
             cerr << "I/O error" << endl;
             return 1;
           }
-          read_evaluation_parameters(ifs, nullptr, evaluation_parameters);
+          read_evaluation_parameters(ifs, nullptr, eval_params.get(), format.max_count);
           if(ifs.fail()) {
             cerr << "I/O error" << endl;
             return 1;
@@ -562,7 +597,7 @@ int main(int argc, char **argv)
             cerr << "Can't open default evaluation file" << endl;
             return 1;
           }
-          write_default_evaluation_parameters(ofs, evaluation_parameters);
+          write_default_evaluation_parameters(ofs, eval_params.get(), format.names, format.max_count);
         }
         return 0;
       }

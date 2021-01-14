@@ -59,6 +59,21 @@ namespace peacockspider
   extern int start_evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT];
   
   extern const char *evaluation_parameter_names[MAX_EVALUATION_PARAMETER_COUNT];
+
+  struct EvaluationParameterFormat
+  {
+    std::size_t max_count;
+    const char **names;
+    
+    EvaluationParameterFormat() {}
+    
+    EvaluationParameterFormat(std::size_t max_count, const char **names) :
+      max_count(max_count), names(names) {}
+  };
+
+  const std::size_t MAX_OLD_EVALUATION_PARAMETER_FORMAT_COUNT = 1;
+
+  extern EvaluationParameterFormat old_evaluation_parameter_formats[MAX_OLD_EVALUATION_PARAMETER_FORMAT_COUNT];
   
   struct ParentPair
   {
