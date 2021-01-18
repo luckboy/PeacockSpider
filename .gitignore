@@ -4,6 +4,10 @@
 /genetic.tar.bz2
 /genetic.tar.xz
 /genetic.zip
+/genetic_*.tar.gz
+/genetic_*.tar.bz2
+/genetic_*.tar.xz
+/genetic_*.zip
 /.kdev4
 *.log
 *.pgn
