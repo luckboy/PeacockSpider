@@ -1,6 +1,6 @@
 /*
  * Peacock Spider - Chess engine.
- * Copyright (C) 2020 Łukasz Szpakowski
+ * Copyright (C) 2020-2021 Łukasz Szpakowski
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,6 +70,14 @@ namespace peacockspider
     11, 10, 9, 1, -1, -9, -10, -11
   };
   
+  int tab_first_zone_steps120[9] = {
+    11, 10, 9, 1, 0, -1, -9, -10, -11
+  };
+
+  int tab_second_zone_steps120[12] = {
+    21, 20, 19, 12, 8, 2, -2, -8, -12, -19, -20, -21 
+  };
+
   Bitboard tab_pawn_capture_bitboards[2][64];
   Bitboard tab_knight_bitboards[64];
   Bitboard tab_king_bitboards[64];
@@ -95,6 +103,11 @@ namespace peacockspider
 
   Bitboard tab_column_bitboards[8];
   Bitboard tab_neighbour_column_bitboards[8];
+
+  int tab_first_zone_square_counts[64];
+  Square8 tab_first_zone_squares[64][16];
+  int tab_second_zone_square_counts[64];
+  Square8 tab_second_zone_squares[64][16];
 
   void initialize_tables()
   {
@@ -264,6 +277,7 @@ namespace peacockspider
       }
       tab_square_offset_counts[bits] = count;
     }
+
     // Initializes column bitboards.
     for(Column col = 0; col < 8; col++) {
       tab_column_bitboards[col] = 0;
@@ -276,6 +290,35 @@ namespace peacockspider
       tab_neighbour_column_bitboards[col] = 0;
       if(col - 1 >= 0) tab_neighbour_column_bitboards[col] |= tab_column_bitboards[col - 1];
       if(col + 1 < 8) tab_neighbour_column_bitboards[col] |= tab_column_bitboards[col + 1];
+    }
+    
+    // Initializes first zone squares.
+    for(Square from = 0; from < 64; from++) {
+      for(int i = 0; i < 16; i++) tab_first_zone_squares[from][i] = -1;
+      int from120 = mailbox64[from];
+      int count = 0;
+      for(int i = 0; i < 9; i++) {
+        Square to = mailbox[from120 + tab_first_zone_steps120[i]];
+        if(to != -1) {
+          tab_first_zone_squares[from][count] = to;
+          count++;
+        }
+      }
+      tab_first_zone_square_counts[from] = count;
+    }
+    // Initializes second zone squares.
+    for(Square from = 0; from < 64; from++) {
+      for(int i = 0; i < 16; i++) tab_second_zone_squares[from][i] = -1;
+      int from120 = mailbox64[from];
+      int count = 0;
+      for(int i = 0; i < 12; i++) {
+        Square to = mailbox[from120 + tab_second_zone_steps120[i]];
+        if(to != -1) {
+          tab_second_zone_squares[from][count] = to;
+          count++;
+        }
+      }
+      tab_second_zone_square_counts[from] = count;
     }
   }
 }

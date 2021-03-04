@@ -22,6 +22,38 @@ using namespace std;
 
 namespace peacockspider
 {
+  namespace
+  {
+    int tab_first_king_zone_attack_weights[10] = {
+      0,  // 0
+      0,  // 1
+      1,  // 2
+      2,  // 3
+      3,  // 4
+      4,  // 5
+      4,  // 6
+      5,  // 7
+      5,  // 8
+      5   // 9
+    };
+
+    int tab_second_king_zone_attack_weights[13] = {
+      0,  // 0
+      0,  // 1
+      1,  // 2
+      1,  // 3
+      2,  // 4
+      2,  // 5
+      2,  // 6
+      3,  // 7
+      3,  // 8
+      3,  // 9
+      3,  // 10
+      3,  // 11
+      3   // 12
+    };
+  }
+  
   void EvaluationFunction::set(const int *params)
   {
     int i;
@@ -196,6 +228,8 @@ namespace peacockspider
         }
       }
     }
+    // Sets king zone attacks.
+    _M_king_zone_attacks = params[EVALUATION_PARAMETER_KING_ZONE_ATTACKS];
   }
   
   int EvaluationFunction::operator()(const Board &board) const
@@ -284,6 +318,61 @@ namespace peacockspider
       }
       if(pawn_count >= 2) value -= _M_doubled_pawn;
     }
+    pair<Bitboard, Bitboard> attack_bbd_pair = fold_squares(board.color_bitboard(Side::WHITE) | board.color_bitboard(Side::BLACK), make_pair(static_cast<Bitboard>(0), static_cast<Bitboard>(0)), [&](pair<Bitboard, Bitboard> bbd_pair, Square from) {
+      Side side = board.has_color(Side::WHITE, from) ? Side::WHITE : Side::BLACK;
+      Bitboard bbd = 0;
+      if(board.has_piece(Piece::PAWN, from)) {
+        bbd = tab_pawn_capture_bitboards[side_to_index(side)][from];
+      } else if(board.has_piece(Piece::KNIGHT, from)) {
+        bbd = tab_knight_bitboards[from];
+      } else if(board.has_piece(Piece::BISHOP, from)) {
+        bbd = fold_bishop_slides(from, static_cast<Bitboard>(0), [&](Bitboard bbd2) { return bbd2; }, [&](Bitboard bbd2, Square to) {
+          return make_pair(bbd2 | (static_cast<Bitboard>(1) << to), board.has_empty(to));
+        });
+      } else if(board.has_piece(Piece::ROOK, from)) {
+        bbd = fold_rook_slides(from, static_cast<Bitboard>(0), [&](Bitboard bbd2) { return bbd2; }, [&](Bitboard bbd2, Square to) {
+          return make_pair(bbd2 | (static_cast<Bitboard>(1) << to), board.has_empty(to));
+        });
+      } else if(board.has_piece(Piece::QUEEN, from)) {
+        bbd = fold_queen_slides(from, static_cast<Bitboard>(0), [&](Bitboard bbd2) { return bbd2; }, [&](Bitboard bbd2, Square to) {
+          return make_pair(bbd2 | (static_cast<Bitboard>(1) << to), board.has_empty(to));
+        });
+      } else if(board.has_piece(Piece::KING, from)) {
+        bbd = tab_king_bitboards[from];
+      }
+      if(side == Side::WHITE)
+        return make_pair(bbd_pair.first, bbd_pair.second | bbd);
+      else
+        return make_pair(bbd_pair.first | bbd, bbd_pair.second); 
+    });
+    int white_zone_squ_count = tab_first_zone_square_counts[board.king_square(Side::WHITE)];
+    int white_attack_count = 0;
+    for(int i = 0; i < white_zone_squ_count; i++) {
+      if((attack_bbd_pair.first & (static_cast<Bitboard>(1) << tab_first_zone_squares[board.king_square(Side::WHITE)][i])) != 0)
+        white_attack_count++;
+    }
+    int black_zone_squ_count = tab_first_zone_square_counts[board.king_square(Side::BLACK)];
+    int black_attack_count = 0;
+    for(int i = 0; i < black_zone_squ_count; i++) {
+      if((attack_bbd_pair.second & (static_cast<Bitboard>(1) << tab_first_zone_squares[board.king_square(Side::BLACK)][i])) != 0)
+        black_attack_count++;
+    }
+    value += _M_king_zone_attacks * tab_first_king_zone_attack_weights[white_attack_count];
+    value -= _M_king_zone_attacks * tab_first_king_zone_attack_weights[black_attack_count];
+    white_zone_squ_count = tab_second_zone_square_counts[board.king_square(Side::WHITE)];
+    white_attack_count = 0;
+    for(int i = 0; i < white_zone_squ_count; i++) {
+      if((attack_bbd_pair.first & (static_cast<Bitboard>(1) << tab_second_zone_squares[board.king_square(Side::WHITE)][i])) != 0)
+        white_attack_count++;
+    }
+    black_zone_squ_count = tab_second_zone_square_counts[board.king_square(Side::BLACK)];
+    black_attack_count = 0;
+    for(int i = 0; i < black_zone_squ_count; i++) {
+      if((attack_bbd_pair.second & (static_cast<Bitboard>(1) << tab_second_zone_squares[board.king_square(Side::BLACK)][i])) != 0)
+        black_attack_count++;
+    }
+    value += _M_king_zone_attacks * tab_second_king_zone_attack_weights[white_attack_count];
+    value -= _M_king_zone_attacks * tab_second_king_zone_attack_weights[black_attack_count];
     return (board.side() == Side::WHITE ? value : -value);
   }
 
