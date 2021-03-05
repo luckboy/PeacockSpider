@@ -38,7 +38,9 @@ namespace peacockspider
       Range(0, 20),       // EVALUATION_PARAMETER_KING_CENTER
       Range(2000, 4000),  // EVALUATION_PARAMETER_ENDGAME_MATERIAL
       Range(-20, 0),      // EVALUATION_PARAMETER_ISOLATED_PAWN
-      Range(-20, 0)       // EVALUATION_PARAMETER_DOUBLED_PAWN
+      Range(-20, 0),      // EVALUATION_PARAMETER_DOUBLED_PAWN
+      Range(0, 10)        // EVALUATION_PARAMETER_SPACE
+
     };
   }
 }

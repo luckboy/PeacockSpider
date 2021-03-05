@@ -196,6 +196,8 @@ namespace peacockspider
         }
       }
     }
+    // Sets space.
+    _M_space = params[EVALUATION_PARAMETER_SPACE];
   }
   
   int EvaluationFunction::operator()(const Board &board) const
@@ -283,6 +285,44 @@ namespace peacockspider
         if(board.has_color_piece(Side::BLACK, Piece::PAWN, col + (row << 3))) pawn_count++;
       }
       if(pawn_count >= 2) value -= _M_doubled_pawn;
+    }
+    pair<Bitboard, Bitboard> attack_bbd_pair = fold_squares(board.color_bitboard(Side::WHITE) | board.color_bitboard(Side::BLACK), make_pair(static_cast<Bitboard>(0), static_cast<Bitboard>(0)), [&](pair<Bitboard, Bitboard> bbd_pair, Square from) {
+      Side side = board.has_color(Side::WHITE, from) ? Side::WHITE : Side::BLACK;
+      Bitboard bbd = 0;
+      if(board.has_piece(Piece::PAWN, from)) {
+        bbd = tab_pawn_capture_bitboards[side_to_index(side)][from];
+      } else if(board.has_piece(Piece::KNIGHT, from)) {
+        bbd = tab_knight_bitboards[from];
+      } else if(board.has_piece(Piece::BISHOP, from)) {
+        bbd = fold_bishop_slides(from, static_cast<Bitboard>(0), [&](Bitboard bbd2) { return bbd2; }, [&](Bitboard bbd2, Square to) {
+          return make_pair(bbd2 | (static_cast<Bitboard>(1) << to), board.has_empty(to));
+        });
+      } else if(board.has_piece(Piece::ROOK, from)) {
+        bbd = fold_rook_slides(from, static_cast<Bitboard>(0), [&](Bitboard bbd2) { return bbd2; }, [&](Bitboard bbd2, Square to) {
+          return make_pair(bbd2 | (static_cast<Bitboard>(1) << to), board.has_empty(to));
+        });
+      } else if(board.has_piece(Piece::QUEEN, from)) {
+        bbd = fold_queen_slides(from, static_cast<Bitboard>(0), [&](Bitboard bbd2) { return bbd2; }, [&](Bitboard bbd2, Square to) {
+          return make_pair(bbd2 | (static_cast<Bitboard>(1) << to), board.has_empty(to));
+        });
+      } else if(board.has_piece(Piece::KING, from)) {
+        bbd = tab_king_bitboards[from];
+      }
+      if(side == Side::WHITE)
+        return make_pair(bbd_pair.first, bbd_pair.second | bbd); 
+      else
+        return make_pair(bbd_pair.first | bbd, bbd_pair.second);
+    });
+    Bitboard white_space_bbd = ~attack_bbd_pair.first & ~board.color_bitboard(Side::WHITE);
+    Bitboard black_space_bbd = ~attack_bbd_pair.second & ~board.color_bitboard(Side::BLACK);
+    for(Square i = 0; i < 64; i += 4) {
+      int bits, count;
+      bits = (white_space_bbd >> i) & 0xf;
+      count = tab_square_offset_counts[bits];
+      value += _M_space * count;
+      bits = (black_space_bbd >> i) & 0xf;
+      count = tab_square_offset_counts[bits];
+      value -= _M_space * count;
     }
     return (board.side() == Side::WHITE ? value : -value);
   }
