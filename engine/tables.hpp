@@ -1,6 +1,6 @@
 /*
  * Peacock Spider - Chess engine.
- * Copyright (C) 2020 Łukasz Szpakowski
+ * Copyright (C) 2020-2021 Łukasz Szpakowski
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,9 @@ namespace peacockspider
   extern int tab_rook_steps120[4];
   extern int tab_queen_steps120[8];
   extern int tab_king_steps120[8];
+
+  extern int tab_small_zone_steps120[9];
+  extern int tab_big_zone_steps120[4];
   
   extern Bitboard tab_pawn_capture_bitboards[2][64];
   extern Bitboard tab_knight_bitboards[64];
@@ -57,6 +60,8 @@ namespace peacockspider
 
   extern Bitboard tab_column_bitboards[8];
   extern Bitboard tab_neighbour_column_bitboards[8];
+
+  extern Bitboard tab_big_zone_bitboards[64];
 
   void initialize_tables();
 }

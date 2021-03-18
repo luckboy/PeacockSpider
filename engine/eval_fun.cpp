@@ -196,6 +196,13 @@ namespace peacockspider
         }
       }
     }
+    // Sets piece big zone.
+    _M_piece_big_zone[piece_to_index(Piece::PAWN)] = params[EVALUATION_PARAMETER_PAWN_BIG_ZONE];
+    _M_piece_big_zone[piece_to_index(Piece::KNIGHT)] = params[EVALUATION_PARAMETER_KNIGHT_BIG_ZONE];
+    _M_piece_big_zone[piece_to_index(Piece::BISHOP)] = params[EVALUATION_PARAMETER_BISHOP_BIG_ZONE];
+    _M_piece_big_zone[piece_to_index(Piece::ROOK)] = params[EVALUATION_PARAMETER_ROOK_BIG_ZONE];
+    _M_piece_big_zone[piece_to_index(Piece::QUEEN)] = params[EVALUATION_PARAMETER_QUEEN_BIG_ZONE];
+    _M_piece_big_zone[piece_to_index(Piece::KING)] = 0;
   }
   
   int EvaluationFunction::operator()(const Board &board) const
@@ -283,6 +290,41 @@ namespace peacockspider
         if(board.has_color_piece(Side::BLACK, Piece::PAWN, col + (row << 3))) pawn_count++;
       }
       if(pawn_count >= 2) value -= _M_doubled_pawn;
+    }
+    Bitboard white_big_zone_bbd = tab_big_zone_bitboards[board.king_square(Side::WHITE)];
+    Bitboard black_big_zone_bbd = tab_big_zone_bitboards[board.king_square(Side::BLACK)];
+    for(Square i = 0; i < 64; i += 4) {
+      int bits, count;
+      bits = ((board.color_bitboard(Side::BLACK) & board.piece_bitboard(Piece::PAWN) & white_big_zone_bbd) >> i) & 0xf;
+      count = tab_square_offset_counts[bits];
+      value += _M_piece_big_zone[piece_to_index(Piece::PAWN)] * count;
+      bits = ((board.color_bitboard(Side::WHITE) & board.piece_bitboard(Piece::PAWN) & black_big_zone_bbd) >> i) & 0xf;
+      count = tab_square_offset_counts[bits];
+      value -= _M_piece_big_zone[piece_to_index(Piece::PAWN)] * count;
+      bits = ((board.color_bitboard(Side::BLACK) & board.piece_bitboard(Piece::KNIGHT) & white_big_zone_bbd) >> i) & 0xf;
+      count = tab_square_offset_counts[bits];
+      value += _M_piece_big_zone[piece_to_index(Piece::KNIGHT)] * count;
+      bits = ((board.color_bitboard(Side::WHITE) & board.piece_bitboard(Piece::KNIGHT) & black_big_zone_bbd) >> i) & 0xf;
+      count = tab_square_offset_counts[bits];
+      value -= _M_piece_big_zone[piece_to_index(Piece::KNIGHT)] * count;
+      bits = ((board.color_bitboard(Side::BLACK) & board.piece_bitboard(Piece::BISHOP) & white_big_zone_bbd) >> i) & 0xf;
+      count = tab_square_offset_counts[bits];
+      value += _M_piece_big_zone[piece_to_index(Piece::BISHOP)] * count;
+      bits = ((board.color_bitboard(Side::WHITE) & board.piece_bitboard(Piece::BISHOP) & black_big_zone_bbd) >> i) & 0xf;
+      count = tab_square_offset_counts[bits];
+      value -= _M_piece_big_zone[piece_to_index(Piece::BISHOP)] * count;
+      bits = ((board.color_bitboard(Side::BLACK) & board.piece_bitboard(Piece::ROOK) & white_big_zone_bbd) >> i) & 0xf;
+      count = tab_square_offset_counts[bits];
+      value += _M_piece_big_zone[piece_to_index(Piece::ROOK)] * count;
+      bits = ((board.color_bitboard(Side::WHITE) & board.piece_bitboard(Piece::ROOK) & black_big_zone_bbd) >> i) & 0xf;
+      count = tab_square_offset_counts[bits];
+      value -= _M_piece_big_zone[piece_to_index(Piece::ROOK)] * count;
+      bits = ((board.color_bitboard(Side::BLACK) & board.piece_bitboard(Piece::QUEEN) & white_big_zone_bbd) >> i) & 0xf;
+      count = tab_square_offset_counts[bits];
+      value += _M_piece_big_zone[piece_to_index(Piece::QUEEN)] * count;
+      bits = ((board.color_bitboard(Side::WHITE) & board.piece_bitboard(Piece::QUEEN) & black_big_zone_bbd) >> i) & 0xf;
+      count = tab_square_offset_counts[bits];
+      value -= _M_piece_big_zone[piece_to_index(Piece::QUEEN)] * count;
     }
     return (board.side() == Side::WHITE ? value : -value);
   }

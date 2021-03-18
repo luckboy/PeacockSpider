@@ -1,6 +1,6 @@
 /*
  * Peacock Spider - Chess engine.
- * Copyright (C) 2020 Łukasz Szpakowski
+ * Copyright (C) 2020-2021 Łukasz Szpakowski
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,7 +69,15 @@ namespace peacockspider
   int tab_king_steps120[8] = {
     11, 10, 9, 1, -1, -9, -10, -11
   };
-  
+
+  int tab_small_zone_steps120[9] = {
+    11, 10, 9, 1, 0, -1, -9, -10, -11
+  };
+
+  int tab_big_zone_steps120[4] = {
+    10, 1, -1, -10
+  };
+
   Bitboard tab_pawn_capture_bitboards[2][64];
   Bitboard tab_knight_bitboards[64];
   Bitboard tab_king_bitboards[64];
@@ -95,6 +103,8 @@ namespace peacockspider
 
   Bitboard tab_column_bitboards[8];
   Bitboard tab_neighbour_column_bitboards[8];
+
+  Bitboard tab_big_zone_bitboards[64];
 
   void initialize_tables()
   {
@@ -264,6 +274,7 @@ namespace peacockspider
       }
       tab_square_offset_counts[bits] = count;
     }
+
     // Initializes column bitboards.
     for(Column col = 0; col < 8; col++) {
       tab_column_bitboards[col] = 0;
@@ -276,6 +287,30 @@ namespace peacockspider
       tab_neighbour_column_bitboards[col] = 0;
       if(col - 1 >= 0) tab_neighbour_column_bitboards[col] |= tab_column_bitboards[col - 1];
       if(col + 1 < 8) tab_neighbour_column_bitboards[col] |= tab_column_bitboards[col + 1];
+    }
+    
+    // Initializes big zone bitboards.
+    for(Square from = 0; from < 64; from++) {
+      Bitboard bbd = 0;
+      int from120 = mailbox64[from];
+      for(int i = 0; i < 9; i++) {
+        Square to = mailbox[from120 + tab_small_zone_steps120[i]];
+        if(to != -1) bbd |= static_cast<Bitboard>(1) << to;
+      }
+      for(int i = 0; i < 3; i++) {
+        Bitboard new_bbd = bbd;
+        for(Square squ = 0; squ < 64; squ++) {
+          if((bbd & (static_cast<Bitboard>(1) << squ)) != 0) {
+            int squ120 = mailbox64[squ];
+            for(int j = 0; j < 4; j++) {
+              Square to = mailbox[squ120 + tab_big_zone_steps120[j]];
+              if(to != -1) new_bbd |= static_cast<Bitboard>(1) << to;
+            }
+          }
+        }
+        bbd = new_bbd;
+      }
+      tab_big_zone_bitboards[from] = bbd;
     }
   }
 }
