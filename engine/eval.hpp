@@ -42,7 +42,10 @@ namespace peacockspider
   const std::size_t EVALUATION_PARAMETER_ENDGAME_MATERIAL =   14;
   const std::size_t EVALUATION_PARAMETER_ISOLATED_PAWN =      15;
   const std::size_t EVALUATION_PARAMETER_DOUBLED_PAWN =       16;
-  const std::size_t MAX_EVALUATION_PARAMETER_COUNT =          17;
+  const std::size_t EVALUATION_PARAMETER_BISHOP_KING_TROPISM =  17;
+  const std::size_t EVALUATION_PARAMETER_ROOK_KING_TROPISM =    18;
+  const std::size_t EVALUATION_PARAMETER_QUEEN_KING_TROPISM =   19;
+  const std::size_t MAX_EVALUATION_PARAMETER_COUNT =          20;
 
   extern int default_evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT];
   extern int start_evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT];
@@ -60,7 +63,7 @@ namespace peacockspider
       max_count(max_count), names(names) {}
   };
 
-  const std::size_t MAX_OLD_EVALUATION_PARAMETER_FORMAT_COUNT = 2;
+  const std::size_t MAX_OLD_EVALUATION_PARAMETER_FORMAT_COUNT = 3;
 
   extern EvaluationParameterFormat old_evaluation_parameter_formats[MAX_OLD_EVALUATION_PARAMETER_FORMAT_COUNT];
   
@@ -85,6 +88,7 @@ namespace peacockspider
     int _M_isolated_pawn;
     int _M_doubled_pawn;
     int _M_piece_square_bits[2][6][16][16];
+    int _M_piece_king_tropism[6];
   public:
     EvaluationFunction()
     { set(default_evaluation_parameters); }

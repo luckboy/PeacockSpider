@@ -196,6 +196,13 @@ namespace peacockspider
         }
       }
     }
+    // Sets piece king tropism.
+    _M_piece_king_tropism[piece_to_index(Piece::PAWN)] = 0;
+    _M_piece_king_tropism[piece_to_index(Piece::KNIGHT)] = 0;
+    _M_piece_king_tropism[piece_to_index(Piece::BISHOP)] = params[EVALUATION_PARAMETER_BISHOP_KING_TROPISM];
+    _M_piece_king_tropism[piece_to_index(Piece::ROOK)] = params[EVALUATION_PARAMETER_ROOK_KING_TROPISM];
+    _M_piece_king_tropism[piece_to_index(Piece::QUEEN)] = params[EVALUATION_PARAMETER_QUEEN_KING_TROPISM];
+    _M_piece_king_tropism[piece_to_index(Piece::KING)] = 0;
   }
   
   int EvaluationFunction::operator()(const Board &board) const
@@ -283,6 +290,31 @@ namespace peacockspider
         if(board.has_color_piece(Side::BLACK, Piece::PAWN, col + (row << 3))) pawn_count++;
       }
       if(pawn_count >= 2) value -= _M_doubled_pawn;
+    }
+    for(int i = 0; i < 2; i++) {
+      Side side = (i == 0 ? Side::WHITE : Side::BLACK);
+      int tmp_value;
+      tmp_value = fold_bishop_slides(board.king_square(side), make_pair(0, 0), [&](pair<int, int> tropism_pair) {
+        return make_pair(tropism_pair.first, 0); 
+      }, [&](pair<int, int> tropism_pair, Square from) {
+        if(board.has_color_piece(~side, Piece::BISHOP, from))
+          return make_pair(make_pair(tropism_pair.first + (7 - (tropism_pair.second + 1)) * _M_piece_king_tropism[piece_to_index(Piece::BISHOP)], 0), false);
+        else if(board.has_color_piece(~side, Piece::QUEEN, from))
+          return make_pair(make_pair(tropism_pair.first + (7 - (tropism_pair.second + 1)) * _M_piece_king_tropism[piece_to_index(Piece::QUEEN)], 0), false);
+        else
+          return make_pair(make_pair(tropism_pair.first, tropism_pair.second + 1), true);
+      }).first;
+      tmp_value += fold_rook_slides(board.king_square(side), make_pair(0, 0), [&](pair<int, int> tropism_pair) {
+        return make_pair(tropism_pair.first, 0); 
+      }, [&](pair<int, int> tropism_pair, Square from) {
+        if(board.has_color_piece(~side, Piece::ROOK, from))
+          return make_pair(make_pair(tropism_pair.first + (7 - (tropism_pair.second + 1)) * _M_piece_king_tropism[piece_to_index(Piece::ROOK)], 0), false);
+        else if(board.has_color_piece(~side, Piece::QUEEN, from))
+          return make_pair(make_pair(tropism_pair.first + (7 - (tropism_pair.second + 1)) * _M_piece_king_tropism[piece_to_index(Piece::QUEEN)], 0), false);
+        else
+          return make_pair(make_pair(tropism_pair.first, tropism_pair.second + 1), true);
+      }).first;
+      value += (side == Side::WHITE ? tmp_value : -tmp_value);
     }
     return (board.side() == Side::WHITE ? value : -value);
   }
