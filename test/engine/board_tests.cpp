@@ -411,7 +411,7 @@ namespace peacockspider
     
     void BoardTests::test_board_has_attack_method_returns_true_for_king_attack()
     {
-      Board board("4k3/8/8/8/8/4K3/8/8 b - - 0 1");
+      Board board("4k3/8/8/8/8/4K3/8/8 w - - 0 1");
       CPPUNIT_ASSERT_EQUAL(true, board.has_attack(Side::BLACK, E4));
     }
     
