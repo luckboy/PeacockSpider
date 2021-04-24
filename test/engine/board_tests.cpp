@@ -411,7 +411,7 @@ namespace peacockspider
     
     void BoardTests::test_board_has_attack_method_returns_true_for_king_attack()
     {
-      Board board("4k3/8/8/8/8/4K3/8/8 b - - 0 1");
+      Board board("4k3/8/8/8/8/4K3/8/8 w - - 0 1");
       CPPUNIT_ASSERT_EQUAL(true, board.has_attack(Side::BLACK, E4));
     }
     
@@ -439,7 +439,7 @@ namespace peacockspider
       CPPUNIT_ASSERT_EQUAL(true, board.has_attack(Side::BLACK, E6));
     }
 
-    void BoardTests::test_board_has_attack_method_retruns_false_for_barriers()
+    void BoardTests::test_board_has_attack_method_returns_false_for_barriers()
     {
       Board board("4k3/4b3/5p2/8/3q1P2/8/8/4K3 w - - 0 1");
       CPPUNIT_ASSERT_EQUAL(false, board.has_attack(Side::WHITE, H4));
