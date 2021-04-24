@@ -61,7 +61,7 @@ namespace peacockspider
       CPPUNIT_TEST(test_board_has_attack_method_returns_true_for_rook_attack);
       CPPUNIT_TEST(test_board_has_attack_method_returns_true_for_queen_attack_as_bishop_attack);
       CPPUNIT_TEST(test_board_has_attack_method_returns_true_for_queen_attack_as_rook_attack);
-      CPPUNIT_TEST(test_board_has_attack_method_retruns_false_for_barriers);
+      CPPUNIT_TEST(test_board_has_attack_method_returns_false_for_barriers);
       CPPUNIT_TEST(test_board_has_attack_method_returns_false_for_no_barriers);
       CPPUNIT_TEST(test_board_generate_pseudolegal_moves_method_generates_moves_for_initial_board);
       CPPUNIT_TEST(test_board_generate_pseudolegal_moves_method_generates_moves_for_white_side_and_pawns);
@@ -200,7 +200,7 @@ namespace peacockspider
       void test_board_has_attack_method_returns_true_for_rook_attack();
       void test_board_has_attack_method_returns_true_for_queen_attack_as_bishop_attack();
       void test_board_has_attack_method_returns_true_for_queen_attack_as_rook_attack();
-      void test_board_has_attack_method_retruns_false_for_barriers();
+      void test_board_has_attack_method_returns_false_for_barriers();
       void test_board_has_attack_method_returns_false_for_no_barriers();
       void test_board_generate_pseudolegal_moves_method_generates_moves_for_initial_board();
       void test_board_generate_pseudolegal_moves_method_generates_moves_for_white_side_and_pawns();
