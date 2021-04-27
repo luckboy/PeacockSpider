@@ -1544,7 +1544,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(Board("2r1k2r/8/8/8/8/8/8/4K3 w k - 1 2") == board2);
     }
 
-    void BoardTests::test_board_make_move_method_removes_all_white_castling_for_white_side()
+    void BoardTests::test_board_make_move_method_removes_all_white_castlings_for_white_side()
     {
       Board board("4k3/8/8/8/8/8/8/R3K2R w KQ - 0 1");
       Board board2;
@@ -1552,7 +1552,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(Board("4k3/8/8/8/8/8/4K3/R6R b - - 1 1") == board2);
     }
 
-    void BoardTests::test_board_make_move_method_removes_all_black_castling_for_black_side()
+    void BoardTests::test_board_make_move_method_removes_all_black_castlings_for_black_side()
     {
       Board board("r3k2r/8/8/8/8/8/8/4K3 b kq - 0 1");
       Board board2;
