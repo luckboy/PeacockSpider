@@ -138,8 +138,8 @@ namespace peacockspider
       CPPUNIT_TEST(test_board_make_move_method_removes_black_short_castling_for_black_side);
       CPPUNIT_TEST(test_board_make_move_method_removes_white_long_castling_for_white_side);
       CPPUNIT_TEST(test_board_make_move_method_removes_black_long_castling_for_black_side);
-      CPPUNIT_TEST(test_board_make_move_method_removes_all_white_castling_for_white_side);
-      CPPUNIT_TEST(test_board_make_move_method_removes_all_black_castling_for_black_side);
+      CPPUNIT_TEST(test_board_make_move_method_removes_all_white_castlings_for_white_side);
+      CPPUNIT_TEST(test_board_make_move_method_removes_all_black_castlings_for_black_side);
       CPPUNIT_TEST(test_board_make_move_method_removes_black_short_castling_for_white_side);
       CPPUNIT_TEST(test_board_make_move_method_removes_white_short_castling_for_black_side);
       CPPUNIT_TEST(test_board_make_move_method_removes_black_long_castling_for_white_side);
@@ -277,8 +277,8 @@ namespace peacockspider
       void test_board_make_move_method_removes_black_short_castling_for_black_side();
       void test_board_make_move_method_removes_white_long_castling_for_white_side();
       void test_board_make_move_method_removes_black_long_castling_for_black_side();
-      void test_board_make_move_method_removes_all_white_castling_for_white_side();
-      void test_board_make_move_method_removes_all_black_castling_for_black_side();
+      void test_board_make_move_method_removes_all_white_castlings_for_white_side();
+      void test_board_make_move_method_removes_all_black_castlings_for_black_side();
       void test_board_make_move_method_removes_black_short_castling_for_white_side();
       void test_board_make_move_method_removes_white_short_castling_for_black_side();
       void test_board_make_move_method_removes_black_long_castling_for_white_side();
