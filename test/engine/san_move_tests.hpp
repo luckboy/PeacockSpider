@@ -1,6 +1,6 @@
 /*
  * Peacock Spider - Chess engine.
- * Copyright (C) 2020 Łukasz Szpakowski
+ * Copyright (C) 2020-2021 Łukasz Szpakowski
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ namespace peacockspider
       CPPUNIT_TEST(test_san_move_set_method_sets_capture_with_source_square);
       CPPUNIT_TEST(test_san_move_set_method_sets_move_with_promotion_piece);
       CPPUNIT_TEST(test_san_move_set_method_sets_capture_with_promotion_piece);
-      CPPUNIT_TEST(test_san_move_set_method_sets_move_with_promotion_piece_and_eqaul_character);
+      CPPUNIT_TEST(test_san_move_set_method_sets_move_with_promotion_piece_and_equal_character);
       CPPUNIT_TEST(test_san_move_set_method_sets_short_castling);
       CPPUNIT_TEST(test_san_move_set_method_sets_long_castling);
       CPPUNIT_TEST(test_san_move_set_method_sets_move_with_check);
@@ -97,7 +97,7 @@ namespace peacockspider
       void test_san_move_set_method_sets_capture_with_source_square();
       void test_san_move_set_method_sets_move_with_promotion_piece();
       void test_san_move_set_method_sets_capture_with_promotion_piece();
-      void test_san_move_set_method_sets_move_with_promotion_piece_and_eqaul_character();
+      void test_san_move_set_method_sets_move_with_promotion_piece_and_equal_character();
       void test_san_move_set_method_sets_short_castling();
       void test_san_move_set_method_sets_long_castling();
       void test_san_move_set_method_sets_move_with_check();
