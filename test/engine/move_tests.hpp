@@ -1,6 +1,6 @@
 /*
  * Peacock Spider - Chess engine.
- * Copyright (C) 2020 Łukasz Szpakowski
+ * Copyright (C) 2020-2021 Łukasz Szpakowski
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,6 +47,7 @@ namespace peacockspider
       CPPUNIT_TEST(test_move_set_san_method_sets_short_castling_for_white_side);
       CPPUNIT_TEST(test_move_set_san_method_sets_short_castling_for_black_side);
       CPPUNIT_TEST(test_move_set_san_method_sets_long_castling_for_white_side);
+      CPPUNIT_TEST(test_move_set_san_method_sets_long_castling_for_black_side);
       CPPUNIT_TEST(test_move_set_san_method_sets_capture);
       CPPUNIT_TEST(test_move_set_san_method_sets_capture_for_white_side_and_en_passant);
       CPPUNIT_TEST(test_move_set_san_method_sets_capture_for_black_side_and_en_passant);
@@ -110,6 +111,7 @@ namespace peacockspider
       void test_move_set_san_method_sets_short_castling_for_white_side();
       void test_move_set_san_method_sets_short_castling_for_black_side();
       void test_move_set_san_method_sets_long_castling_for_white_side();
+      void test_move_set_san_method_sets_long_castling_for_black_side();
       void test_move_set_san_method_sets_capture();
       void test_move_set_san_method_sets_capture_for_white_side_and_en_passant();
       void test_move_set_san_method_sets_capture_for_black_side_and_en_passant();
