@@ -1,6 +1,6 @@
 /*
  * Peacock Spider - Chess engine.
- * Copyright (C) 2020 Łukasz Szpakowski
+ * Copyright (C) 2020-2021 Łukasz Szpakowski
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -107,7 +107,7 @@ namespace peacockspider
       CPPUNIT_ASSERT(SANMove(Piece::PAWN, B7 % 8, -1, A8, PromotionPiece::KNIGHT, SANMoveFlags::CAPTURE) == move);
     }
 
-    void SANMoveTests::test_san_move_set_method_sets_move_with_promotion_piece_and_eqaul_character()
+    void SANMoveTests::test_san_move_set_method_sets_move_with_promotion_piece_and_equal_character()
     {
       SANMove move;
       CPPUNIT_ASSERT_EQUAL(true, move.set("h8=Q"));
