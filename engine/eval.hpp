@@ -48,7 +48,12 @@ namespace peacockspider
   const std::size_t EVALUATION_PARAMETER_ROOK_MOBILITY =      20;
   const std::size_t EVALUATION_PARAMETER_QUEEN_MOBILITY =     21;
   const std::size_t EVALUATION_PARAMETER_KING_MOBILITY =      22;
-  const std::size_t MAX_EVALUATION_PARAMETER_COUNT =          23;
+  const std::size_t EVALUATION_PARAMETER_PAWN_DEFENCE =       23;
+  const std::size_t EVALUATION_PARAMETER_KNIGHT_DEFENCE =     24;
+  const std::size_t EVALUATION_PARAMETER_BISHOP_DEFENCE =     25;
+  const std::size_t EVALUATION_PARAMETER_ROOK_DEFENCE =       26;
+  const std::size_t EVALUATION_PARAMETER_QUEEN_DEFENCE =      27;
+  const std::size_t MAX_EVALUATION_PARAMETER_COUNT =          28;
 
   extern int default_evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT];
   extern int start_evaluation_parameters[MAX_EVALUATION_PARAMETER_COUNT];
@@ -92,6 +97,7 @@ namespace peacockspider
     int _M_doubled_pawn;
     int _M_piece_square_bits[2][6][16][16];
     int _M_mobilities[6];
+    int _M_defences[6];
   public:
     EvaluationFunction()
     { set(default_evaluation_parameters); }
