@@ -203,13 +203,6 @@ namespace peacockspider
     _M_mobilities[piece_to_index(Piece::ROOK)] = params[EVALUATION_PARAMETER_ROOK_MOBILITY];
     _M_mobilities[piece_to_index(Piece::QUEEN)] = params[EVALUATION_PARAMETER_QUEEN_MOBILITY];
     _M_mobilities[piece_to_index(Piece::KING)] = params[EVALUATION_PARAMETER_KING_MOBILITY];
-    // Sets defences.
-    _M_defences[piece_to_index(Piece::PAWN)] = params[EVALUATION_PARAMETER_PAWN_DEFENCE];
-    _M_defences[piece_to_index(Piece::KNIGHT)] = params[EVALUATION_PARAMETER_KNIGHT_DEFENCE];
-    _M_defences[piece_to_index(Piece::BISHOP)] = params[EVALUATION_PARAMETER_BISHOP_DEFENCE];
-    _M_defences[piece_to_index(Piece::ROOK)] = params[EVALUATION_PARAMETER_ROOK_DEFENCE];
-    _M_defences[piece_to_index(Piece::QUEEN)] = params[EVALUATION_PARAMETER_QUEEN_DEFENCE];
-    _M_defences[piece_to_index(Piece::KING)] = 0;
   }
   
   int EvaluationFunction::operator()(const Board &board) const
@@ -306,8 +299,6 @@ namespace peacockspider
           Square en_passant_squ = board.en_passant_column() != -1 ? board.en_passant_column() + (board.side() == Side::WHITE ? 050 : 020) : -1;
           if(board.has_color(~side, to) || en_passant_squ == to)
             return sum2 + _M_mobilities[piece_to_index(Piece::PAWN)];
-          else if(board.has_color(side, to))
-            return sum2 + _M_defences[piece_to_index(board.piece(to))];
           else
             return sum2;
         });
@@ -322,7 +313,7 @@ namespace peacockspider
           if(board.has_empty(to) || board.has_color(~side, to))
             return sum2 + _M_mobilities[piece_to_index(Piece::KNIGHT)];
           else
-            return sum2 + _M_defences[piece_to_index(board.piece(to))];
+            return sum2;
         });
       } else if(board.has_piece(Piece::BISHOP, from)) {
         tmp_value = fold_bishop_slides(from, 0, [&](int sum2) { return sum2; }, [&](int sum2, Square to) {
@@ -331,7 +322,7 @@ namespace peacockspider
           else if(board.has_color(~side, to))
             return make_pair(sum2 + _M_mobilities[piece_to_index(Piece::BISHOP)], false);
           else
-            return make_pair(sum2 + _M_defences[piece_to_index(board.piece(to))], false);
+            return make_pair(sum2, false);
         });
       } else if(board.has_piece(Piece::ROOK, from)) {
         tmp_value = fold_rook_slides(from, 0, [&](int sum2) { return sum2; }, [&](int sum2, Square to) {
@@ -340,7 +331,7 @@ namespace peacockspider
           else if(board.has_color(~side, to))
             return make_pair(sum2 + _M_mobilities[piece_to_index(Piece::ROOK)], false);
           else
-            return make_pair(sum2 +_M_defences[piece_to_index(board.piece(to))], false);
+            return make_pair(sum2, false);
         });
       } else if(board.has_piece(Piece::QUEEN, from)) {
         tmp_value = fold_bishop_slides(from, 0, [&](int sum2) { return sum2; }, [&](int sum2, Square to) {
@@ -349,14 +340,14 @@ namespace peacockspider
           else if(board.has_color(~side, to))
             return make_pair(sum2 + _M_mobilities[piece_to_index(Piece::QUEEN)], false);
           else
-            return make_pair(sum2 + _M_defences[piece_to_index(board.piece(to))], false);
+            return make_pair(sum2, false);
         });
       } else if(board.has_piece(Piece::KING, from)) {
         tmp_value = fold_king_squares(from, 0, [&](int sum2, Square to) {
           if(board.has_empty(to) || board.has_color(~side, to))
             return sum2 + _M_mobilities[piece_to_index(Piece::KING)];
           else
-            return sum2 + _M_defences[piece_to_index(board.piece(to))];
+            return sum2;
         });
       }
       return sum + (side == Side::WHITE ? tmp_value : -tmp_value);
