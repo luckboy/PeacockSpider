@@ -296,7 +296,7 @@ namespace peacockspider
       int tmp_value = 0;
       if(board.has_piece(Piece::PAWN, from)) {
         tmp_value = fold_pawn_capture_squares(side, from, 0, [&](int sum2, Square to) {
-          Square en_passant_squ = board.en_passant_column() != -1 ? board.en_passant_column() + (board.side() == Side::WHITE ? 050 : 020) : -1;
+          Square en_passant_squ = (board.en_passant_column() != -1 && board.side() == side) ? board.en_passant_column() + (board.side() == Side::WHITE ? 050 : 020) : -1;
           if(board.has_color(~side, to) || en_passant_squ == to)
             return sum2 + _M_mobilities[piece_to_index(Piece::PAWN)];
           else
