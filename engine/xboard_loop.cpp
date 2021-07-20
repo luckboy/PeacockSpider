@@ -1,6 +1,6 @@
 /*
  * Peacock Spider - Chess engine.
- * Copyright (C) 2020 Łukasz Szpakowski
+ * Copyright (C) 2020-2021 Łukasz Szpakowski
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -190,6 +190,7 @@ namespace peacockspider
       new_board.set_halfmove_clock(0);
       new_board.set_fullmove_number(1);
       new_board.update_hash_key();
+      if(new_board.in_check(~new_board.side())) return make_pair(false, true);
       return make_pair(true, true);
     }
 
